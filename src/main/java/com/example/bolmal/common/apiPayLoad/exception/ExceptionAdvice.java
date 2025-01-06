@@ -27,25 +27,19 @@ import java.util.Optional;
 @RestControllerAdvice(annotations = {RestController.class})
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException e) {
-        // 모든 오류 메시지 수집
-        Map<String, String> errors = new LinkedHashMap<>();
-        e.getConstraintViolations().forEach(violation -> {
-            String fieldName = violation.getPropertyPath().toString(); // 필드 이름 추출
-            String errorMessage = violation.getMessage(); // 어노테이션의 message 속성 값
-            errors.put(fieldName, errorMessage);
-        });
+    @ExceptionHandler
+    public ResponseEntity<Object> validation(ConstraintViolationException e, WebRequest request) {
+        log.error("Validation error: {}", e.getMessage(), e);
 
-        // ApiResponse 형식으로 클라이언트에 반환
-        ApiResponse<Object> response = ApiResponse.onFailure(
-                ErrorStatus._BAD_REQUEST.getCode(),
-                "Validation failure",
-                errors
-        );
+        String errorMessage = e.getConstraintViolations().stream()
+                .map(constraintViolation -> constraintViolation.getMessage())
+                .findFirst()
+                .orElse("Invalid input");
+
+        ErrorStatus errorStatus = resolveErrorStatus(errorMessage, ErrorStatus._BAD_REQUEST);
         Sentry.captureException(e);
 
-        return ResponseEntity.badRequest().body(response);
+        return handleExceptionInternalConstraint(e, errorStatus, HttpHeaders.EMPTY, request);
     }
 
     @Override
@@ -53,19 +47,17 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
             MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
         Map<String, String> errors = new LinkedHashMap<>();
+        Sentry.captureException(ex);
         ex.getBindingResult().getFieldErrors().forEach(fieldError -> {
             String fieldName = fieldError.getField();
             String errorMessage = Optional.ofNullable(fieldError.getDefaultMessage()).orElse("");
             errors.merge(fieldName, errorMessage, (existing, newMsg) -> existing + ", " + newMsg);
         });
 
-        ApiResponse<Object> body = ApiResponse.onFailure(
-                ErrorStatus._BAD_REQUEST.getCode(),
+        ApiResponse<Object> body = ApiResponse.onFailure(ErrorStatus._BAD_REQUEST.getCode(),
                 ErrorStatus._BAD_REQUEST.getMessage(),
-                errors
-        );
+                errors);
 
-        Sentry.captureException(ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(headers).body(body);
     }
 
@@ -75,6 +67,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         log.error("Unhandled exception: {}", e.getMessage(), e);
 
         Sentry.captureException(e);
+
         return handleExceptionInternalFalse(
                 e,
                 ErrorStatus._INTERNAL_SERVER_ERROR,
@@ -99,7 +92,6 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         ApiResponse<Object> body = ApiResponse.onFailure(reason.getCode(), reason.getMessage(), null);
         WebRequest webRequest = new ServletWebRequest(request);
 
-        Sentry.captureException(e);
         return super.handleExceptionInternal(e, body, headers, reason.getHttpStatus(), webRequest);
     }
 
@@ -107,7 +99,6 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
             Exception e, ErrorStatus errorStatus, HttpHeaders headers, HttpStatus status, WebRequest request, String errorPoint) {
         ApiResponse<Object> body = ApiResponse.onFailure(errorStatus.getCode(), errorStatus.getMessage(), errorPoint);
 
-        Sentry.captureException(e);
         return super.handleExceptionInternal(e, body, headers, status, request);
     }
 
@@ -115,7 +106,6 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
             Exception e, HttpHeaders headers, ErrorStatus errorStatus, WebRequest request, Map<String, String> errorArgs) {
         ApiResponse<Object> body = ApiResponse.onFailure(errorStatus.getCode(), errorStatus.getMessage(), errorArgs);
 
-        Sentry.captureException(e);
         return super.handleExceptionInternal(e, body, headers, errorStatus.getHttpStatus(), request);
     }
 
@@ -123,7 +113,6 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
             Exception e, ErrorStatus errorStatus, HttpHeaders headers, WebRequest request) {
         ApiResponse<Object> body = ApiResponse.onFailure(errorStatus.getCode(), errorStatus.getMessage(), null);
 
-        Sentry.captureException(e);
         return super.handleExceptionInternal(e, body, headers, errorStatus.getHttpStatus(), request);
     }
 
@@ -131,11 +120,8 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         try {
             return ErrorStatus.valueOf(errorMessage);
         } catch (IllegalArgumentException ex) {
-            Sentry.captureException(ex);
             log.warn("Invalid error status '{}', using default: {}", errorMessage, defaultStatus);
             return defaultStatus;
         }
     }
-
-
 }
