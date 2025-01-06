@@ -28,6 +28,7 @@ management:
     web:
       exposure:
         include: "*"
+
   metrics:
     tags:
       application: bolmal
