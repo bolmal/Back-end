@@ -1,7 +1,7 @@
 package com.example.bolmal.common.apiPayLoad.code.status;
 
-import com.example.momogum.apiPayLoad.code.BaseCode;
-import com.example.momogum.apiPayLoad.code.ReasonDTO;
+import com.example.bolmal.common.apiPayLoad.code.BaseCode;
+import com.example.bolmal.common.apiPayLoad.code.ReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

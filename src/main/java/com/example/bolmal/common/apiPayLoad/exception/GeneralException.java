@@ -1,7 +1,8 @@
 package com.example.bolmal.common.apiPayLoad.exception;
 
-import com.example.momogum.apiPayLoad.code.BaseErrorCode;
-import com.example.momogum.apiPayLoad.code.ErrorReasonDTO;
+
+import com.example.bolmal.common.apiPayLoad.code.BaseErrorCode;
+import com.example.bolmal.common.apiPayLoad.code.ErrorReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

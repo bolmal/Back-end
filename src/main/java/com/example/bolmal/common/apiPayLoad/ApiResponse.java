@@ -1,7 +1,7 @@
 package com.example.bolmal.common.apiPayLoad;
 
-import com.example.momogum.apiPayLoad.code.BaseCode;
-import com.example.momogum.apiPayLoad.code.status.SuccessStatus;
+import com.example.bolmal.common.apiPayLoad.code.BaseCode;
+import com.example.bolmal.common.apiPayLoad.code.status.SuccessStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

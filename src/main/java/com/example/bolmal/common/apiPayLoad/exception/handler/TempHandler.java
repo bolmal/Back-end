@@ -1,8 +1,8 @@
 package com.example.bolmal.common.apiPayLoad.exception.handler;
 
 
-import com.example.momogum.apiPayLoad.code.BaseErrorCode;
-import com.example.momogum.apiPayLoad.exception.GeneralException;
+import com.example.bolmal.common.apiPayLoad.code.BaseErrorCode;
+import com.example.bolmal.common.apiPayLoad.exception.GeneralException;
 
 public class TempHandler extends GeneralException {
 

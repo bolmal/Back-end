@@ -1,8 +1,8 @@
 package com.example.bolmal.common.apiPayLoad.exception;
 
-import com.example.momogum.apiPayLoad.ApiResponse;
-import com.example.momogum.apiPayLoad.code.ErrorReasonDTO;
-import com.example.momogum.apiPayLoad.code.status.ErrorStatus;
+import com.example.bolmal.common.apiPayLoad.ApiResponse;
+import com.example.bolmal.common.apiPayLoad.code.ErrorReasonDTO;
+import com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
