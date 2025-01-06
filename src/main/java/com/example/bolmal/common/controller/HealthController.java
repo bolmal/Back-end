@@ -14,6 +14,6 @@ public class HealthController {
     @GetMapping
     @Operation(summary = "서버 안정성을 체크하기 위한 API 입니다")
     public String health() {
-        return "healthy!8";
+        return "healthy!";
     }
 }
