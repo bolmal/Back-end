@@ -33,3 +33,11 @@ management:
     tags:
       application: bolmal
 
+sentry:
+  dsn: https://274740575bf06fd85a33c4a2ee628e1d@o4508596177076224.ingest.de.sentry.io/4508596181074000
+  exception-resolver-order: -2147483647
+  max-request-body-size: always
+  send-default-pii: true
+  traces-sample-rate: 1.0
+  environment: dev
+

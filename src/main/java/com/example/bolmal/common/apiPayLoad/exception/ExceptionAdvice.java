@@ -3,6 +3,7 @@ package com.example.bolmal.common.apiPayLoad.exception;
 import com.example.bolmal.common.apiPayLoad.ApiResponse;
 import com.example.bolmal.common.apiPayLoad.code.ErrorReasonDTO;
 import com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus;
+import io.sentry.Sentry;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 "Validation failure",
                 errors
         );
+        Sentry.captureException(e);
 
         return ResponseEntity.badRequest().body(response);
     }
@@ -63,6 +65,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
                 errors
         );
 
+        Sentry.captureException(ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(headers).body(body);
     }
 
@@ -71,6 +74,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> exception(Exception e, WebRequest request) {
         log.error("Unhandled exception: {}", e.getMessage(), e);
 
+        Sentry.captureException(e);
         return handleExceptionInternalFalse(
                 e,
                 ErrorStatus._INTERNAL_SERVER_ERROR,
@@ -86,6 +90,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         log.error("General exception: {}", generalException.getMessage(), generalException);
 
         ErrorReasonDTO errorReason = generalException.getErrorReasonHttpStatus();
+        Sentry.captureException(generalException);
         return handleExceptionInternal(generalException, errorReason, null, request);
     }
 
@@ -94,6 +99,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         ApiResponse<Object> body = ApiResponse.onFailure(reason.getCode(), reason.getMessage(), null);
         WebRequest webRequest = new ServletWebRequest(request);
 
+        Sentry.captureException(e);
         return super.handleExceptionInternal(e, body, headers, reason.getHttpStatus(), webRequest);
     }
 
@@ -101,6 +107,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
             Exception e, ErrorStatus errorStatus, HttpHeaders headers, HttpStatus status, WebRequest request, String errorPoint) {
         ApiResponse<Object> body = ApiResponse.onFailure(errorStatus.getCode(), errorStatus.getMessage(), errorPoint);
 
+        Sentry.captureException(e);
         return super.handleExceptionInternal(e, body, headers, status, request);
     }
 
@@ -108,6 +115,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
             Exception e, HttpHeaders headers, ErrorStatus errorStatus, WebRequest request, Map<String, String> errorArgs) {
         ApiResponse<Object> body = ApiResponse.onFailure(errorStatus.getCode(), errorStatus.getMessage(), errorArgs);
 
+        Sentry.captureException(e);
         return super.handleExceptionInternal(e, body, headers, errorStatus.getHttpStatus(), request);
     }
 
@@ -115,6 +123,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
             Exception e, ErrorStatus errorStatus, HttpHeaders headers, WebRequest request) {
         ApiResponse<Object> body = ApiResponse.onFailure(errorStatus.getCode(), errorStatus.getMessage(), null);
 
+        Sentry.captureException(e);
         return super.handleExceptionInternal(e, body, headers, errorStatus.getHttpStatus(), request);
     }
 
@@ -122,6 +131,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         try {
             return ErrorStatus.valueOf(errorMessage);
         } catch (IllegalArgumentException ex) {
+            Sentry.captureException(ex);
             log.warn("Invalid error status '{}', using default: {}", errorMessage, defaultStatus);
             return defaultStatus;
         }
