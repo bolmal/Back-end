@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthController {
 
     @GetMapping
-    @Operation(summary = "서버 안정성을 체크하기 위한 API 입니다")
+    @Operation(summary = "서버 안정성을 체크를 위한 API 입니다")
     public String health() {
         return "healthy!";
     }
