@@ -43,6 +43,9 @@ dependencies {
     // Sentry Dependencies
     implementation 'io.sentry:sentry-logback:6.26.0'
     implementation 'io.sentry:sentry-spring-boot-starter:6.26.0'
+
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 tasks.named('test') {
