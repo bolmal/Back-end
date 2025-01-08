@@ -1,12 +1,12 @@
 package com.example.bolmal.member.infrastructure;
 
 import com.example.bolmal.member.domain.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface MemberRepository {
+public interface MemberJpaRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByUsername(String username);
 
-    Member save(Member member);
 }
