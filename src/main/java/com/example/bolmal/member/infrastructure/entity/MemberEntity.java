@@ -86,21 +86,21 @@ public class MemberEntity {
 
 
     // Entity -> Model: 엔티티를 모델정보로 전환할 때
-    public static Member toModel(MemberEntity memberEntity) {
+    public Member toModel() {
 
         return Member.builder()
-                .id(memberEntity.getId())
-                .username(memberEntity.getUsername())
-                .password(memberEntity.getPassword())
-                .name(memberEntity.getName())
-                .nickname(memberEntity.getNickname())
-                .role(memberEntity.getRole())
-                .phoneNumber(memberEntity.getPhoneNumber())
-                .birthday(memberEntity.getBirthday())
-                .email(memberEntity.getEmail())
-                .status(memberEntity.getStatus())
-                .inactiveDate(memberEntity.getInactiveDate())
-                .gender(memberEntity.getGender())
+                .id(id)
+                .username(username)
+                .password(password)
+                .name(name)
+                .nickname(nickname)
+                .role(role)
+                .phoneNumber(phoneNumber)
+                .birthday(birthday)
+                .email(email)
+                .status(status)
+                .inactiveDate(inactiveDate)
+                .gender(gender)
                 .build();
 
     }

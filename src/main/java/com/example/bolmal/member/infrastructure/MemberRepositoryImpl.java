@@ -1,5 +1,6 @@
 package com.example.bolmal.member.infrastructure;
 
+import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.infrastructure.entity.MemberEntity;
 import com.example.bolmal.member.service.port.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +16,12 @@ public class MemberRepositoryImpl implements MemberRepository {
 
 
     @Override
-    public Optional<MemberEntity> findByUsername(String username) {
-        return memberJpaRepository.findByUsername(username);
+    public Optional<Member> findByUsername(String username) {
+        return memberJpaRepository.findByUsername(username).map(MemberEntity::toModel);
     }
 
     @Override
-    public MemberEntity save(MemberEntity member) {
-        return memberJpaRepository.save(member);
+    public Member save(Member member) {
+        return memberJpaRepository.save(MemberEntity.fromModel(member)).toModel();
     }
 }

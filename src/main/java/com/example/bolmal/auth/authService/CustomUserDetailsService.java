@@ -2,6 +2,7 @@ package com.example.bolmal.auth.authService;
 
 
 import com.example.bolmal.auth.web.dto.CustomUserDetails;
+import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.infrastructure.entity.MemberEntity;
 import com.example.bolmal.member.service.port.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         // Try to find MemberEntity
-        MemberEntity member = memberRepository.findByUsername(username).orElse(null);
+        Member member = memberRepository.findByUsername(username).orElse(null);
 
         if (member != null) {
             return new CustomUserDetails(member);

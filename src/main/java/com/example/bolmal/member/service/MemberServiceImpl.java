@@ -2,6 +2,7 @@ package com.example.bolmal.member.service;
 
 
 
+import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.infrastructure.entity.MemberEntity;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
@@ -31,7 +32,7 @@ public class MemberServiceImpl implements MemberService {
         /* converter 메서드는 기본적으로 static 메모리를 할당받아 사용하기 때문에
          * bCryptPasswordEncoder를 주입받을 수 없어 회원가입만 컨버터를 사용하지 않겠습니다 */
 
-        MemberEntity newMember= MemberEntity.builder()
+        Member newMember= Member.builder()
                 .username(request.getUsername())
                 .password(bCryptPasswordEncoder.encode(request.getPassword()))
                 .name(request.getName())
@@ -44,7 +45,7 @@ public class MemberServiceImpl implements MemberService {
                 .gender(request.getGender())
                 .build();
 
-        MemberEntity savedMember = memberRepository.save(newMember);
+        Member savedMember = memberRepository.save(newMember);
 
 
         return MemberJoinDTO.MemberJoinResponseDTO.builder()
