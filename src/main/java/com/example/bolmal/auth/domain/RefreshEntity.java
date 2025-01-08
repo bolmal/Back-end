@@ -23,4 +23,28 @@ public class RefreshEntity {
     private String refresh;
 
     private String expiration;
+
+
+
+
+    public static RefreshEntity fromModel(Refresh refresh) {
+
+        RefreshEntity refreshEntity = new RefreshEntity();
+        refreshEntity.id = refresh.getId();
+        refreshEntity.username = refresh.getUsername();
+        refreshEntity.refresh = refresh.getRefresh();
+        refreshEntity.expiration = refresh.getExpiration();
+
+        return refreshEntity;
+    }
+
+
+    public Refresh toModel() {
+        return Refresh.builder()
+                .id(id)
+                .username(username)
+                .refresh(refresh)
+                .expiration(expiration)
+                .build();
+    }
 }
