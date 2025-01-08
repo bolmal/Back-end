@@ -1,6 +1,8 @@
 package com.example.bolmal.auth.jwt;
 
+import com.example.bolmal.config.JWTConfig;
 import io.jsonwebtoken.Jwts;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
+
 public class JWTUtil {
 
     private SecretKey secretKey;

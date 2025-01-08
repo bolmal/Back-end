@@ -2,6 +2,7 @@ package com.example.bolmal.auth.jwt;
 
 
 import com.example.bolmal.auth.web.dto.CustomUserDetails;
+import com.example.bolmal.config.JWTConfig;
 import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Role;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -23,12 +24,13 @@ import java.io.IOException;
 public class JWTFilter extends OncePerRequestFilter{
 
     private final JWTUtil jwtUtil;
+    private final JWTConfig jwtConfig;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         // 헤더에서 Authorization 토큰을 꺼냄
-        String authorizationHeader = request.getHeader("Authorization");
+        String authorizationHeader = request.getHeader(jwtConfig.getHeader());
 
         // Authorization 헤더가 없거나 Bearer 스킴이 없으면 다음 필터로 이동
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {

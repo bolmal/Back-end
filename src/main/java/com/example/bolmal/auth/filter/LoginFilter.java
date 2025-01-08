@@ -4,6 +4,7 @@ package com.example.bolmal.auth.filter;
 
 import com.example.bolmal.auth.domain.Refresh;
 import com.example.bolmal.auth.service.port.RefreshRepository;
+import com.example.bolmal.config.JWTConfig;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.auth.jwt.JWTUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
+    private final JWTConfig jwtConfig;
     private final RefreshRepository refreshRepository;
     private final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper 추가
 
@@ -75,14 +77,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", username, role, 600000L);//10분
-        String refresh = jwtUtil.createJwt("refresh", username, role, 9990000000L);//24시간
+        String access = jwtUtil.createJwt("access", username, role, jwtConfig.getAccessTokenValidityInSeconds());// 1시간
+        String refresh = jwtUtil.createJwt("refresh", username, role, jwtConfig.getRefreshTokenValidityInSeconds());//30일
 
         //응답 설정
         response.setHeader("access", access);
         response.addCookie(createCookie("refresh", refresh));
 
-        addRefreshEntity(username,refresh,9990000000L);
+        addRefreshEntity(username,refresh, jwtConfig.getRefreshTokenValidityInSeconds());
 
         response.setStatus(HttpStatus.OK.value());
 

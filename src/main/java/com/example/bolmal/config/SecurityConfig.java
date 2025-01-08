@@ -33,6 +33,7 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+    private final JWTConfig jwtConfig;
     private final RefreshRepository refreshRepository;
 
 
@@ -96,10 +97,10 @@ public class SecurityConfig {
                 .anyRequest().authenticated());
 
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil,jwtConfig), LoginFilter.class);
 
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil,refreshRepository), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil,jwtConfig,refreshRepository), UsernamePasswordAuthenticationFilter.class);
 
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
