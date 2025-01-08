@@ -1,0 +1,63 @@
+package com.example.bolmal.member.domain;
+
+import com.example.bolmal.member.domain.enums.Gender;
+import com.example.bolmal.member.domain.enums.Role;
+import com.example.bolmal.member.domain.enums.Status;
+import com.example.bolmal.member.web.dto.MemberJoinDTO;
+import lombok.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import static com.example.bolmal.member.util.BCryptImpl.encode;
+
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Getter
+public class Member {
+
+
+    private Long id;
+
+    private String username;
+
+    private String password;
+
+    private String name;
+
+    private String nickname;
+
+    private Role role;
+
+    private String phoneNumber;
+
+    private LocalDate birthday;
+
+    private String email;
+
+    private Status status = Status.ACTIVE;
+
+    private LocalDateTime inactiveDate;
+
+    private Gender gender;
+
+
+    public static Member JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request){
+
+        return Member.builder()
+                .username(request.getUsername())
+                .password(encode(request.getPassword()))
+                .name(request.getName())
+                .nickname(request.getNickname())
+                .role(Role.ROLE_USER)
+                .phoneNumber(request.getPhoneNumber())
+                .birthday(request.getBirthDate())
+                .email(request.getEmail())
+                .status(Status.ACTIVE)
+                .gender(request.getGender())
+                .build();
+    }
+
+
+}
