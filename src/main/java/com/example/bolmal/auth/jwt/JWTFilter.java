@@ -2,7 +2,7 @@ package com.example.bolmal.auth.jwt;
 
 
 import com.example.bolmal.auth.web.dto.CustomUserDetails;
-import com.example.bolmal.member.domain.Member;
+import com.example.bolmal.member.infrastructure.entity.MemberEntity;
 import com.example.bolmal.member.domain.enums.Role;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -65,7 +65,7 @@ public class JWTFilter extends OncePerRequestFilter{
         Role role = Role.valueOf(roleString);
 
 
-        Member member = Member.builder()
+        MemberEntity member = MemberEntity.builder()
                 .username(username)
                 .role(role)
                 .build();

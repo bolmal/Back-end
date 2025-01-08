@@ -1,6 +1,6 @@
 package com.example.bolmal.auth.web.dto;
 
-import com.example.bolmal.member.domain.Member;
+import com.example.bolmal.member.infrastructure.entity.MemberEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +11,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private final Member member;
+    private final MemberEntity member;
 
     // Role 반환
     @Override

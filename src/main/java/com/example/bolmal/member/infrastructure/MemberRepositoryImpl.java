@@ -1,6 +1,6 @@
 package com.example.bolmal.member.infrastructure;
 
-import com.example.bolmal.member.domain.Member;
+import com.example.bolmal.member.infrastructure.entity.MemberEntity;
 import com.example.bolmal.member.service.port.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -15,12 +15,12 @@ public class MemberRepositoryImpl implements MemberRepository {
 
 
     @Override
-    public Optional<Member> findByUsername(String username) {
+    public Optional<MemberEntity> findByUsername(String username) {
         return memberJpaRepository.findByUsername(username);
     }
 
     @Override
-    public Member save(Member member) {
+    public MemberEntity save(MemberEntity member) {
         return memberJpaRepository.save(member);
     }
 }
