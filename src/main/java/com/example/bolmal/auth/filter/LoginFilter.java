@@ -5,7 +5,7 @@ package com.example.bolmal.auth.filter;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.auth.domain.RefreshEntity;
 import com.example.bolmal.auth.jwt.JWTUtil;
-import com.example.bolmal.auth.infrastructure.RefreshRepository;
+import com.example.bolmal.auth.infrastructure.RefreshJpaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
@@ -33,7 +33,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
-    private final RefreshRepository refreshRepository;
+    private final RefreshJpaRepository refreshRepository;
     private final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper 추가
 
 

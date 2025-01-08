@@ -1,8 +1,8 @@
-package com.example.bolmal.auth.authService;
+package com.example.bolmal.auth.service;
 
 
 import com.example.bolmal.auth.domain.RefreshEntity;
-import com.example.bolmal.auth.infrastructure.RefreshRepository;
+import com.example.bolmal.auth.infrastructure.RefreshJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +12,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class RefreshTokenService {
 
-    private final RefreshRepository refreshRepository;
+    private final RefreshJpaRepository refreshRepository;
 
 
     @Transactional
