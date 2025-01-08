@@ -1,9 +1,9 @@
-package com.example.bolmal.config.filter;
+package com.example.bolmal.auth.filter;
 
 
 
-import com.example.bolmal.config.jwt.JWTUtil;
-import com.example.bolmal.config.repository.RefreshRepository;
+import com.example.bolmal.auth.jwt.JWTUtil;
+import com.example.bolmal.auth.infrastructure.RefreshRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

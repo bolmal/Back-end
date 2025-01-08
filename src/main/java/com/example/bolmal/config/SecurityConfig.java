@@ -1,11 +1,11 @@
 package com.example.bolmal.config;
 
 
-import com.example.bolmal.config.filter.CustomLogoutFilter;
-import com.example.bolmal.config.filter.LoginFilter;
-import com.example.bolmal.config.jwt.JWTFilter;
-import com.example.bolmal.config.jwt.JWTUtil;
-import com.example.bolmal.config.repository.RefreshRepository;
+import com.example.bolmal.auth.filter.CustomLogoutFilter;
+import com.example.bolmal.auth.filter.LoginFilter;
+import com.example.bolmal.auth.jwt.JWTFilter;
+import com.example.bolmal.auth.jwt.JWTUtil;
+import com.example.bolmal.auth.infrastructure.RefreshRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

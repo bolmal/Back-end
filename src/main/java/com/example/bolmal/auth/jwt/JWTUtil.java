@@ -1,4 +1,4 @@
-package com.example.bolmal.config.jwt;
+package com.example.bolmal.auth.jwt;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;

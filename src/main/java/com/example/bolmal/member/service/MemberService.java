@@ -1,11 +1,12 @@
-package com.example.bolmal.config;
+package com.example.bolmal.member.service;
 
 
 
-import com.example.bolmal.config.domain.Member;
-import com.example.bolmal.config.domain.Role;
-import com.example.bolmal.config.domain.Status;
-import com.example.bolmal.config.repository.MemberRepository;
+import com.example.bolmal.member.domain.Member;
+import com.example.bolmal.member.domain.Role;
+import com.example.bolmal.member.domain.Status;
+import com.example.bolmal.member.infrastructure.MemberRepository;
+import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

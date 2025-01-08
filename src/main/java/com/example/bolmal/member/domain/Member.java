@@ -1,12 +1,10 @@
-package com.example.bolmal.config.domain;
+package com.example.bolmal.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Builder

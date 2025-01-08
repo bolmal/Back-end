@@ -1,6 +1,6 @@
-package com.example.bolmal.config.repository;
+package com.example.bolmal.member.infrastructure;
 
-import com.example.bolmal.config.domain.Member;
+import com.example.bolmal.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

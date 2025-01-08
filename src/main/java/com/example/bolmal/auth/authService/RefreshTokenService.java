@@ -1,8 +1,8 @@
-package com.example.bolmal.config.authService;
+package com.example.bolmal.auth.authService;
 
 
-import com.example.bolmal.config.domain.RefreshEntity;
-import com.example.bolmal.config.repository.RefreshRepository;
+import com.example.bolmal.auth.domain.RefreshEntity;
+import com.example.bolmal.auth.infrastructure.RefreshRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

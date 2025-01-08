@@ -1,9 +1,9 @@
-package com.example.bolmal.config.authService;
+package com.example.bolmal.auth.authService;
 
 
-import com.example.bolmal.config.CustomUserDetails;
-import com.example.bolmal.config.domain.Member;
-import com.example.bolmal.config.repository.MemberRepository;
+import com.example.bolmal.auth.web.dto.CustomUserDetails;
+import com.example.bolmal.member.domain.Member;
+import com.example.bolmal.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

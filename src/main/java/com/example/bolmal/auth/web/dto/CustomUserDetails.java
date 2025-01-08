@@ -1,6 +1,6 @@
-package com.example.bolmal.config;
+package com.example.bolmal.auth.web.dto;
 
-import com.example.bolmal.config.domain.Member;
+import com.example.bolmal.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

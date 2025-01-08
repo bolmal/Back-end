@@ -1,11 +1,11 @@
-package com.example.bolmal.config.filter;
+package com.example.bolmal.auth.filter;
 
 
 
-import com.example.bolmal.config.MemberJoinDTO;
-import com.example.bolmal.config.domain.RefreshEntity;
-import com.example.bolmal.config.jwt.JWTUtil;
-import com.example.bolmal.config.repository.RefreshRepository;
+import com.example.bolmal.member.web.dto.MemberJoinDTO;
+import com.example.bolmal.auth.domain.RefreshEntity;
+import com.example.bolmal.auth.jwt.JWTUtil;
+import com.example.bolmal.auth.infrastructure.RefreshRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;

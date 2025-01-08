@@ -1,9 +1,9 @@
-package com.example.bolmal.config.jwt;
+package com.example.bolmal.auth.jwt;
 
 
-import com.example.bolmal.config.CustomUserDetails;
-import com.example.bolmal.config.domain.Member;
-import com.example.bolmal.config.domain.Role;
+import com.example.bolmal.auth.web.dto.CustomUserDetails;
+import com.example.bolmal.member.domain.Member;
+import com.example.bolmal.member.domain.Role;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

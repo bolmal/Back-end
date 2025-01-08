@@ -1,4 +1,4 @@
-package com.example.bolmal.config.domain;
+package com.example.bolmal.auth.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

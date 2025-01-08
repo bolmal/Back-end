@@ -1,9 +1,7 @@
-package com.example.bolmal.config;
+package com.example.bolmal.member.web.dto;
 
-import com.example.bolmal.config.domain.Gender;
+import com.example.bolmal.member.domain.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalDate;

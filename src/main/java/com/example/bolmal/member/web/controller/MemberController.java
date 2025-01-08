@@ -1,13 +1,12 @@
-package com.example.bolmal.config;
+package com.example.bolmal.member.web.controller;
 
 import com.example.bolmal.common.apiPayLoad.ApiResponse;
+import com.example.bolmal.member.service.MemberService;
+import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
