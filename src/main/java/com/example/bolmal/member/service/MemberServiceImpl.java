@@ -31,7 +31,7 @@ public class MemberServiceImpl implements MemberService {
 
 
         return MemberJoinDTO.MemberJoinResponseDTO.builder()
-                .MemberId(savedMember.getId())
+                .memberId(savedMember.getId())
                 .build();
 
     }

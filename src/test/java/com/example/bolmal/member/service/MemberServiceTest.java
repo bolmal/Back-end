@@ -7,8 +7,6 @@ import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.mock.FakeBCrypt;
 import com.example.bolmal.member.mock.FakeMemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
-import com.example.bolmal.member.web.port.MemberService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class MemberServiceTest {
 

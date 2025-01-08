@@ -46,7 +46,7 @@ public class MemberJoinDTO {
     @Getter
     public static class MemberJoinResponseDTO{
 
-        Long MemberId;
+        Long memberId;
 
     }
 
