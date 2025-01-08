@@ -3,13 +3,12 @@ package com.example.bolmal.member.domain;
 import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
+import com.example.bolmal.member.util.BCrypt;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import static com.example.bolmal.member.util.BCryptImpl.encode;
 
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -43,11 +42,11 @@ public class Member {
     private Gender gender;
 
 
-    public static Member JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request){
+    public static Member JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request,BCrypt bCrypt){
 
         return Member.builder()
                 .username(request.getUsername())
-                .password(encode(request.getPassword()))
+                .password(bCrypt.encode(request.getPassword()))
                 .name(request.getName())
                 .nickname(request.getNickname())
                 .role(Role.ROLE_USER)
