@@ -1,8 +1,8 @@
 package com.example.bolmal.auth.mock;
 
-import com.example.bolmal.member.util.CurrentTime;
+import com.example.bolmal.member.service.port.MemberRepository;
 
-public class FakeCurrentTime implements CurrentTime {
+public class FakeCurrentTime implements MemberRepository.CurrentTime {
     @Override
     public long getCurrentTime() {
 

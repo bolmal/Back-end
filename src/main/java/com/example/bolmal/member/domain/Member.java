@@ -3,7 +3,8 @@ package com.example.bolmal.member.domain;
 import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
-import com.example.bolmal.member.util.BCrypt;
+import com.example.bolmal.member.service.port.BCrypt;
+import com.example.bolmal.member.service.port.MemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import lombok.*;
 
@@ -42,7 +43,7 @@ public class Member {
     private Gender gender;
 
 
-    public static Member JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request,BCrypt bCrypt){
+    public static Member JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request, BCrypt bCrypt){
 
         return Member.builder()
                 .username(request.getUsername())

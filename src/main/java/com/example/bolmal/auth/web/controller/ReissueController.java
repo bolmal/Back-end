@@ -3,9 +3,10 @@ package com.example.bolmal.auth.web.controller;
 
 import com.example.bolmal.auth.domain.Refresh;
 import com.example.bolmal.auth.jwt.JWTUtilImpl;
+import com.example.bolmal.auth.service.port.CurrentTime;
 import com.example.bolmal.auth.service.port.RefreshRepository;
 import com.example.bolmal.config.JWTConfig;
-import com.example.bolmal.member.util.CurrentTime;
+import com.example.bolmal.member.service.port.MemberRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

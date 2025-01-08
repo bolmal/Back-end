@@ -1,11 +1,11 @@
 package com.example.bolmal.member.mock;
 
-import com.example.bolmal.member.util.BCrypt;
+import com.example.bolmal.member.service.port.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class FakeBCrypt implements BCrypt {
+public class FakeBCrypt implements MemberRepository.BCrypt {
 
     private final String mockStr = "test";
 

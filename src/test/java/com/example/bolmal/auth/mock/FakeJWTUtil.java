@@ -1,9 +1,8 @@
 package com.example.bolmal.auth.mock;
 
 import com.example.bolmal.auth.jwt.JWTUtil;
-import com.example.bolmal.member.util.CurrentTime;
+import com.example.bolmal.member.service.port.MemberRepository;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.SecretKey;
@@ -51,7 +50,7 @@ public class FakeJWTUtil implements JWTUtil {
     }
 
     @Override
-    public String createJwt(String category, String username, String role, Long expiredMs, CurrentTime fakeCurrentTime) {
+    public String createJwt(String category, String username, String role, Long expiredMs, MemberRepository.CurrentTime fakeCurrentTime) {
         expiredMs = expiredMs * 1000L;
 
         return Jwts.builder()

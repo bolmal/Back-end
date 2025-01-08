@@ -2,9 +2,9 @@ package com.example.bolmal.auth.service;
 
 
 import com.example.bolmal.auth.domain.Refresh;
+import com.example.bolmal.auth.service.port.CurrentTime;
 import com.example.bolmal.auth.service.port.RefreshRepository;
-import com.example.bolmal.config.JWTConfig;
-import com.example.bolmal.member.util.CurrentTime;
+import com.example.bolmal.member.service.port.MemberRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

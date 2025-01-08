@@ -1,4 +1,4 @@
-package com.example.bolmal.member.util;
+package com.example.bolmal.member.service.port;
 
 public interface BCrypt {
     String encode(String rawPassword);

@@ -1,5 +1,6 @@
-package com.example.bolmal.member.util;
+package com.example.bolmal.member.infrastructure;
 
+import com.example.bolmal.auth.service.port.CurrentTime;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -3,9 +3,10 @@ package com.example.bolmal.auth.filter;
 
 
 import com.example.bolmal.auth.service.RefreshTokenService;
+import com.example.bolmal.auth.service.port.CurrentTime;
 import com.example.bolmal.auth.service.port.RefreshRepository;
 import com.example.bolmal.config.JWTConfig;
-import com.example.bolmal.member.util.CurrentTime;
+import com.example.bolmal.member.service.port.MemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.auth.jwt.JWTUtilImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;

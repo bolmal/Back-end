@@ -1,6 +1,7 @@
 package com.example.bolmal.auth.jwt;
 
-import com.example.bolmal.member.util.CurrentTime;
+import com.example.bolmal.auth.service.port.CurrentTime;
+import com.example.bolmal.member.service.port.MemberRepository;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
