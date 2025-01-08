@@ -1,6 +1,7 @@
 package com.example.bolmal.member.infrastructure;
 
 import com.example.bolmal.member.domain.Member;
+import com.example.bolmal.member.service.port.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

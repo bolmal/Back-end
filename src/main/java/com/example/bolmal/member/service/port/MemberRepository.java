@@ -1,4 +1,4 @@
-package com.example.bolmal.member.infrastructure;
+package com.example.bolmal.member.service.port;
 
 import com.example.bolmal.member.domain.Member;
 
