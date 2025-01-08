@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.example.bolmal.member.util.BCryptImpl.encode;
-
 public class FakeMemberRepository implements MemberRepository {
 
     private final AtomicLong counter = new AtomicLong(0);
@@ -20,7 +18,10 @@ public class FakeMemberRepository implements MemberRepository {
 
     @Override
     public Optional<Member> findByUsername(String username) {
-        return Optional.empty();
+
+        // data에서 stream을 이용하여 순회
+        // 그때 username이 같은 데이터가 있다면 반환한다
+        return data.stream().filter(item-> item.getUsername().equals(username)).findAny();
     }
 
     @Override
@@ -28,7 +29,7 @@ public class FakeMemberRepository implements MemberRepository {
         Member newMember =Member.builder()
                 .id(counter.incrementAndGet())
                 .username(member.getUsername())
-                .password(encode(member.getPassword()))
+                .password(member.getPassword())
                 .name(member.getName())
                 .nickname(member.getNickname())
                 .role(Role.ROLE_USER)
@@ -38,5 +39,8 @@ public class FakeMemberRepository implements MemberRepository {
                 .status(Status.ACTIVE)
                 .gender(member.getGender())
                 .build();
+
+        data.add(newMember);
+        return newMember;
     }
 }
