@@ -3,6 +3,7 @@ package com.example.bolmal.auth.filter;
 
 
 import com.example.bolmal.auth.domain.Refresh;
+import com.example.bolmal.auth.service.RefreshTokenService;
 import com.example.bolmal.auth.service.port.RefreshRepository;
 import com.example.bolmal.config.JWTConfig;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
@@ -37,6 +38,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final JWTConfig jwtConfig;
     private final RefreshRepository refreshRepository;
     private final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper 추가
+    private final RefreshTokenService refreshTokenService;
 
 
 
@@ -84,7 +86,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         response.setHeader("access", access);
         response.addCookie(createCookie("refresh", refresh));
 
-        addRefreshEntity(username,refresh, jwtConfig.getRefreshTokenValidityInSeconds());
+        refreshTokenService.addRefreshEntity(username,refresh, jwtConfig.getRefreshTokenValidityInSeconds());
 
         response.setStatus(HttpStatus.OK.value());
 
@@ -98,23 +100,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 
 
-
-
-
-    private void addRefreshEntity(String username, String refresh, Long expiredMs) {
-
-        expiredMs = expiredMs * 1000L;
-
-        Date date = new Date(System.currentTimeMillis() + expiredMs);
-
-        Refresh refreshToken = Refresh.builder()
-                .username(username)
-                .refresh(refresh)
-                .expiration(date.toString())
-                .build();
-
-        refreshRepository.save(refreshToken);
-    }
 
     //쿠키 생성
     private Cookie createCookie(String key, String value) {

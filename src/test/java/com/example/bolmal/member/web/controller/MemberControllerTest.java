@@ -6,6 +6,7 @@ import com.example.bolmal.member.mock.FakeBCrypt;
 import com.example.bolmal.member.mock.FakeMemberService;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
@@ -32,6 +33,7 @@ class MemberControllerTest {
     }
 
     @Test
+    @DisplayName("join()을 이용하여 회원가입을 진행할 수 있다")
     public void title(){
 
         //given

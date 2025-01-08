@@ -3,21 +3,31 @@ package com.example.bolmal.auth.service;
 
 import com.example.bolmal.auth.domain.Refresh;
 import com.example.bolmal.auth.service.port.RefreshRepository;
+import com.example.bolmal.config.JWTConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RefreshTokenService {
 
     private final RefreshRepository refreshRepository;
 
+    public void addRefreshEntity(String username, String refresh, Long expiredMs) {
 
-    @Transactional
-    public void saveRefresh(String username, Integer expireS, String refresh) {
+        expiredMs = expiredMs * 1000L;
 
-        Refresh refreshToken = Refresh.toRefresh(username,expireS,refresh);
+        Date date = new Date(System.currentTimeMillis() + expiredMs);
+
+        Refresh refreshToken = Refresh.builder()
+                .username(username)
+                .refresh(refresh)
+                .expiration(date.toString())
+                .build();
 
         refreshRepository.save(refreshToken);
     }
