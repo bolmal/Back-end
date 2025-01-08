@@ -1,7 +1,7 @@
 package com.example.bolmal.member.web.controller;
 
 import com.example.bolmal.common.apiPayLoad.ApiResponse;
-import com.example.bolmal.member.service.MemberService;
+import com.example.bolmal.member.web.port.MemberService;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

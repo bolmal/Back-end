@@ -1,4 +1,4 @@
-package com.example.bolmal.member.domain;
+package com.example.bolmal.member.domain.enums;
 
 public enum Role {
 

@@ -3,7 +3,7 @@ package com.example.bolmal.auth.jwt;
 
 import com.example.bolmal.auth.web.dto.CustomUserDetails;
 import com.example.bolmal.member.domain.Member;
-import com.example.bolmal.member.domain.Role;
+import com.example.bolmal.member.domain.enums.Role;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

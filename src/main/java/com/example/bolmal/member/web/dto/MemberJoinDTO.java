@@ -1,6 +1,6 @@
 package com.example.bolmal.member.web.dto;
 
-import com.example.bolmal.member.domain.Gender;
+import com.example.bolmal.member.domain.enums.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 

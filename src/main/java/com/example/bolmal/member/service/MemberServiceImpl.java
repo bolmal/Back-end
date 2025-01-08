@@ -3,10 +3,11 @@ package com.example.bolmal.member.service;
 
 
 import com.example.bolmal.member.domain.Member;
-import com.example.bolmal.member.domain.Role;
-import com.example.bolmal.member.domain.Status;
+import com.example.bolmal.member.domain.enums.Role;
+import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.infrastructure.MemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
+import com.example.bolmal.member.web.port.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,12 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class MemberService {
+public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
+    @Override
     public MemberJoinDTO.MemberJoinResponseDTO joinMember(MemberJoinDTO.MemberJoinRequestDTO request){
 
 
