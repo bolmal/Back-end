@@ -46,6 +46,8 @@ public class JWTUtil {
 
     public String createJwt(String category,String username, String role, Long expiredMs) {
 
+        expiredMs = expiredMs * 1000L;
+
         return Jwts.builder()
                 .claim("category",category)
                 .claim("username", username)

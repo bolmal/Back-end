@@ -103,6 +103,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private void addRefreshEntity(String username, String refresh, Long expiredMs) {
 
+        expiredMs = expiredMs * 1000L;
+
         Date date = new Date(System.currentTimeMillis() + expiredMs);
 
         Refresh refreshToken = Refresh.builder()
