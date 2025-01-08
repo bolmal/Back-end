@@ -1,8 +1,6 @@
 package com.example.bolmal.auth.jwt;
 
-import com.example.bolmal.config.JWTConfig;
 import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
-
-public class JWTUtil {
+public class JWTUtil{
 
     private SecretKey secretKey;
 
@@ -44,7 +41,7 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(String category,String username, String role, Long expiredMs) {
+    public String createJwt(String category, String username, String role, Long expiredMs) {
 
         expiredMs = expiredMs * 1000L;
 

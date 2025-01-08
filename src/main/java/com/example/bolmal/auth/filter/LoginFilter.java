@@ -2,7 +2,6 @@ package com.example.bolmal.auth.filter;
 
 
 
-import com.example.bolmal.auth.domain.Refresh;
 import com.example.bolmal.auth.service.RefreshTokenService;
 import com.example.bolmal.auth.service.port.RefreshRepository;
 import com.example.bolmal.config.JWTConfig;
@@ -25,7 +24,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 
 @RequiredArgsConstructor
