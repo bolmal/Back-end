@@ -30,8 +30,10 @@ public class MemberJoinDTO {
         @Schema(description = "회원 닉네임 입니다")
         String nickname;
 
+        @Schema(description = "회원 생일 입니다")
         LocalDate birthDate;
 
+        @Schema(description = "회원 성별 입니다")
         Gender gender;
     }
 
