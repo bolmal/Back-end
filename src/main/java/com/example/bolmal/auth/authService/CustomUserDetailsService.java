@@ -4,6 +4,7 @@ package com.example.bolmal.auth.authService;
 import com.example.bolmal.auth.web.dto.CustomUserDetails;
 import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.infrastructure.MemberJpaRepository;
+import com.example.bolmal.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final MemberJpaRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
