@@ -3,7 +3,6 @@ package com.example.bolmal.auth.filter;
 
 
 import com.example.bolmal.auth.jwt.JWTUtil;
-import com.example.bolmal.auth.infrastructure.RefreshJpaRepository;
 import com.example.bolmal.auth.service.port.RefreshRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;

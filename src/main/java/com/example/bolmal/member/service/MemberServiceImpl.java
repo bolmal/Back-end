@@ -3,7 +3,6 @@ package com.example.bolmal.member.service;
 
 
 import com.example.bolmal.member.domain.Member;
-import com.example.bolmal.member.infrastructure.entity.MemberEntity;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.service.port.MemberRepository;

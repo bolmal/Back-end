@@ -3,7 +3,6 @@ package com.example.bolmal.member.domain;
 import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
