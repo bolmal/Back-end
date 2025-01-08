@@ -1,5 +1,6 @@
-package com.example.bolmal.auth.domain;
+package com.example.bolmal.auth.infrastructure.port;
 
+import com.example.bolmal.auth.domain.Refresh;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

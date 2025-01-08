@@ -1,6 +1,6 @@
 package com.example.bolmal.auth.infrastructure;
 
-import com.example.bolmal.auth.domain.RefreshEntity;
+import com.example.bolmal.auth.infrastructure.port.RefreshEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 

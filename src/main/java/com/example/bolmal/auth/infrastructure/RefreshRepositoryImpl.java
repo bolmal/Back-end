@@ -1,7 +1,7 @@
 package com.example.bolmal.auth.infrastructure;
 
 import com.example.bolmal.auth.domain.Refresh;
-import com.example.bolmal.auth.domain.RefreshEntity;
+import com.example.bolmal.auth.infrastructure.port.RefreshEntity;
 import com.example.bolmal.auth.service.port.RefreshRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
