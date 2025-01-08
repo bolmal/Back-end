@@ -6,6 +6,7 @@ import com.example.bolmal.auth.filter.LoginFilter;
 import com.example.bolmal.auth.jwt.JWTFilter;
 import com.example.bolmal.auth.jwt.JWTUtil;
 import com.example.bolmal.auth.infrastructure.RefreshJpaRepository;
+import com.example.bolmal.auth.service.port.RefreshRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +34,7 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
-    private final RefreshJpaRepository refreshRepository;
+    private final RefreshRepository refreshRepository;
 
 
 

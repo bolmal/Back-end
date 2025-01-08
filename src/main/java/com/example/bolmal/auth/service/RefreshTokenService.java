@@ -1,8 +1,8 @@
 package com.example.bolmal.auth.service;
 
 
-import com.example.bolmal.auth.domain.RefreshEntity;
-import com.example.bolmal.auth.infrastructure.RefreshJpaRepository;
+import com.example.bolmal.auth.domain.Refresh;
+import com.example.bolmal.auth.service.port.RefreshRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,17 +12,17 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class RefreshTokenService {
 
-    private final RefreshJpaRepository refreshRepository;
+    private final RefreshRepository refreshRepository;
 
 
     @Transactional
     public void saveRefresh(String username, Integer expireS, String refresh) {
-        RefreshEntity refreshEntity = RefreshEntity.builder()
+        Refresh refreshToken = Refresh.builder()
                 .username(username)
                 .refresh(refresh)
                 .expiration(new Date(System.currentTimeMillis() + expireS * 1000L).toString())
                 .build();
 
-        refreshRepository.save(refreshEntity);
+        refreshRepository.save(refreshToken);
     }
 }
