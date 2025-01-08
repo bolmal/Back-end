@@ -6,7 +6,6 @@ import com.example.bolmal.auth.service.port.RefreshRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -17,11 +16,8 @@ public class RefreshTokenService {
 
     @Transactional
     public void saveRefresh(String username, Integer expireS, String refresh) {
-        Refresh refreshToken = Refresh.builder()
-                .username(username)
-                .refresh(refresh)
-                .expiration(new Date(System.currentTimeMillis() + expireS * 1000L).toString())
-                .build();
+
+        Refresh refreshToken = Refresh.toRefresh(username,expireS,refresh);
 
         refreshRepository.save(refreshToken);
     }

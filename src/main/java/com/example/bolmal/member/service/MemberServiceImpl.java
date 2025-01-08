@@ -3,14 +3,11 @@ package com.example.bolmal.member.service;
 
 
 import com.example.bolmal.member.domain.Member;
-import com.example.bolmal.member.domain.enums.Role;
-import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.service.port.MemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.port.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,15 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Override
     public MemberJoinDTO.MemberJoinResponseDTO joinMember(MemberJoinDTO.MemberJoinRequestDTO request){
-
-
-        /* converter 메서드는 기본적으로 static 메모리를 할당받아 사용하기 때문에
-         * bCryptPasswordEncoder를 주입받을 수 없어 회원가입만 컨버터를 사용하지 않겠습니다 */
 
         Member newMember= Member.JoinDTOto(request);
 
