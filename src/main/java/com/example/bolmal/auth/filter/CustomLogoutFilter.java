@@ -2,7 +2,7 @@ package com.example.bolmal.auth.filter;
 
 
 
-import com.example.bolmal.auth.jwt.JWTUtil;
+import com.example.bolmal.auth.jwt.JWTUtilImpl;
 import com.example.bolmal.auth.service.port.RefreshRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -20,7 +20,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
 
-    private final JWTUtil jwtUtil;
+    private final JWTUtilImpl jwtUtil;
     private final RefreshRepository refreshRepository;
 
 

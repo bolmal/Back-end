@@ -5,8 +5,9 @@ package com.example.bolmal.auth.filter;
 import com.example.bolmal.auth.service.RefreshTokenService;
 import com.example.bolmal.auth.service.port.RefreshRepository;
 import com.example.bolmal.config.JWTConfig;
+import com.example.bolmal.member.util.CurrentTime;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
-import com.example.bolmal.auth.jwt.JWTUtil;
+import com.example.bolmal.auth.jwt.JWTUtilImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
@@ -32,8 +33,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 
     private final AuthenticationManager authenticationManager;
-    private final JWTUtil jwtUtil;
+    private final JWTUtilImpl jwtUtil;
     private final JWTConfig jwtConfig;
+    private final CurrentTime currentTime;
     private final RefreshRepository refreshRepository;
     private final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper 추가
     private final RefreshTokenService refreshTokenService;
@@ -77,8 +79,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", username, role, jwtConfig.getAccessTokenValidityInSeconds());// 1시간
-        String refresh = jwtUtil.createJwt("refresh", username, role, jwtConfig.getRefreshTokenValidityInSeconds());//30일
+        String access = jwtUtil.createJwt("access", username, role, jwtConfig.getAccessTokenValidityInSeconds(),currentTime);// 1시간
+        String refresh = jwtUtil.createJwt("refresh", username, role, jwtConfig.getRefreshTokenValidityInSeconds(),currentTime);//30일
 
         //응답 설정
         response.setHeader("access", access);

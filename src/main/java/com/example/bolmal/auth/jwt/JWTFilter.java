@@ -23,7 +23,7 @@ import java.io.IOException;
 @Slf4j
 public class JWTFilter extends OncePerRequestFilter{
 
-    private final JWTUtil jwtUtil;
+    private final JWTUtilImpl jwtUtil;
     private final JWTConfig jwtConfig;
 
     @Override

@@ -4,9 +4,10 @@ package com.example.bolmal.config;
 import com.example.bolmal.auth.filter.CustomLogoutFilter;
 import com.example.bolmal.auth.filter.LoginFilter;
 import com.example.bolmal.auth.jwt.JWTFilter;
-import com.example.bolmal.auth.jwt.JWTUtil;
+import com.example.bolmal.auth.jwt.JWTUtilImpl;
 import com.example.bolmal.auth.service.RefreshTokenService;
 import com.example.bolmal.auth.service.port.RefreshRepository;
+import com.example.bolmal.member.util.CurrentTime;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -33,10 +34,11 @@ import java.util.Collections;
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
-    private final JWTUtil jwtUtil;
+    private final JWTUtilImpl jwtUtil;
     private final JWTConfig jwtConfig;
     private final RefreshRepository refreshRepository;
     private final RefreshTokenService refreshTokenService;
+    private final CurrentTime currentTime;
 
 
 
@@ -102,7 +104,7 @@ public class SecurityConfig {
                 .addFilterBefore(new JWTFilter(jwtUtil,jwtConfig), LoginFilter.class);
 
         http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil,jwtConfig,refreshRepository,refreshTokenService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil,jwtConfig,currentTime,refreshRepository,refreshTokenService), UsernamePasswordAuthenticationFilter.class);
 
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
