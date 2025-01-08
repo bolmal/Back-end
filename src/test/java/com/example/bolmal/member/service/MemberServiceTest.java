@@ -68,7 +68,7 @@ class MemberServiceTest {
     
     @Test
     @DisplayName("joinMember은 requestDTO를 이용하여 유저를 생성 할 수 있다")
-    public void joinMember은_requestDTO를_이용하여_유저를_생성_할_수_있다(){
+    public void joinMember(){
         //given
         MemberJoinDTO.MemberJoinRequestDTO request = MemberJoinDTO.MemberJoinRequestDTO.builder()
                 .username("test")
@@ -88,6 +88,8 @@ class MemberServiceTest {
 
         //then
         assertThat(result).isNotNull();
+        // 앞에서 두개 만들고 해서 3나옴
+        assertThat(result.getMemberId()).isEqualTo(3L);
     }
 
 
