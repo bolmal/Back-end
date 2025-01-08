@@ -31,18 +31,7 @@ public class MemberServiceImpl implements MemberService {
         /* converter 메서드는 기본적으로 static 메모리를 할당받아 사용하기 때문에
          * bCryptPasswordEncoder를 주입받을 수 없어 회원가입만 컨버터를 사용하지 않겠습니다 */
 
-        Member newMember= Member.builder()
-                .username(request.getUsername())
-                .password(bCryptPasswordEncoder.encode(request.getPassword()))
-                .name(request.getName())
-                .nickname(request.getNickname())
-                .role(Role.ROLE_USER)
-                .phoneNumber(request.getPhoneNumber())
-                .birthday(request.getBirthDate())
-                .email(request.getEmail())
-                .status(Status.ACTIVE)
-                .gender(request.getGender())
-                .build();
+        Member newMember= Member.JoinDTOto(request);
 
         Member savedMember = memberRepository.save(newMember);
 
