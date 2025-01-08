@@ -35,7 +35,7 @@ public class Member {
 
     private String email;
 
-    private Status status = Status.ACTIVE;
+    private Status status;
 
     private LocalDateTime inactiveDate;
 

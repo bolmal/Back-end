@@ -49,7 +49,7 @@ public class MemberEntity {
     // 회원 ACTIVE,INACTIVE 상태 추가
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status = Status.ACTIVE;
+    private Status status;
 
     // 회원 비활성화 상태 날짜를 기록하는 필드
     private LocalDateTime inactiveDate;
