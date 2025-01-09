@@ -1,60 +1,17 @@
 package com.example.bolmal.auth.jwt;
 
-import com.example.bolmal.config.JWTConfig;
-import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import com.example.bolmal.auth.service.port.CurrentTime;
+import com.example.bolmal.member.service.port.MemberRepository;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
+public interface JWTUtil {
+    String getUsername(String token);
 
-@Component
-
-public class JWTUtil {
-
-    private SecretKey secretKey;
-
-    public JWTUtil(@Value("${spring.jwt.secret}")String secret) {
-
-
-        secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
-    }
-
-    public String getUsername(String token) {
-
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
-    }
-
-    public String getRole(String token) {
-
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
-    }
-
+    String getRole(String token);
 
     //카테고리 추출
-    public String getCategory(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
-    }
+    String getCategory(String token);
 
-    public Boolean isExpired(String token) {
+    Boolean isExpired(String token);
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
-    }
-
-    public String createJwt(String category,String username, String role, Long expiredMs) {
-
-        expiredMs = expiredMs * 1000L;
-
-        return Jwts.builder()
-                .claim("category",category)
-                .claim("username", username)
-                .claim("role", role)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiredMs))
-                .signWith(secretKey)
-                .compact();
-    }
+    String createJwt(String category, String username, String role, Long expiredMs, CurrentTime currentTime);
 }

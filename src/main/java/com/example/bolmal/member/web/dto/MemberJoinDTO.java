@@ -8,6 +8,9 @@ import java.time.LocalDate;
 
 public class MemberJoinDTO {
 
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
     @Getter
     public static class MemberJoinRequestDTO{
 
@@ -43,7 +46,7 @@ public class MemberJoinDTO {
     @Getter
     public static class MemberJoinResponseDTO{
 
-        Long MemberId;
+        Long memberId;
 
     }
 

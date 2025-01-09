@@ -5,6 +5,7 @@ import com.example.bolmal.member.web.port.MemberService;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/members")
 @Tag(name = "개인 정보 관리 API")
+@Builder
 public class MemberController {
 
     private final MemberService memberService;

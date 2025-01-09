@@ -2,9 +2,11 @@ package com.example.bolmal.auth.web.controller;
 
 
 import com.example.bolmal.auth.domain.Refresh;
-import com.example.bolmal.auth.jwt.JWTUtil;
+import com.example.bolmal.auth.jwt.JWTUtilImpl;
+import com.example.bolmal.auth.service.port.CurrentTime;
 import com.example.bolmal.auth.service.port.RefreshRepository;
 import com.example.bolmal.config.JWTConfig;
+import com.example.bolmal.member.service.port.MemberRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,8 +28,9 @@ import java.util.Date;
 @Tag(name = "리프레시,액세스 토큰 재발급 API", description = "리프레시,액세스 토큰 재발급 API입니다.")
 public class ReissueController {
 
-    private final JWTUtil jwtUtil;
+    private final JWTUtilImpl jwtUtil;
     private final JWTConfig jwtConfig;
+    private final CurrentTime currentTime;
     private final RefreshRepository refreshRepository;
 
 
@@ -87,8 +90,8 @@ public class ReissueController {
         String role = jwtUtil.getRole(refresh);
 
         //make new JWT
-        String newAccess = jwtUtil.createJwt("access", username, role, jwtConfig.getAccessTokenValidityInSeconds());
-        String newRefresh = jwtUtil.createJwt("refresh", username, role, jwtConfig.getRefreshTokenValidityInSeconds());
+        String newAccess = jwtUtil.createJwt("access", username, role, jwtConfig.getAccessTokenValidityInSeconds(),currentTime);
+        String newRefresh = jwtUtil.createJwt("refresh", username, role, jwtConfig.getRefreshTokenValidityInSeconds(),currentTime);
 
         //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
         refreshRepository.deleteByRefresh(refresh);
