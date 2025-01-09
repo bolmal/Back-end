@@ -14,4 +14,4 @@ spring:
     header: Authorization
     secret: fekjrvehfdnsdkejrfehvfnmdskwqfejvrfehnfewrfgfrew
     access-token-validity-in-seconds: 10 # 액세스 토큰 유효 시간 (1시간)
-    refresh-token-validity-in-seconds: 100 # 리프레시 토큰: 30일
+    refresh-token-validity-in-seconds: 2592000 # 리프레시 토큰: 30일

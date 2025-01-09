@@ -19,9 +19,8 @@ import java.util.Date;
 public class RefreshTokenService {
 
     private final RefreshRepository refreshRepository;
-    private final CurrentTime currentTime;
 
-    public Refresh addRefreshEntity(String username, String refresh, Long expiredMs) {
+    public Refresh addRefreshEntity(String username, String refresh, Long expiredMs, CurrentTime currentTime) {
 
         expiredMs = expiredMs * 1000L;
 
