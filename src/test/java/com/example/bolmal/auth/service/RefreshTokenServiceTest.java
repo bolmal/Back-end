@@ -5,16 +5,10 @@ import com.example.bolmal.auth.domain.Refresh;
 import com.example.bolmal.auth.mock.FakeCurrentTime;
 import com.example.bolmal.auth.mock.FakeJWTUtil;
 import com.example.bolmal.auth.mock.FakeRefreshRepository;
-import com.example.bolmal.auth.service.port.CurrentTime;
-import io.jsonwebtoken.Jwts;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 class RefreshTokenServiceTest {
