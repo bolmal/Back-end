@@ -4,6 +4,7 @@ package com.example.bolmal.member.service;
 
 import com.example.bolmal.member.domain.Agreement;
 import com.example.bolmal.member.domain.Member;
+import com.example.bolmal.member.service.port.AgreementRepository;
 import com.example.bolmal.member.service.port.BCrypt;
 import com.example.bolmal.member.service.port.MemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final AgreementRepository agreementRepository;
     private final BCrypt bCrypt;
 
 
@@ -37,7 +39,7 @@ public class MemberServiceImpl implements MemberService {
 
         // 약관동의 저장
         Agreement newAgreement = Agreement.JoinDTOto(request);
-
+        agreementRepository.save(newAgreement);
 
         return MemberJoinDTO.MemberJoinResponseDTO.builder()
                 .memberId(savedMember.getId())
