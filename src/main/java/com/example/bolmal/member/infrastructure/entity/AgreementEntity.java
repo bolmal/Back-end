@@ -1,8 +1,6 @@
 package com.example.bolmal.member.infrastructure.entity;
 
 import com.example.bolmal.member.domain.Agreement;
-import com.example.bolmal.member.domain.Member;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,7 +29,7 @@ public class AgreementEntity {
 
 
     // Model -> Entity: 모델 정보를 영속성 객체로 바꿀 때
-    public static AgreementEntity fromAgreement(Agreement agreement) {
+    public static AgreementEntity fromModel(Agreement agreement) {
 
         AgreementEntity agreementEntity = new AgreementEntity();
         agreementEntity.id = agreement.getId();
@@ -45,9 +43,9 @@ public class AgreementEntity {
 
 
     // Entity -> Model: 엔티티를 모델정보로 전환할 때
-    public AgreementEntity toAgreementEntity() {
+    public Agreement toModel() {
 
-        return AgreementEntity.builder()
+        return Agreement.builder()
                 .id(id)
                 .advAgreement(advAgreement)
                 .financialAgreement(financialAgreement)
