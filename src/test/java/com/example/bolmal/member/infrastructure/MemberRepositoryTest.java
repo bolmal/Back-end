@@ -36,7 +36,7 @@ public class MemberRepositoryTest {
     public void title(){
         //given
         //when
-        MemberEntity test = memberRepository.findByUsername("test")
+        MemberEntity test = memberRepository.findByUsername("testtest1")
                 .orElseThrow(()->new IllegalArgumentException("회원 SQL 작성이 잘못됨"));
 
         //then
