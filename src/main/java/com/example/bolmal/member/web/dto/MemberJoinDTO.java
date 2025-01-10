@@ -47,6 +47,21 @@ public class MemberJoinDTO {
 
         @Schema(description = "회원전화번호 입니다")
         String phoneNumber;
+
+
+        // --- 회원 약관동의 ---
+
+        @Schema(description = "서비스 약관동의 여부 입니다")
+        Boolean serviceAgreement;
+
+        @Schema(description = "개인정보 수집 여부 입니다")
+        Boolean privacyAgreement;
+
+        @Schema(description = "금융거래 정보 약관동의 여부 입니다")
+        Boolean financialAgreement;
+
+        @Schema(description = "광고성 정보 수신동의 여부(선택) 입니다")
+        Boolean advAgreement;
     }
 
     @Builder

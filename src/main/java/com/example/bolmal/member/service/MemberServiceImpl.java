@@ -25,9 +25,16 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberJoinDTO.MemberJoinResponseDTO joinMember(MemberJoinDTO.MemberJoinRequestDTO request){
 
-        Member newMember= Member.JoinDTOto(request,bCrypt);
+        if (!Boolean.TRUE.equals(request.getPrivacyAgreement())
+                || !Boolean.TRUE.equals(request.getServiceAgreement())
+                || !Boolean.TRUE.equals(request.getFinancialAgreement())) {
+            throw new IllegalArgumentException("필수 약관에는 모두 동의를 해주셔야 합니다.");
+        }
 
+        Member newMember= Member.JoinDTOto(request,bCrypt);
         Member savedMember = memberRepository.save(newMember);
+
+        // 약관동의 저장
 
 
         return MemberJoinDTO.MemberJoinResponseDTO.builder()
