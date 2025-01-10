@@ -4,6 +4,7 @@ import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
+import com.example.bolmal.member.mock.FakeAgreementRepository;
 import com.example.bolmal.member.mock.FakeBCrypt;
 import com.example.bolmal.member.mock.FakeMemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
@@ -23,18 +24,20 @@ class MemberServiceTest {
     void setUp() {
 
         FakeMemberRepository fakeMemberRepository = new FakeMemberRepository();
+        FakeAgreementRepository fakeAgreementRepository = new FakeAgreementRepository();
         FakeBCrypt fakeBCrypt = new FakeBCrypt();
 
         this.memberService = MemberServiceImpl.builder()
                 .memberRepository(fakeMemberRepository)
+                .agreementRepository(fakeAgreementRepository)
                 .bCrypt(fakeBCrypt)
                 .build();
 
         fakeMemberRepository.save(
                 Member.builder()
                         .id(1L)
-                        .username("test")
-                        .password(fakeBCrypt.encode("test"))
+                        .username("testtest")
+                        .password("Test123!")
                         .name("test")
                         .nickname("test")
                         .role(Role.ROLE_USER)
@@ -48,8 +51,8 @@ class MemberServiceTest {
         fakeMemberRepository.save(
                 Member.builder()
                         .id(2L)
-                        .username("test2")
-                        .password(fakeBCrypt.encode("test2"))
+                        .username("testtest2")
+                        .password("Test123!")
                         .name("test2")
                         .nickname("test2")
                         .role(Role.ROLE_USER)
@@ -68,14 +71,18 @@ class MemberServiceTest {
     public void joinMember(){
         //given
         MemberJoinDTO.MemberJoinRequestDTO request = MemberJoinDTO.MemberJoinRequestDTO.builder()
-                .username("test")
-                .password("test")
+                .username("testtest3")
+                .password("Test123!")
                 .name("test")
                 .nickname("test")
                 .phoneNumber("test")
                 .birthDate(LocalDate.of(2025, 1, 8))
                 .email("test@test.test")
                 .gender(Gender.FEMALE)
+                .advAgreement(Boolean.TRUE)
+                .serviceAgreement(Boolean.TRUE)
+                .financialAgreement(Boolean.TRUE)
+                .privacyAgreement(Boolean.TRUE)
                 .build();
 
 
