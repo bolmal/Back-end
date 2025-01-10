@@ -2,6 +2,10 @@ package com.example.bolmal.member.web.dto;
 
 import com.example.bolmal.member.domain.enums.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -14,21 +18,22 @@ public class MemberJoinDTO {
     @Getter
     public static class MemberJoinRequestDTO{
 
+        @Max(16)
+        @Min(4)
+        @Pattern(regexp = "^[a-z0-9]{4,16}$", message = "ID는 영문 소문자와 숫자로만 구성되며 4~16자여야 합니다.")
+        @Schema(description = "ID입니다 <br> 영문 소문자, 숫자로 4~16자로 구성")
+        String username;
+
+        @Schema(description = "비밀번호는 8~12자의 영문, 숫자, 특수문자를 포함해야 합니다.")
+        @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[a-zA-Z\\d!@#$%^&*(),.?\":{}|<>]{8,12}$",
+                message = "비밀번호는 8~12자의 영문, 숫자, 특수문자를 포함해야 합니다.")
+        String password;
 
         @Schema(description = "회원이름 입니다")
         String name;
 
-        @Schema(description = "회원전화번호 입니다")
-        String phoneNumber;
-
-        @Schema(description = "회원이메일 입니다")
-        String email;
-
-        @Schema(description = "ID입니다 <br> 6~20자의 영문,숫자")
-        String username;
-
-        @Schema(description = "비밀번호는 8~12자의 영문, 숫자, 특수문자를 포함해야 합니다.")
-        String password;
+        @Schema(description = "회원 성별 입니다")
+        Gender gender;
 
         @Schema(description = "회원 닉네임 입니다")
         String nickname;
@@ -36,8 +41,12 @@ public class MemberJoinDTO {
         @Schema(description = "회원 생일 입니다")
         LocalDate birthDate;
 
-        @Schema(description = "회원 성별 입니다")
-        Gender gender;
+        @Email
+        @Schema(description = "회원이메일 입니다")
+        String email;
+
+        @Schema(description = "회원전화번호 입니다")
+        String phoneNumber;
     }
 
     @Builder
