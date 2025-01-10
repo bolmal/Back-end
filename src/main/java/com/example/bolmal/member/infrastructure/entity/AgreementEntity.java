@@ -1,5 +1,7 @@
 package com.example.bolmal.member.infrastructure.entity;
 
+import com.example.bolmal.member.domain.Agreement;
+import com.example.bolmal.member.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,4 +28,32 @@ public class AgreementEntity {
 
     @Column(nullable = false)
     private Boolean advAgreement;
+
+
+    // Model -> Entity: 모델 정보를 영속성 객체로 바꿀 때
+    public static AgreementEntity fromAgreement(Agreement agreement) {
+
+        AgreementEntity agreementEntity = new AgreementEntity();
+        agreementEntity.id = agreement.getId();
+        agreementEntity.serviceAgreement = agreement.getServiceAgreement();
+        agreementEntity.privacyAgreement = agreement.getPrivacyAgreement();
+        agreementEntity.financialAgreement = agreement.getFinancialAgreement();
+        agreementEntity.advAgreement = agreement.getAdvAgreement();
+
+        return agreementEntity;
+    }
+
+
+    // Entity -> Model: 엔티티를 모델정보로 전환할 때
+    public AgreementEntity toAgreementEntity() {
+
+        return AgreementEntity.builder()
+                .id(id)
+                .advAgreement(advAgreement)
+                .financialAgreement(financialAgreement)
+                .privacyAgreement(privacyAgreement)
+                .serviceAgreement(serviceAgreement)
+                .build();
+
+    }
 }
