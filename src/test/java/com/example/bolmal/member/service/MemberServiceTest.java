@@ -64,7 +64,7 @@ class MemberServiceTest {
     
     
     @Test
-    @DisplayName("joinMember은 requestDTO를 이용하여 유저를 생성 할 수 있다")
+    @DisplayName("joinMember()은 requestDTO를 이용하여 유저를 생성 할 수 있다")
     public void joinMember(){
         //given
         MemberJoinDTO.MemberJoinRequestDTO request = MemberJoinDTO.MemberJoinRequestDTO.builder()
@@ -87,6 +87,71 @@ class MemberServiceTest {
         assertThat(result).isNotNull();
         // 앞에서 두개 만들고 해서 3나옴
         assertThat(result.getMemberId()).isEqualTo(3L);
+    }
+
+
+    @Test
+    @DisplayName("Username 패턴 조건을 만족하지 못하면 오류를 반환한다")
+    public void joinMember_username(){
+        //given
+
+        //when
+
+        //then
+    }
+
+    @Test
+    @DisplayName("Username이 중복되면 오류를 반환한다")
+    public void joinMember_username_validation(){
+        //given
+
+        //when
+
+        //then
+    }
+
+
+    @Test
+    @DisplayName("Password 조건을 만족하지 못하면 오류를 반환한다")
+    public void joinMember_password(){
+        //given
+
+        //when
+
+        //then
+    }
+
+
+    @Test
+    @DisplayName("Email 조건을 만족하지 못하면 오류를 반환한다")
+    public void joinMember_email(){
+        //given
+
+        //when
+
+        //then
+    }
+
+
+    @Test
+    @DisplayName("필수 약관동의 조건을 만족하지 못하면 오류를 반환한다")
+    public void joinMember_agreement(){
+        //given
+
+        //when
+
+        //then
+    }
+
+
+    @Test
+    @DisplayName("전화번호 인증을 통과하지 못하면 오류를 반환한다")
+    public void joinMember_phone_number_validation(){
+        //given
+
+        //when
+
+        //then
     }
 
 
