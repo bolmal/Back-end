@@ -1,7 +1,9 @@
 package com.example.bolmal.member.infrastructure.entity;
 
 import com.example.bolmal.member.domain.Agreement;
+import com.example.bolmal.member.domain.Member;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import lombok.*;
 
 @Entity
@@ -26,6 +28,12 @@ public class AgreementEntity {
 
     @Column(nullable = false)
     private Boolean advAgreement;
+
+
+
+    @OneToOne
+    @JoinColumn(name = "member_entity_id")
+    private MemberEntity member;
 
 
     // Model -> Entity: 모델 정보를 영속성 객체로 바꿀 때

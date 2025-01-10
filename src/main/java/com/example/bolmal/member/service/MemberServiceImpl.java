@@ -2,6 +2,7 @@ package com.example.bolmal.member.service;
 
 
 
+import com.example.bolmal.member.domain.Agreement;
 import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.service.port.BCrypt;
 import com.example.bolmal.member.service.port.MemberRepository;
@@ -35,6 +36,7 @@ public class MemberServiceImpl implements MemberService {
         Member savedMember = memberRepository.save(newMember);
 
         // 약관동의 저장
+        Agreement newAgreement = Agreement.JoinDTOto(request);
 
 
         return MemberJoinDTO.MemberJoinResponseDTO.builder()

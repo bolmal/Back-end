@@ -1,6 +1,7 @@
 package com.example.bolmal.member.domain;
 
 
+import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import lombok.*;
 
 @Builder
@@ -18,5 +19,15 @@ public class Agreement {
     Boolean financialAgreement;
 
     Boolean advAgreement;
+
+
+    public static Agreement JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request){
+        return Agreement.builder()
+                .advAgreement(request.getAdvAgreement())
+                .financialAgreement(request.getFinancialAgreement())
+                .privacyAgreement(request.getPrivacyAgreement())
+                .serviceAgreement(request.getServiceAgreement())
+                .build();
+    }
 
 }
