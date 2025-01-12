@@ -43,4 +43,9 @@ public class FakeMemberRepository implements MemberRepository {
         data.add(newMember);
         return newMember;
     }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return data.stream().anyMatch(item -> item.getUsername().equals(username));
+    }
 }
