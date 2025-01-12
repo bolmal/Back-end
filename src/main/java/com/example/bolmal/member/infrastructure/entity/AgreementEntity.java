@@ -1,5 +1,6 @@
 package com.example.bolmal.member.infrastructure.entity;
 
+import com.example.bolmal.common.domain.BaseEntity;
 import com.example.bolmal.member.domain.Agreement;
 import com.example.bolmal.member.domain.Member;
 import jakarta.persistence.*;
@@ -11,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class AgreementEntity {
+public class AgreementEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
