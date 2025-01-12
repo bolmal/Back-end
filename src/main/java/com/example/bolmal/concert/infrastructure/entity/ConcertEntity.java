@@ -1,5 +1,7 @@
 package com.example.bolmal.concert.infrastructure.entity;
 
+import com.example.bolmal.alarm.infrastructure.entity.AlarmEntity;
+import com.example.bolmal.artist.infrastructure.entity.ArtistEntity;
 import com.example.bolmal.common.domain.BaseEntity;
 import com.example.bolmal.concert.domain.enums.ConcertRound;
 import com.example.bolmal.concert.domain.enums.OnlineStore;
@@ -7,6 +9,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -49,5 +53,11 @@ public class ConcertEntity extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OnlineStore onlineStore;
+
+    @OneToMany(mappedBy = "concertEntity", cascade = CascadeType.ALL)
+    private List<AlarmEntity> alarmEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "concertEntity", cascade = CascadeType.ALL)
+    private List<ArtistEntity> artistEntities = new ArrayList<>();
 
 }
