@@ -1,5 +1,9 @@
 package com.example.bolmal.member.infrastructure.entity;
 
+import com.example.bolmal.alarm.infrastructure.entity.AlarmEntity;
+import com.example.bolmal.artist.infrastructure.entity.FavoriteArtistEntity;
+import com.example.bolmal.bookmark.infrastructure.entity.BookmarkEntity;
+import com.example.bolmal.common.domain.BaseEntity;
 import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
@@ -9,13 +13,15 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class MemberEntity {
+public class MemberEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,6 +63,18 @@ public class MemberEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private AgreementEntity agreementEntity;
+
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL)
+    private List<FavoriteArtistEntity> favoriteArtistEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL)
+    private List<AlarmEntity> alarmEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL)
+    private List<BookmarkEntity> bookmarkEntities = new ArrayList<>();
 
 
 
