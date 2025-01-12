@@ -1,5 +1,6 @@
 package com.example.bolmal.concert.infrastructure.entity;
 
+import com.example.bolmal.common.domain.BaseEntity;
 import com.example.bolmal.concert.domain.enums.ConcertRound;
 import com.example.bolmal.concert.domain.enums.OnlineStore;
 import jakarta.persistence.*;
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class ConcertEntity {
+public class ConcertEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,8 +41,7 @@ public class ConcertEntity {
     @Column(nullable = false)
     private Integer concertAge;
 
-    @Column(nullable = false)
-    private String restricts;
+    private String viewingRestri;
 
     @Column(nullable = false)
     private Integer recommendRate;

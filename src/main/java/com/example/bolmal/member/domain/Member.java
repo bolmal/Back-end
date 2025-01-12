@@ -1,5 +1,6 @@
 package com.example.bolmal.member.domain;
 
+import com.example.bolmal.common.domain.BaseEntity;
 import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class Member {
+public class Member extends BaseEntity {
 
 
     private Long id;

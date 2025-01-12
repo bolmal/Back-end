@@ -1,6 +1,7 @@
 package com.example.bolmal.member.domain;
 
 
+import com.example.bolmal.common.domain.BaseEntity;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import lombok.*;
 
@@ -8,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class Agreement {
+public class Agreement extends BaseEntity {
 
     Long id;
 
