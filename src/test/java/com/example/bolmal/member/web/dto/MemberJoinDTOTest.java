@@ -96,10 +96,26 @@ public class MemberJoinDTOTest {
     @DisplayName("Email 조건을 만족하지 못하면 오류를 반환한다")
     public void joinMember_email(){
         //given
+        MemberJoinDTO.MemberJoinRequestDTO request = MemberJoinDTO.MemberJoinRequestDTO.builder()
+                .username("testtest")
+                .password("Test123!")
+                .name("test")
+                .nickname("test")
+                .phoneNumber("test")
+                .birthDate(LocalDate.of(2025, 1, 8))
+                .email("test")
+                .gender(Gender.FEMALE)
+                .advAgreement(Boolean.TRUE)
+                .serviceAgreement(Boolean.TRUE)
+                .financialAgreement(Boolean.TRUE)
+                .privacyAgreement(Boolean.TRUE)
+                .build();
 
-        //when
+        Set<ConstraintViolation<MemberJoinDTO.MemberJoinRequestDTO>> validate = validator.validate(request);
 
-        //then
+        // then
+        assertThat(validate).isNotNull();
+        assertThat(validate.iterator().next().getMessage()).contains("올바른 형식의 이메일 주소여야 합니다");
     }
 
 
