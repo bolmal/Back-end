@@ -2,6 +2,7 @@ package com.example.bolmal.member.web.controller;
 
 import com.example.bolmal.common.apiPayLoad.ApiResponse;
 import com.example.bolmal.member.service.MemberPhoneNumberAuthenticateServiceImpl;
+import com.example.bolmal.member.web.port.MemberPhoneNumberAuthenticateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Builder;
@@ -12,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/phone-numbers")
 @Tag(name = "전화번호 인증 API")
+@RequiredArgsConstructor
 public class PhoneNumberAuthenticateController {
 
-    private MemberPhoneNumberAuthenticateServiceImpl memberPhoneNumberAuthenticateService;
+    private final MemberPhoneNumberAuthenticateService memberPhoneNumberAuthenticateService;
 
     @Operation(summary = "인증번호 발급")
     @GetMapping("/passwords")
