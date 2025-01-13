@@ -14,6 +14,7 @@ import org.junit.jupiter.api.*;
 
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus.MEMBER_AGREEMENT;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -22,11 +23,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 class MemberServiceTest {
 
     private MemberServiceImpl memberService;
+    FakeMemberRepository fakeMemberRepository = new FakeMemberRepository();
 
     @BeforeEach
     void setUp() {
 
-        FakeMemberRepository fakeMemberRepository = new FakeMemberRepository();
         FakeAgreementRepository fakeAgreementRepository = new FakeAgreementRepository();
         FakeBCrypt fakeBCrypt = new FakeBCrypt();
 
@@ -129,16 +130,29 @@ class MemberServiceTest {
     @DisplayName("update() 메서드를 이용하여 회원정보를 업데이트 할 수 있다")
     public void member_update(){
         //given
+        String username = "testtest";
+        String updateUsername = "updatedTest";
+
         MemberUpdateDTO.MemberUpdateRequestDTO updateMember = MemberUpdateDTO.MemberUpdateRequestDTO.builder()
-                .name("test")
+                .username("updatedTest")
+                .name("updatedTest")
+                .phoneNumber("updatedTest")
+                .birthDate(LocalDate.of(2025, 1, 13))
+                .email("updatedtest@test.test")
+                .gender(Gender.MALE)
                 .build();
 
         //when
+        MemberUpdateDTO.MemberUpdateResponseDTO result = memberService.update(updateMember, username);
+        Optional<Member> byUsername = fakeMemberRepository.findByUsername(updateUsername);
 
         //then
-        assertThatThrownBy(()-> memberService.update(updateMember))
-        .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("TDD-RED");
+        assertThat(result).isNotNull();
+
+        //update 이기에 memberId가 바뀌어선 안된다
+        assertThat(result.getMemberId()).isEqualTo(1L);
+        assertThat(byUsername.get().getUsername()).isEqualTo("updatedTest");
+        assertThat(byUsername.get().getName()).isEqualTo("updatedTest");
     }
 
 }

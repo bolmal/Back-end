@@ -46,7 +46,8 @@ public class FakeMemberService implements MemberService {
 
     // Controller 테스트 코드 작성 시 필요함 FIXME
     @Override
-    public MemberUpdateDTO.MemberUpdateResponseDTO update(MemberUpdateDTO.MemberUpdateRequestDTO request) {
+    public MemberUpdateDTO.MemberUpdateResponseDTO update(MemberUpdateDTO.MemberUpdateRequestDTO request,
+                                                          String username) {
         return null;
     }
 }
