@@ -120,17 +120,6 @@ public class MemberJoinDTOTest {
 
 
     @Test
-    @DisplayName("필수 약관동의 조건을 만족하지 못하면 오류를 반환한다")
-    public void joinMember_agreement(){
-        //given
-
-        //when
-
-        //then
-    }
-
-
-    @Test
     @DisplayName("전화번호 인증을 통과하지 못하면 오류를 반환한다")
     public void joinMember_phone_number_validation(){
         //given

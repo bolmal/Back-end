@@ -8,11 +8,14 @@ import com.example.bolmal.member.mock.FakeAgreementRepository;
 import com.example.bolmal.member.mock.FakeBCrypt;
 import com.example.bolmal.member.mock.FakeMemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
+import jakarta.validation.Validator;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class MemberServiceTest {
 
@@ -93,6 +96,32 @@ class MemberServiceTest {
         assertThat(result).isNotNull();
         // 앞에서 두개 만들고 해서 3나옴
         assertThat(result.getMemberId()).isEqualTo(3L);
+    }
+
+    @Test
+    @DisplayName("필수 약관동의 조건을 만족하지 못하면 오류를 반환한다")
+    public void joinMember_agreement(){
+        //given
+        MemberJoinDTO.MemberJoinRequestDTO request = MemberJoinDTO.MemberJoinRequestDTO.builder()
+                .username("testtest3")
+                .password("Test123!")
+                .name("test")
+                .nickname("test")
+                .phoneNumber("test")
+                .birthDate(LocalDate.of(2025, 1, 8))
+                .email("test@test.test")
+                .gender(Gender.FEMALE)
+                .advAgreement(Boolean.TRUE)
+                .serviceAgreement(Boolean.TRUE)
+                .financialAgreement(Boolean.FALSE) // 필수조건 false
+                .privacyAgreement(Boolean.TRUE)
+                .build();
+
+
+        // when & then
+        assertThatThrownBy(() -> memberService.joinMember(request))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("필수 약관에는 모두 동의를 해주셔야 합니다.");
     }
 
 
