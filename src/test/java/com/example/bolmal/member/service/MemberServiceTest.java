@@ -71,7 +71,7 @@ class MemberServiceTest {
     
     @Test
     @DisplayName("joinMember()은 requestDTO를 이용하여 유저를 생성 할 수 있다")
-    public void joinMember(){
+    public void member_join(){
         //given
         MemberJoinDTO.MemberJoinRequestDTO request = MemberJoinDTO.MemberJoinRequestDTO.builder()
                 .username("testtest3")
