@@ -2,6 +2,8 @@ package com.example.bolmal.member.service;
 
 
 
+import com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus;
+import com.example.bolmal.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmal.member.domain.Agreement;
 import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.service.port.AgreementRepository;
@@ -32,7 +34,7 @@ public class MemberServiceImpl implements MemberService {
         if (!Boolean.TRUE.equals(request.getPrivacyAgreement())
                 || !Boolean.TRUE.equals(request.getServiceAgreement())
                 || !Boolean.TRUE.equals(request.getFinancialAgreement())) {
-            throw new IllegalArgumentException("필수 약관에는 모두 동의를 해주셔야 합니다.");
+            throw new MemberHandler(ErrorStatus.MEMBER_AGREEMENT);
         }
 
         Member newMember= Member.JoinDTOto(request,bCrypt);

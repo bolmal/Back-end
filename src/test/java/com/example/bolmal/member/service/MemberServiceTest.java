@@ -1,5 +1,6 @@
 package com.example.bolmal.member.service;
 
+import com.example.bolmal.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
@@ -11,9 +12,11 @@ import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
 
+import static com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus.MEMBER_AGREEMENT;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -118,10 +121,9 @@ class MemberServiceTest {
                 .build();
 
 
-        // when & then
         assertThatThrownBy(() -> memberService.joinMember(request))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("필수 약관에는 모두 동의를 해주셔야 합니다.");
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_AGREEMENT);
     }
 
 
