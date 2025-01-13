@@ -119,15 +119,4 @@ public class MemberJoinDTOTest {
     }
 
 
-    @Test
-    @DisplayName("전화번호 인증을 통과하지 못하면 오류를 반환한다")
-    public void joinMember_phone_number_validation(){
-        //given
-
-        //when
-
-        //then
-    }
-
-
 }

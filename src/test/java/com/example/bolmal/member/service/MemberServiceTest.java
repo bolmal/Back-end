@@ -9,10 +9,8 @@ import com.example.bolmal.member.mock.FakeAgreementRepository;
 import com.example.bolmal.member.mock.FakeBCrypt;
 import com.example.bolmal.member.mock.FakeMemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
-import jakarta.validation.Validator;
 import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 
 import java.time.LocalDate;
 
@@ -23,7 +21,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 class MemberServiceTest {
 
     private MemberServiceImpl memberService;
-
 
     @BeforeEach
     void setUp() {
@@ -38,7 +35,7 @@ class MemberServiceTest {
                 .bCrypt(fakeBCrypt)
                 .build();
 
-        fakeMemberRepository.save(
+        Member member1 = fakeMemberRepository.save(
                 Member.builder()
                         .id(1L)
                         .username("testtest")
@@ -47,7 +44,7 @@ class MemberServiceTest {
                         .nickname("test")
                         .role(Role.ROLE_USER)
                         .phoneNumber("test")
-                        .birthday(LocalDate.of(2025,1,8))
+                        .birthday(LocalDate.of(2025, 1, 8))
                         .email("test@test.test")
                         .status(Status.ACTIVE)
                         .gender(Gender.FEMALE)

@@ -7,5 +7,4 @@ import org.springframework.stereotype.Service;
 public interface MemberService {
 
     MemberJoinDTO.MemberJoinResponseDTO joinMember(MemberJoinDTO.MemberJoinRequestDTO request);
-
 }
