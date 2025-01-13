@@ -14,9 +14,11 @@ import org.junit.jupiter.api.*;
 
 
 import java.time.LocalDate;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus.MEMBER_AGREEMENT;
+import static com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus.MEMBER_NOT_FOUND;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -68,8 +70,14 @@ class MemberServiceTest {
                         .build());
 
     }
-    
-    
+
+    @AfterEach
+    void tearDown() {
+        fakeMemberRepository.clear(); // 데이터를 초기화하는 메서드 호출
+    }
+
+
+
     @Test
     @DisplayName("joinMember()은 requestDTO를 이용하여 유저를 생성 할 수 있다")
     public void member_join(){
@@ -153,6 +161,29 @@ class MemberServiceTest {
         assertThat(result.getMemberId()).isEqualTo(1L);
         assertThat(byUsername.get().getUsername()).isEqualTo("updatedTest");
         assertThat(byUsername.get().getName()).isEqualTo("updatedTest");
+    }
+
+
+    @Test
+    @DisplayName("update() 메서드를 이용하여 업데이트한 회원정보를 이전의 정보로 조회 할 수 없다")
+    public void member_update_valid(){
+        //given
+        String username = "testtest";
+
+        MemberUpdateDTO.MemberUpdateRequestDTO updateMember = MemberUpdateDTO.MemberUpdateRequestDTO.builder()
+                .username("updatedTest")
+                .name("updatedTest")
+                .phoneNumber("updatedTest")
+                .birthDate(LocalDate.of(2025, 1, 13))
+                .email("updatedtest@test.test")
+                .gender(Gender.MALE)
+                .build();
+
+        memberService.update(updateMember, username);
+
+        //then
+        Optional<Member> oldMember = fakeMemberRepository.findByUsername("testtest");
+        assertThat(oldMember).isEmpty(); // Optional.empty() -> oldMember가 존재하지 않음
     }
 
 }

@@ -51,4 +51,10 @@ public class FakeMemberRepository implements MemberRepository {
     public boolean existsByUsername(String username) {
         return data.stream().anyMatch(item -> item.getUsername().equals(username));
     }
+
+    public void clear() {
+        data.clear();
+        counter.set(0);
+    }
+
 }
