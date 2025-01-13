@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Setter
 public class Agreement extends BaseEntity {
 
     Long id;
@@ -21,14 +22,21 @@ public class Agreement extends BaseEntity {
 
     Boolean advAgreement;
 
+    Member member;
 
-    public static Agreement JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request){
+
+    public static Agreement JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request,Member member){
         return Agreement.builder()
                 .advAgreement(request.getAdvAgreement())
                 .financialAgreement(request.getFinancialAgreement())
                 .privacyAgreement(request.getPrivacyAgreement())
                 .serviceAgreement(request.getServiceAgreement())
+                .member(member)
                 .build();
+    }
+
+    private static void setMember(Agreement agreement,Member member){
+        agreement.setMember(member);
     }
 
 }

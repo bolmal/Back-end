@@ -34,17 +34,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberJoinDTO.MemberJoinResponseDTO joinMember(@Valid MemberJoinDTO.MemberJoinRequestDTO request){
 
-        if (!Boolean.TRUE.equals(request.getPrivacyAgreement())
-                || !Boolean.TRUE.equals(request.getServiceAgreement())
-                || !Boolean.TRUE.equals(request.getFinancialAgreement())) {
-            throw new MemberHandler(ErrorStatus.MEMBER_AGREEMENT);
-        }
-
+        authenticateAgreement(request);
         Member newMember= Member.JoinDTOto(request,bCrypt);
         Member savedMember = memberRepository.save(newMember);
 
-        // 약관동의 저장
-        Agreement newAgreement = Agreement.JoinDTOto(request);
+        Agreement newAgreement = Agreement.JoinDTOto(request,savedMember);
         agreementRepository.save(newAgreement);
 
         return MemberJoinDTO.MemberJoinResponseDTO.builder()
@@ -64,6 +58,20 @@ public class MemberServiceImpl implements MemberService {
         return MemberUpdateDTO.MemberUpdateResponseDTO.builder()
                 .memberId(updatedMember.getId())
                 .build();
+    }
+
+
+
+
+
+
+
+    private static void authenticateAgreement(MemberJoinDTO.MemberJoinRequestDTO request) {
+        if (!Boolean.TRUE.equals(request.getPrivacyAgreement())
+                || !Boolean.TRUE.equals(request.getServiceAgreement())
+                || !Boolean.TRUE.equals(request.getFinancialAgreement())) {
+            throw new MemberHandler(ErrorStatus.MEMBER_AGREEMENT);
+        }
     }
 
     private Member findMemberByUsername(String username) {

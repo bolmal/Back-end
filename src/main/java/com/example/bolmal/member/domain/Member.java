@@ -45,6 +45,8 @@ public class Member extends BaseEntity {
 
     private Gender gender;
 
+    private Agreement agreement;
+
 
     public static Member JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request, BCrypt bCrypt){
 
@@ -77,6 +79,10 @@ public class Member extends BaseEntity {
 
         return member;
 
+    }
+
+    public static void setAgreement(Agreement agreement,Member member){
+        member.setAgreement(agreement);
     }
 
 
