@@ -1,16 +1,10 @@
 package com.example.bolmal.member.mock;
 
 import com.example.bolmal.member.domain.Member;
-import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
-import com.example.bolmal.member.infrastructure.MemberJpaRepository;
-import com.example.bolmal.member.infrastructure.entity.MemberEntity;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.port.MemberService;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.time.LocalDate;
 
 public class FakeMemberService implements MemberService {
 
