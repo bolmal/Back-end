@@ -1,6 +1,6 @@
-package com.example.bolmal.common.validation.annotation;
+package com.example.bolmal.member.validation.annotation;
 
-import com.example.bolmal.common.validation.validator.UsernameDuplicateValidator;
+import com.example.bolmal.member.validation.validator.UsernameDuplicateValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

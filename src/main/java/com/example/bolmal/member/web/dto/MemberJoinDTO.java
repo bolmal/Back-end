@@ -1,7 +1,7 @@
 package com.example.bolmal.member.web.dto;
 
-import com.example.bolmal.common.validation.annotation.UsernameDuplicate;
 import com.example.bolmal.member.domain.enums.Gender;
+import com.example.bolmal.member.validation.annotation.UsernameDuplicate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
@@ -20,7 +20,7 @@ public class MemberJoinDTO {
     public static class MemberJoinRequestDTO{
 
 
-        @UsernameDuplicate
+        @UsernameDuplicate(message = "중복된 username 입니다")
         @Pattern(regexp = "^[a-z0-9]{4,16}$", message = "ID는 영문 소문자와 숫자로만 구성되며 4~16자여야 합니다.")
         @Schema(description = "ID입니다 <br> 영문 소문자, 숫자로 4~16자로 구성")
         String username;

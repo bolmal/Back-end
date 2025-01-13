@@ -4,6 +4,7 @@ import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.service.port.MemberRepository;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,8 @@ public class FakeMemberRepository implements MemberRepository {
                 .status(Status.ACTIVE)
                 .gender(member.getGender())
                 .build();
+
+
 
         data.add(newMember);
         return newMember;

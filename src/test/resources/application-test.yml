@@ -1,4 +1,6 @@
 spring:
+
+
   datasource :
     url: jdbc:h2:mem:bolamal
     driverClassName: org.h2.Driver
