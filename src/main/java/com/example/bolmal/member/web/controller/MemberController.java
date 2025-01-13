@@ -1,6 +1,7 @@
 package com.example.bolmal.member.web.controller;
 
 import com.example.bolmal.common.apiPayLoad.ApiResponse;
+import com.example.bolmal.member.web.dto.MemberUpdateDTO;
 import com.example.bolmal.member.web.port.MemberService;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,6 +45,11 @@ public class MemberController {
         7. 비밀번호
 
      * */
+    @Operation(summary = "회원정보 업데이트 API")
+    @PatchMapping("/")
+    public void update(@Valid @RequestBody MemberUpdateDTO.MemberUpdateRequestDTO request) {
+
+    }
 
 
 
