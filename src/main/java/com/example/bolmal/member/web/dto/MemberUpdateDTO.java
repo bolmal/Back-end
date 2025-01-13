@@ -11,6 +11,7 @@ public class MemberUpdateDTO {
     @Getter
     public static class MemberUpdateRequestDTO{
 
+        String name;
 
     }
 
@@ -21,7 +22,7 @@ public class MemberUpdateDTO {
     @Getter
     public static class MemberUpdateResponseDTO{
 
-
+        String name;
 
     }
 }

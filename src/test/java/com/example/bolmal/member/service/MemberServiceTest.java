@@ -9,6 +9,7 @@ import com.example.bolmal.member.mock.FakeAgreementRepository;
 import com.example.bolmal.member.mock.FakeBCrypt;
 import com.example.bolmal.member.mock.FakeMemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
+import com.example.bolmal.member.web.dto.MemberUpdateDTO;
 import org.junit.jupiter.api.*;
 
 
@@ -123,5 +124,21 @@ class MemberServiceTest {
                 .hasFieldOrPropertyWithValue("code", MEMBER_AGREEMENT);
     }
 
+
+    @Test
+    @DisplayName("update() 메서드를 이용하여 회원정보를 업데이트 할 수 있다")
+    public void member_update(){
+        //given
+        MemberUpdateDTO.MemberUpdateRequestDTO updateMember = MemberUpdateDTO.MemberUpdateRequestDTO.builder()
+                .name("test")
+                .build();
+
+        //when
+
+        //then
+        assertThatThrownBy(()-> memberService.update(updateMember))
+        .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("TDD-RED");
+    }
 
 }

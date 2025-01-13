@@ -4,6 +4,7 @@ import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
+import com.example.bolmal.member.web.dto.MemberUpdateDTO;
 import com.example.bolmal.member.web.port.MemberService;
 
 public class FakeMemberService implements MemberService {
@@ -31,5 +32,11 @@ public class FakeMemberService implements MemberService {
         return MemberJoinDTO.MemberJoinResponseDTO.builder()
                 .memberId(2L)
                 .build();
+    }
+
+    // Controller 테스트 코드 작성 시 필요함 FIXME
+    @Override
+    public MemberUpdateDTO.MemberUpdateResponseDTO update(MemberUpdateDTO.MemberUpdateRequestDTO request) {
+        return null;
     }
 }

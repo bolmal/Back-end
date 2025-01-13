@@ -10,6 +10,7 @@ import com.example.bolmal.member.service.port.AgreementRepository;
 import com.example.bolmal.member.service.port.BCrypt;
 import com.example.bolmal.member.service.port.MemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
+import com.example.bolmal.member.web.dto.MemberUpdateDTO;
 import com.example.bolmal.member.web.port.MemberService;
 import jakarta.validation.Valid;
 import lombok.Builder;
@@ -47,6 +48,10 @@ public class MemberServiceImpl implements MemberService {
         return MemberJoinDTO.MemberJoinResponseDTO.builder()
                 .memberId(savedMember.getId())
                 .build();
+    }
 
+    @Override
+    public MemberUpdateDTO.MemberUpdateResponseDTO update(MemberUpdateDTO.MemberUpdateRequestDTO request) {
+        throw new IllegalArgumentException("TDD-RED");
     }
 }
