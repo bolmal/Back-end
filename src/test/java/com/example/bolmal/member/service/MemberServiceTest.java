@@ -9,6 +9,7 @@ import com.example.bolmal.member.mock.FakeAgreementRepository;
 import com.example.bolmal.member.mock.FakeBCrypt;
 import com.example.bolmal.member.mock.FakeMemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
+import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
 import org.junit.jupiter.api.*;
 
@@ -189,12 +190,31 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("get() 메서드를 이용하여 회원정보를 조회 할 수 있다")
-    public void title(){
+    public void member_get(){
+        //given
+
+        //when
+        MemberProfileDTO.MemberProfileResponseDTO result = memberService.get("testtest");
+
+        //then
+        assertThat(result).isNotNull();
+        assertThat(result.getName()).isEqualTo("test");
+        assertThat(result.getEmail()).isEqualTo("test@test.test");
+
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 회원은 get() 메서드를 이용하여 조회 할 수 없다")
+    public void member_get_valid(){
         //given
 
         //when
 
         //then
+        assertThatThrownBy(()-> memberService.get("faketest"))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+
     }
 
 }

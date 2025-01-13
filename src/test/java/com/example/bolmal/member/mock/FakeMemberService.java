@@ -4,6 +4,7 @@ import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
+import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
 import com.example.bolmal.member.web.port.MemberService;
 
@@ -48,6 +49,11 @@ public class FakeMemberService implements MemberService {
     @Override
     public MemberUpdateDTO.MemberUpdateResponseDTO update(MemberUpdateDTO.MemberUpdateRequestDTO request,
                                                           String username) {
+        return null;
+    }
+
+    @Override
+    public MemberProfileDTO.MemberProfileResponseDTO get(String username) {
         return null;
     }
 }
