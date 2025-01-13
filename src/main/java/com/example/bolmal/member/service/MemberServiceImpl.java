@@ -10,6 +10,7 @@ import com.example.bolmal.member.service.port.AgreementRepository;
 import com.example.bolmal.member.service.port.BCrypt;
 import com.example.bolmal.member.service.port.MemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
+import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
 import com.example.bolmal.member.web.port.MemberService;
 import jakarta.validation.Valid;
@@ -58,6 +59,23 @@ public class MemberServiceImpl implements MemberService {
         return MemberUpdateDTO.MemberUpdateResponseDTO.builder()
                 .memberId(updatedMember.getId())
                 .build();
+    }
+
+    @Override
+    public MemberProfileDTO.MemberProfileResponseDTO get(String username) {
+
+        Member findMember = findMemberByUsername(username);
+
+        return MemberProfileDTO.MemberProfileResponseDTO.builder()
+                .username(findMember.getUsername())
+                .name(findMember.getName())
+                .gender(findMember.getGender())
+                .birthDate(findMember.getBirthday())
+                .email(findMember.getEmail())
+                .phoneNumber(findMember.getPhoneNumber())
+                .imagePath(findMember.getProfileImage())
+                .build();
+
     }
 
 

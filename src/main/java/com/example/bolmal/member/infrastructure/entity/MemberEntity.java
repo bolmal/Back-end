@@ -66,6 +66,8 @@ public class MemberEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    private String profileImage;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private AgreementEntity agreementEntity;
 
@@ -100,6 +102,7 @@ public class MemberEntity extends BaseEntity {
         memberEntity.status = member.getStatus();
         memberEntity.inactiveDate = member.getInactiveDate();
         memberEntity.gender = member.getGender();
+        memberEntity.profileImage = member.getProfileImage();
 
         return memberEntity;
     }

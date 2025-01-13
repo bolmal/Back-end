@@ -23,10 +23,6 @@ public class MemberProfileDTO {
         @Schema(description = "ID입니다 <br> 영문 소문자, 숫자로 4~16자로 구성")
         String username;
 
-        @Schema(description = "비밀번호는 8~12자의 영문, 숫자, 특수문자를 포함해야 합니다.")
-        @PasswordPatternValid
-        String password;
-
         @Schema(description = "회원이름 입니다")
         String name;
 

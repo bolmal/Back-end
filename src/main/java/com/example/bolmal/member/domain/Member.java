@@ -47,6 +47,8 @@ public class Member extends BaseEntity {
 
     private Agreement agreement;
 
+    private String profileImage;
+
 
     public static Member JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request, BCrypt bCrypt){
 

@@ -186,4 +186,15 @@ class MemberServiceTest {
         assertThat(oldMember).isEmpty(); // Optional.empty() -> oldMember가 존재하지 않음
     }
 
+
+    @Test
+    @DisplayName("get() 메서드를 이용하여 회원정보를 조회 할 수 있다")
+    public void title(){
+        //given
+
+        //when
+
+        //then
+    }
+
 }

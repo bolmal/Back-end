@@ -1,6 +1,7 @@
 package com.example.bolmal.member.web.controller;
 
 import com.example.bolmal.common.apiPayLoad.ApiResponse;
+import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
 import com.example.bolmal.member.web.port.MemberService;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
@@ -45,7 +46,10 @@ public class MemberController {
 
     @Operation(summary = "회원정보 조회 API")
     @GetMapping("/")
-    public void get(@AuthenticationPrincipal UserDetails userDetails) {
+    public ApiResponse<MemberProfileDTO.MemberProfileResponseDTO> get(@AuthenticationPrincipal UserDetails userDetails) {
+        MemberProfileDTO.MemberProfileResponseDTO result = memberService.get(userDetails.getUsername());
+
+        return ApiResponse.onSuccess(result);
     }
 
 

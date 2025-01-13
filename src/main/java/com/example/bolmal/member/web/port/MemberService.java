@@ -1,6 +1,7 @@
 package com.example.bolmal.member.web.port;
 
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
+import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
 import org.springframework.stereotype.Service;
 
@@ -11,4 +12,6 @@ public interface MemberService {
 
     MemberUpdateDTO.MemberUpdateResponseDTO update(MemberUpdateDTO.MemberUpdateRequestDTO request,
                                                    String username);
+
+    MemberProfileDTO.MemberProfileResponseDTO get(String username);
 }
