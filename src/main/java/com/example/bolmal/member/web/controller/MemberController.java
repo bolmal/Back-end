@@ -33,20 +33,6 @@ public class MemberController {
     }
 
 
-    /**
-
-        회원정보 수정
-
-        1. 프로필 사진
-        2. 이름
-        3. 성별
-        4. 이메일
-        5. 휴대폰 번호
-            5-1. 휴대폰 인증 필요 (카카오톡 인증번호)
-        6. 아이디
-        7. 비밀번호
-
-     * */
     @Operation(summary = "회원정보 업데이트 API")
     @PatchMapping("/")
     public ApiResponse<MemberUpdateDTO.MemberUpdateResponseDTO> update(@Valid @RequestBody MemberUpdateDTO.MemberUpdateRequestDTO request,
@@ -57,20 +43,10 @@ public class MemberController {
     }
 
 
-
-    /**
-
-        회원정보 조회
-
-        1. 프로필 사진
-        2. 이름
-        3. 성별
-        4. 이메일
-        5. 휴대폰 번호
-        6. 아이디
-        7. 비밀번호
-
-     * */
+    @Operation(summary = "회원정보 조회 API")
+    @GetMapping("/")
+    public void get(@AuthenticationPrincipal UserDetails userDetails) {
+    }
 
 
 
