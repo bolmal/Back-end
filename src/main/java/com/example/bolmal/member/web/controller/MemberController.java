@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -47,8 +49,11 @@ public class MemberController {
      * */
     @Operation(summary = "회원정보 업데이트 API")
     @PatchMapping("/")
-    public void update(@Valid @RequestBody MemberUpdateDTO.MemberUpdateRequestDTO request) {
+    public ApiResponse<MemberUpdateDTO.MemberUpdateResponseDTO> update(@Valid @RequestBody MemberUpdateDTO.MemberUpdateRequestDTO request,
+                                                                       @AuthenticationPrincipal UserDetails userDetails) {
 
+        MemberUpdateDTO.MemberUpdateResponseDTO result = memberService.update(request, userDetails.getUsername());
+        return ApiResponse.onSuccess(result);
     }
 
 

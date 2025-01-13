@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -51,7 +53,21 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberUpdateDTO.MemberUpdateResponseDTO update(MemberUpdateDTO.MemberUpdateRequestDTO request) {
-        throw new IllegalArgumentException("TDD-RED");
+    public MemberUpdateDTO.MemberUpdateResponseDTO update(MemberUpdateDTO.MemberUpdateRequestDTO request,
+                                                          String username) {
+
+        Member findMember = findMemberByUsername(username);
+        Member updatedMember = Member.update(request, findMember);
+
+        memberRepository.save(updatedMember);
+
+        return MemberUpdateDTO.MemberUpdateResponseDTO.builder()
+                .memberId(updatedMember.getId())
+                .build();
+    }
+
+    private Member findMemberByUsername(String username) {
+        return memberRepository.findByUsername(username)
+                .orElseThrow(()->new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
 }

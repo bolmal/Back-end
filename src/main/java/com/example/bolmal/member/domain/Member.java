@@ -7,6 +7,7 @@ import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.service.port.BCrypt;
 import com.example.bolmal.member.service.port.MemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
+import com.example.bolmal.member.web.dto.MemberUpdateDTO;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Setter
 public class Member extends BaseEntity {
 
 
@@ -58,6 +60,23 @@ public class Member extends BaseEntity {
                 .status(Status.ACTIVE)
                 .gender(request.getGender())
                 .build();
+    }
+
+    public static Member update(MemberUpdateDTO.MemberUpdateRequestDTO request, Member member){
+
+
+        member.setUsername(request.getUsername());
+        // 비밀번는 따로 변경하기
+
+        member.setName(request.getName());
+        member.setName(request.getName());
+        member.setGender(request.getGender());
+        member.setBirthday(request.getBirthDate());
+        member.setEmail(request.getEmail());
+        member.setPhoneNumber(request.getPhoneNumber());
+
+        return member;
+
     }
 
 
