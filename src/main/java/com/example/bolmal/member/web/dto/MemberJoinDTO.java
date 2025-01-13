@@ -1,6 +1,7 @@
 package com.example.bolmal.member.web.dto;
 
 import com.example.bolmal.member.domain.enums.Gender;
+import com.example.bolmal.member.validation.annotation.PasswordPatternValid;
 import com.example.bolmal.member.validation.annotation.UsernameDuplicate;
 import com.example.bolmal.member.validation.annotation.UsernamePatternValid;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,8 +28,7 @@ public class MemberJoinDTO {
         String username;
 
         @Schema(description = "비밀번호는 8~12자의 영문, 숫자, 특수문자를 포함해야 합니다.")
-        @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[a-zA-Z\\d!@#$%^&*(),.?\":{}|<>]{8,12}$",
-                message = "비밀번호는 8~12자의 영문, 숫자, 특수문자를 포함해야 합니다.")
+        @PasswordPatternValid
         String password;
 
         @Schema(description = "회원이름 입니다")
