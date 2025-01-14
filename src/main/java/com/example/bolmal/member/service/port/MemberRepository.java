@@ -1,7 +1,10 @@
 package com.example.bolmal.member.service.port;
 
 import com.example.bolmal.member.domain.Member;
+import com.example.bolmal.member.domain.enums.Status;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository {
@@ -11,4 +14,8 @@ public interface MemberRepository {
     Member save(Member member);
 
     boolean existsByUsername(String username);
+
+    List<Member> findInactiveMembersForDeletion(Status status, LocalDateTime cutoffDate);
+
+    void deleteAll(List<Member> membersToDelete);
 }
