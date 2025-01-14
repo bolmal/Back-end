@@ -9,7 +9,7 @@ import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.service.port.AgreementRepository;
 import com.example.bolmal.member.service.port.BCrypt;
-import com.example.bolmal.member.service.port.LocalDate;
+import com.example.bolmal.member.service.port.LocalDateTimeHolder;
 import com.example.bolmal.member.service.port.MemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
@@ -35,7 +35,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final AgreementRepository agreementRepository;
     private final BCrypt bCrypt;
-    private final LocalDate localDate;
+    private final LocalDateTimeHolder localDate;
 
 
     @Override
@@ -76,7 +76,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void delete(String username, LocalDate localDate){
+    public void delete(String username, LocalDateTimeHolder localDate){
 
         Member findMember = findMemberByUsername(username);
         Member.delete(findMember,localDate);
@@ -86,16 +86,15 @@ public class MemberServiceImpl implements MemberService {
 
 
 
-
-
-
-
-    // 매일 자정에 실행
     @Scheduled(cron = "0 0 0 * * ?")
-    @Override
-    public void deleteOldInactiveMembers() {
+    public void final_delete(){
+        deleteOldInactiveMembers(30);
+    }
 
-        LocalDateTime cutoffDate = localDate.minusDays(localDate.now(), 30);
+    @Override
+    public void deleteOldInactiveMembers(long days) {
+
+        LocalDateTime cutoffDate = localDate.minusDays(days);
         List<Member> membersToDelete = memberRepository.findInactiveMembersForDeletion(Status.INACTIVE, cutoffDate);
 
         // 30일 지난 회원 삭제

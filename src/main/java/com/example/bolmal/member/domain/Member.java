@@ -1,12 +1,11 @@
 package com.example.bolmal.member.domain;
 
-import com.example.bolmal.auth.service.port.CurrentTime;
 import com.example.bolmal.common.domain.BaseEntity;
 import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.service.port.BCrypt;
-import com.example.bolmal.member.service.port.MemberRepository;
+import com.example.bolmal.member.service.port.LocalDateTimeHolder;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
@@ -98,7 +97,7 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public static void delete(Member member, com.example.bolmal.member.service.port.LocalDate localDate){
+    public static void delete(Member member, LocalDateTimeHolder localDate){
         member.setStatus(Status.INACTIVE);
         member.setInactiveDate(localDate.now());
     }

@@ -1,11 +1,12 @@
 package com.example.bolmal.member.web.port;
 
-import com.example.bolmal.member.service.port.LocalDate;
+import com.example.bolmal.member.service.port.LocalDateTimeHolder;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public interface MemberService {
@@ -17,9 +18,8 @@ public interface MemberService {
 
     MemberProfileDTO.MemberProfileResponseDTO get(String username);
 
-    void delete(String username, LocalDate localDate);
+    void delete(String username, LocalDateTimeHolder localDate);
 
     // 매일 자정에 실행
-    @Scheduled(cron = "0 0 0 * * ?")
-    void deleteOldInactiveMembers();
+    void deleteOldInactiveMembers(long days);
 }

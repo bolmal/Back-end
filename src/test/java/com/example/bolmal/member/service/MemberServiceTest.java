@@ -7,7 +7,7 @@ import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.mock.FakeAgreementRepository;
 import com.example.bolmal.member.mock.FakeBCrypt;
-import com.example.bolmal.member.mock.FakeLocalDate;
+import com.example.bolmal.member.mock.FakeLocalDateTimeHolder;
 import com.example.bolmal.member.mock.FakeMemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
@@ -16,6 +16,7 @@ import org.junit.jupiter.api.*;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus.MEMBER_AGREEMENT;
@@ -27,7 +28,7 @@ class MemberServiceTest {
 
     private MemberServiceImpl memberService;
     FakeMemberRepository fakeMemberRepository = new FakeMemberRepository();
-    FakeLocalDate fakeLocalDate = new FakeLocalDate();
+    FakeLocalDateTimeHolder fakeLocalDateTimeHolder = new FakeLocalDateTimeHolder();
 
     @BeforeEach
     void setUp() {
@@ -39,7 +40,7 @@ class MemberServiceTest {
                 .memberRepository(fakeMemberRepository)
                 .agreementRepository(fakeAgreementRepository)
                 .bCrypt(fakeBCrypt)
-                .localDate(fakeLocalDate)
+                .localDate(fakeLocalDateTimeHolder)
                 .build();
 
         Member member1 = fakeMemberRepository.save(
@@ -227,25 +228,31 @@ class MemberServiceTest {
         //given
 
         //when
-        memberService.delete("testtest",fakeLocalDate);
+        memberService.delete("testtest",fakeLocalDateTimeHolder);
         Member byUsername = fakeMemberRepository.findByUsername("testtest")
                 .orElseThrow();
 
         //then
         assertThat(byUsername.getStatus()).isEqualTo(Status.INACTIVE);
-        assertThat(byUsername.getInactiveDate()).isEqualTo(fakeLocalDate.now());
+        assertThat(byUsername.getInactiveDate()).isEqualTo(fakeLocalDateTimeHolder.now());
     }
 
     @Test
-    @DisplayName("")
-    public void member_delete_inactive(){
+    @DisplayName("deleteOldInactiveMembers() 메서드를 통해서 정해진 일자가 지난 회원을 삭제 할 수 있다")
+    public void member_delete_cutOffDays(){
         //given
+        LocalDateTime cutOffDays = LocalDateTime.of(2024, 12, 2, 1, 1, 1);
 
         //when
-        memberService.delete("testtest",fakeLocalDate);
-        memberService.deleteOldInactiveMembers();
+        memberService.delete("testtest",fakeLocalDateTimeHolder);
+        Member byUsername = fakeMemberRepository.findByUsername("testtest")
+                .orElseThrow();
+        byUsername.setInactiveDate(cutOffDays);
+
+        memberService.deleteOldInactiveMembers(1);
 
         //then
+        assertThat(byUsername.getInactiveDate()).isEqualTo(cutOffDays);
     }
 
 }

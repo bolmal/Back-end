@@ -44,7 +44,14 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public void deleteAll(List<Member> membersToDelete) {
-        memberJpaRepository.deleteAll(membersToDelete);
+        // Member -> MemberEntity로 변환
+        List<MemberEntity> memberEntities = membersToDelete.stream()
+                .map(MemberEntity::fromModel)  // 변환
+                .collect(Collectors.toList());
+
+        // 변환된 MemberEntity 리스트를 deleteAll 메서드에 전달
+        memberJpaRepository.deleteAll(memberEntities);
     }
+
 
 }

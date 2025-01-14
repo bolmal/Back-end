@@ -3,11 +3,13 @@ package com.example.bolmal.member.mock;
 import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
-import com.example.bolmal.member.service.port.LocalDate;
+import com.example.bolmal.member.service.port.LocalDateTimeHolder;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
 import com.example.bolmal.member.web.port.MemberService;
+
+import java.time.LocalDateTime;
 
 public class FakeMemberService implements MemberService {
 
@@ -59,7 +61,14 @@ public class FakeMemberService implements MemberService {
     }
 
     @Override
-    public void delete(String username, LocalDate localDate) {
+    public void delete(String username, LocalDateTimeHolder localDate) {
 
     }
+
+    @Override
+    public void deleteOldInactiveMembers(long days) {
+
+    }
+
+
 }

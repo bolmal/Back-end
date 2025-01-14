@@ -4,10 +4,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Component
-public interface LocalDate {
+
+public interface LocalDateTimeHolder {
 
     LocalDateTime now();
 
-    LocalDateTime minusDays(LocalDateTime localDateTime,long days);
+    LocalDateTime minusDays(long days);
 }
