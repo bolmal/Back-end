@@ -61,7 +61,12 @@ public class MemberController {
         SOFT-DELETE: 얼마나 기다릴지 정해야함
 
      * */
+    @Operation(summary = "회원삭제 API")
+    @PatchMapping("/delete")
+    public ApiResponse<String> delete(@AuthenticationPrincipal UserDetails userDetails) {
 
+        return ApiResponse.onSuccess("정상적으로 삭제되었습니다");
+    }
 
 
     /**
