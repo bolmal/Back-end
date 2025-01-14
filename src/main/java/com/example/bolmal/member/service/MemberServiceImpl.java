@@ -66,15 +66,7 @@ public class MemberServiceImpl implements MemberService {
 
         Member findMember = findMemberByUsername(username);
 
-        return MemberProfileDTO.MemberProfileResponseDTO.builder()
-                .username(findMember.getUsername())
-                .name(findMember.getName())
-                .gender(findMember.getGender())
-                .birthDate(findMember.getBirthday())
-                .email(findMember.getEmail())
-                .phoneNumber(findMember.getPhoneNumber())
-                .imagePath(findMember.getProfileImage())
-                .build();
+        return Member.toMemberProfileResponseDTO(findMember);
 
     }
 

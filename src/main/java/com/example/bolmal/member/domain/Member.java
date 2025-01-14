@@ -7,6 +7,7 @@ import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.service.port.BCrypt;
 import com.example.bolmal.member.service.port.MemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
+import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
 import lombok.*;
 
@@ -83,8 +84,17 @@ public class Member extends BaseEntity {
 
     }
 
-    public static void setAgreement(Agreement agreement,Member member){
-        member.setAgreement(agreement);
+    public static MemberProfileDTO.MemberProfileResponseDTO toMemberProfileResponseDTO(Member member){
+
+        return MemberProfileDTO.MemberProfileResponseDTO.builder()
+                .username(member.getUsername())
+                .name(member.getName())
+                .gender(member.getGender())
+                .birthDate(member.getBirthday())
+                .email(member.getEmail())
+                .phoneNumber(member.getPhoneNumber())
+                .imagePath(member.getProfileImage())
+                .build();
     }
 
 
