@@ -1,5 +1,6 @@
 package com.example.bolmal.member.web.port;
 
+import com.example.bolmal.member.service.port.LocalDate;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
@@ -14,4 +15,6 @@ public interface MemberService {
                                                    String username);
 
     MemberProfileDTO.MemberProfileResponseDTO get(String username);
+
+    void delete(String username, LocalDate localDate);
 }

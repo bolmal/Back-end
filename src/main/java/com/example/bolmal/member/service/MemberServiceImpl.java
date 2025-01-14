@@ -8,6 +8,7 @@ import com.example.bolmal.member.domain.Agreement;
 import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.service.port.AgreementRepository;
 import com.example.bolmal.member.service.port.BCrypt;
+import com.example.bolmal.member.service.port.LocalDate;
 import com.example.bolmal.member.service.port.MemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
@@ -19,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -30,6 +30,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final AgreementRepository agreementRepository;
     private final BCrypt bCrypt;
+    private final LocalDate localDate;
 
 
     @Override
@@ -67,7 +68,13 @@ public class MemberServiceImpl implements MemberService {
         Member findMember = findMemberByUsername(username);
 
         return Member.toMemberProfileResponseDTO(findMember);
+    }
 
+    @Override
+    public void delete(String username,LocalDate localDate){
+
+        Member findMember = findMemberByUsername(username);
+        Member.delete(findMember,localDate);
     }
 
 

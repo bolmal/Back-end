@@ -1,5 +1,6 @@
 package com.example.bolmal.member.domain;
 
+import com.example.bolmal.auth.service.port.CurrentTime;
 import com.example.bolmal.common.domain.BaseEntity;
 import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
@@ -95,6 +96,11 @@ public class Member extends BaseEntity {
                 .phoneNumber(member.getPhoneNumber())
                 .imagePath(member.getProfileImage())
                 .build();
+    }
+
+    public static void delete(Member member, com.example.bolmal.member.service.port.LocalDate localDate){
+        member.setStatus(Status.INACTIVE);
+        member.setInactiveDate(localDate.now());
     }
 
 
