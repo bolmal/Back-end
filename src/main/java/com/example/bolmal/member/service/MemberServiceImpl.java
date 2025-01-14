@@ -76,7 +76,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void delete(String username, LocalDateTimeHolder localDate){
+    public void delete(String username){
 
         Member findMember = findMemberByUsername(username);
         Member deletedMember = Member.delete(findMember, localDate);

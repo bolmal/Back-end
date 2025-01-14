@@ -228,7 +228,7 @@ class MemberServiceTest {
         //given
 
         //when
-        memberService.delete("testtest",fakeLocalDateTimeHolder);
+        memberService.delete("testtest");
         Member byUsername = fakeMemberRepository.findByUsername("testtest")
                 .orElseThrow();
 
@@ -244,7 +244,7 @@ class MemberServiceTest {
         LocalDateTime cutOffDays = LocalDateTime.of(2024, 12, 2, 1, 1, 1);
 
         //when
-        memberService.delete("testtest",fakeLocalDateTimeHolder);
+        memberService.delete("testtest");
         Member byUsername = fakeMemberRepository.findByUsername("testtest")
                 .orElseThrow();
         byUsername.setInactiveDate(cutOffDays);

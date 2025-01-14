@@ -61,7 +61,7 @@ public class FakeMemberService implements MemberService {
     }
 
     @Override
-    public void delete(String username, LocalDateTimeHolder localDate) {
+    public void delete(String username) {
 
     }
 

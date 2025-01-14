@@ -65,6 +65,8 @@ public class MemberController {
     @PatchMapping("/delete")
     public ApiResponse<String> delete(@AuthenticationPrincipal UserDetails userDetails) {
 
+        memberService.delete(userDetails.getUsername());
+
         return ApiResponse.onSuccess("정상적으로 삭제되었습니다");
     }
 

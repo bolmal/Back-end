@@ -18,7 +18,7 @@ public interface MemberService {
 
     MemberProfileDTO.MemberProfileResponseDTO get(String username);
 
-    void delete(String username, LocalDateTimeHolder localDate);
+    void delete(String username);
 
     // 매일 자정에 실행
     void deleteOldInactiveMembers(long days);
