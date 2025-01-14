@@ -6,6 +6,7 @@ import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.service.port.MemberRepository;
 import org.hibernate.exception.ConstraintViolationException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +51,18 @@ public class FakeMemberRepository implements MemberRepository {
     @Override
     public boolean existsByUsername(String username) {
         return data.stream().anyMatch(item -> item.getUsername().equals(username));
+    }
+
+    @Override
+    public List<Member> findInactiveMembersForDeletion(Status status, LocalDateTime cutoffDate) {
+        return data.stream()
+                .filter(item -> item.getStatus().equals(status) && item.getCreatedAt().isBefore(cutoffDate))
+                .toList();
+    }
+
+    @Override
+    public void deleteAll(List<Member> membersToDelete) {
+        data.removeAll(membersToDelete);
     }
 
     public void clear() {
