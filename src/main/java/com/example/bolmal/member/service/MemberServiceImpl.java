@@ -95,7 +95,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void deleteOldInactiveMembers() {
 
-        LocalDateTime cutoffDate = LocalDateTime.now().minusDays(30);  // 30일 이전 날짜 계산
+        LocalDateTime cutoffDate = localDate.minusDays(localDate.now(), 30);
         List<Member> membersToDelete = memberRepository.findInactiveMembersForDeletion(Status.INACTIVE, cutoffDate);
 
         // 30일 지난 회원 삭제

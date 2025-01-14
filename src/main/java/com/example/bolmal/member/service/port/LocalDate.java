@@ -8,4 +8,6 @@ import java.time.LocalDateTime;
 public interface LocalDate {
 
     LocalDateTime now();
+
+    LocalDateTime minusDays(LocalDateTime localDateTime,long days);
 }

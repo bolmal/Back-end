@@ -10,4 +10,9 @@ public class LocalDateImpl implements LocalDate {
     public LocalDateTime now() {
         return LocalDateTime.now();
     }
+
+    @Override
+    public LocalDateTime minusDays(LocalDateTime localDateTime,long days) {
+        return localDateTime.minusDays(days);
+    }
 }

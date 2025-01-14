@@ -223,7 +223,7 @@ class MemberServiceTest {
     @Test
     @DisplayName("delete() 메서드를 이용해서 회원의 상태를 INACTIVE로 전환 할 수 있다" +
             "회원의 삭제 시간을 LocalDateTime을 이용하여 업데이트 할 수 있다")
-    public void title(){
+    public void member_delete(){
         //given
 
         //when
@@ -234,6 +234,18 @@ class MemberServiceTest {
         //then
         assertThat(byUsername.getStatus()).isEqualTo(Status.INACTIVE);
         assertThat(byUsername.getInactiveDate()).isEqualTo(fakeLocalDate.now());
+    }
+
+    @Test
+    @DisplayName("")
+    public void member_delete_inactive(){
+        //given
+
+        //when
+        memberService.delete("testtest",fakeLocalDate);
+        memberService.deleteOldInactiveMembers();
+
+        //then
     }
 
 }
