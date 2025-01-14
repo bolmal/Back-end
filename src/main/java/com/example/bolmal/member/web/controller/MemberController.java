@@ -40,6 +40,7 @@ public class MemberController {
                                                                        @AuthenticationPrincipal UserDetails userDetails) {
 
         MemberUpdateDTO.MemberUpdateResponseDTO result = memberService.update(request, userDetails.getUsername());
+
         return ApiResponse.onSuccess(result);
     }
 
@@ -47,20 +48,13 @@ public class MemberController {
     @Operation(summary = "회원정보 조회 API")
     @GetMapping("/")
     public ApiResponse<MemberProfileDTO.MemberProfileResponseDTO> get(@AuthenticationPrincipal UserDetails userDetails) {
+
         MemberProfileDTO.MemberProfileResponseDTO result = memberService.get(userDetails.getUsername());
 
         return ApiResponse.onSuccess(result);
     }
 
 
-
-    /**
-
-        회원정보 삭제
-
-        SOFT-DELETE: 얼마나 기다릴지 정해야함
-
-     * */
     @Operation(summary = "회원삭제 API")
     @PatchMapping("/delete")
     public ApiResponse<String> delete(@AuthenticationPrincipal UserDetails userDetails) {

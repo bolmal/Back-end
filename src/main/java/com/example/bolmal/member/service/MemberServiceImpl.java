@@ -86,7 +86,14 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void rollback(String username){
+
         Member findMember = findMemberByUsername(username);
+        Status status = findMember.getStatus();
+
+        if (status.equals(Status.ACTIVE)) {
+            throw new MemberHandler(ErrorStatus.MEMBER_NOT_INACTIVE);
+        }
+
         Member rollbackMember = Member.rollback(findMember, localDate);
 
         memberRepository.save(rollbackMember);
