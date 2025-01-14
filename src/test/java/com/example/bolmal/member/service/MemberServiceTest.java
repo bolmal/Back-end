@@ -255,4 +255,19 @@ class MemberServiceTest {
         assertThat(byUsername.getInactiveDate()).isEqualTo(cutOffDays);
     }
 
+    @Test
+    @DisplayName("rollback()을 이용해서 회원을 활성상태로 돌릴 수 있다")
+    public void member_rollback(){
+        //given
+        memberService.delete("testtest");
+        Member byUsername = fakeMemberRepository.findByUsername("testtest")
+                .orElseThrow();
+
+        //when
+        memberService.rollback("testtest");
+
+        //then
+        assertThat(byUsername.getStatus()).isEqualTo(Status.ACTIVE);
+    }
+
 }

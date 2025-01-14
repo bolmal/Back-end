@@ -66,6 +66,11 @@ public class FakeMemberService implements MemberService {
     }
 
     @Override
+    public void rollback(String username) {
+
+    }
+
+    @Override
     public void deleteOldInactiveMembers(long days) {
 
     }
