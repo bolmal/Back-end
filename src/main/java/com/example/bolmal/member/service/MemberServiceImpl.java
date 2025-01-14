@@ -79,8 +79,9 @@ public class MemberServiceImpl implements MemberService {
     public void delete(String username, LocalDateTimeHolder localDate){
 
         Member findMember = findMemberByUsername(username);
-        Member.delete(findMember,localDate);
-        memberRepository.save(findMember);
+        Member deletedMember = Member.delete(findMember, localDate);
+
+        memberRepository.save(deletedMember);
     }
 
 

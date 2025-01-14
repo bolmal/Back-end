@@ -97,9 +97,12 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public static void delete(Member member, LocalDateTimeHolder localDate){
+    public static Member delete(Member member, LocalDateTimeHolder localDate){
+
         member.setStatus(Status.INACTIVE);
         member.setInactiveDate(localDate.now());
+
+        return member;
     }
 
 
