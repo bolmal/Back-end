@@ -20,6 +20,8 @@ public interface MemberService {
 
     void delete(String username);
 
+    void rollback(String username);
+
     // 매일 자정에 실행
     void deleteOldInactiveMembers(long days);
 }

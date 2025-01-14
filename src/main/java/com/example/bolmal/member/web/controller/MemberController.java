@@ -71,6 +71,15 @@ public class MemberController {
     }
 
 
+    @Operation(summary = "비활성화 회원, 활성으로 돌리기")
+    @PatchMapping("/rollback")
+    public ApiResponse<String> rollback(@AuthenticationPrincipal UserDetails userDetails) {
+        memberService.rollback(userDetails.getUsername());
+
+        return ApiResponse.onSuccess("정상적으로 복구되었습니다");
+    }
+
+
     /**
 
         회원정보 찾기 - 아아디

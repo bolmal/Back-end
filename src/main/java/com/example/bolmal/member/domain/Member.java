@@ -105,5 +105,13 @@ public class Member extends BaseEntity {
         return member;
     }
 
+    public static Member rollback(Member member, LocalDateTimeHolder localDate){
+
+        member.setStatus(Status.ACTIVE);
+        member.setInactiveDate(localDate.now());
+
+        return member;
+    }
+
 
 }

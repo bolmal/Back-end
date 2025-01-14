@@ -84,6 +84,15 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(deletedMember);
     }
 
+    @Override
+    public void rollback(String username){
+        Member findMember = findMemberByUsername(username);
+        Member rollbackMember = Member.rollback(findMember, localDate);
+
+        memberRepository.save(rollbackMember);
+    }
+
+
 
 
 
