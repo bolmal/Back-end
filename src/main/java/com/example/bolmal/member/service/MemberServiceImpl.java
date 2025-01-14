@@ -80,6 +80,7 @@ public class MemberServiceImpl implements MemberService {
 
         Member findMember = findMemberByUsername(username);
         Member.delete(findMember,localDate);
+        memberRepository.save(findMember);
     }
 
 
