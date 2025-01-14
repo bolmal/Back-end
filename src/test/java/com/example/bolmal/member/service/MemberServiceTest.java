@@ -19,8 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus.MEMBER_AGREEMENT;
-import static com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus.MEMBER_NOT_FOUND;
+import static com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -268,6 +267,21 @@ class MemberServiceTest {
 
         //then
         assertThat(byUsername.getStatus()).isEqualTo(Status.ACTIVE);
+    }
+
+    @Test
+    @DisplayName("활성 상태인 회원을 rollback() 할 수 없다")
+    public void member_rollback_valid(){
+        //given
+        Member byUsername = fakeMemberRepository.findByUsername("testtest")
+                .orElseThrow();
+
+        //when
+
+        //then
+        assertThatThrownBy(()->memberService.rollback("testtest"))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code",MEMBER_NOT_INACTIVE);
     }
 
 }
