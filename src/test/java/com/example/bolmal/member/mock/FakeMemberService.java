@@ -3,6 +3,7 @@ package com.example.bolmal.member.mock;
 import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
+import com.example.bolmal.member.service.port.LocalDate;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
@@ -55,5 +56,10 @@ public class FakeMemberService implements MemberService {
     @Override
     public MemberProfileDTO.MemberProfileResponseDTO get(String username) {
         return null;
+    }
+
+    @Override
+    public void delete(String username, LocalDate localDate) {
+
     }
 }

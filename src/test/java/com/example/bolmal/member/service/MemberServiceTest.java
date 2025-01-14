@@ -7,6 +7,7 @@ import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.mock.FakeAgreementRepository;
 import com.example.bolmal.member.mock.FakeBCrypt;
+import com.example.bolmal.member.mock.FakeLocalDate;
 import com.example.bolmal.member.mock.FakeMemberRepository;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.*;
 
 
 import java.time.LocalDate;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus.MEMBER_AGREEMENT;
@@ -27,6 +27,7 @@ class MemberServiceTest {
 
     private MemberServiceImpl memberService;
     FakeMemberRepository fakeMemberRepository = new FakeMemberRepository();
+    FakeLocalDate fakeLocalDate = new FakeLocalDate();
 
     @BeforeEach
     void setUp() {
@@ -38,6 +39,7 @@ class MemberServiceTest {
                 .memberRepository(fakeMemberRepository)
                 .agreementRepository(fakeAgreementRepository)
                 .bCrypt(fakeBCrypt)
+                .localDate(fakeLocalDate)
                 .build();
 
         Member member1 = fakeMemberRepository.save(
@@ -215,6 +217,23 @@ class MemberServiceTest {
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
 
+    }
+
+
+    @Test
+    @DisplayName("delete() 메서드를 이용해서 회원의 상태를 INACTIVE로 전환 할 수 있다" +
+            "회원의 삭제 시간을 LocalDateTime을 이용하여 업데이트 할 수 있다")
+    public void title(){
+        //given
+
+        //when
+        memberService.delete("testtest",fakeLocalDate);
+        Member byUsername = fakeMemberRepository.findByUsername("testtest")
+                .orElseThrow();
+
+        //then
+        assertThat(byUsername.getStatus()).isEqualTo(Status.INACTIVE);
+        assertThat(byUsername.getInactiveDate()).isEqualTo(fakeLocalDate.now());
     }
 
 }
