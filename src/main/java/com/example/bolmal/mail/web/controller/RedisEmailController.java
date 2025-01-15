@@ -1,5 +1,6 @@
 package com.example.bolmal.mail.web.controller;
 
+import com.example.bolmal.common.apiPayLoad.ApiResponse;
 import com.example.bolmal.mail.service.RedisMailService;
 import com.example.bolmal.mail.web.dto.EmailRequestDto;
 import jakarta.mail.MessagingException;
@@ -17,17 +18,21 @@ public class RedisEmailController {
     private final RedisMailService emailService;
 
     @GetMapping("/{email_addr}/authcode")
-    public ResponseEntity<String> sendEmailPath(@PathVariable String email_addr) throws MessagingException {
+    public ApiResponse<String> sendEmailPath(@PathVariable String email_addr) throws MessagingException {
+
         emailService.sendEmail(email_addr);
-        return ResponseEntity.ok("이메일을 확인하세요");
+
+        return ApiResponse.onSuccess("이메일이 전송되었습니다");
     }
 
     @PostMapping("/{email_addr}/authcode")
-    public ResponseEntity<String> sendEmailAndCode(@PathVariable String email_addr,
+    public ApiResponse<String> sendEmailAndCode(@PathVariable String email_addr,
                                                    @RequestBody EmailRequestDto dto) throws NoSuchAlgorithmException {
+
         if (emailService.verifyEmailCode(email_addr, dto.getCode())) {
-            return ResponseEntity.ok(emailService.makeMemberId(email_addr));
+            return ApiResponse.onSuccess(emailService.makeMemberId(email_addr));
         }
-        return ResponseEntity.notFound().build();
+
+        return ApiResponse.onFailure("FAIL","인증에 실패하였습니다",null);
     }
 }
