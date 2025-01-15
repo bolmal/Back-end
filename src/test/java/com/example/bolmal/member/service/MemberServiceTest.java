@@ -301,16 +301,6 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("정해진 형식에 맞지 않는 비밀번호로 재설정을 시도 할 시 예외를 반환한다")
-    public void member_password_pattern_valid(){
-        //given
-
-        //when
-
-        //then
-    }
-
-    @Test
     @DisplayName("이전과 같은 비밀번호로 변경을 시도 할 시 예외를 반환한다")
     public void member_password_duplicate_valid(){
         //given

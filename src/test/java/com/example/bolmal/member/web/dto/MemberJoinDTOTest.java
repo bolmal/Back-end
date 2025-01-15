@@ -118,5 +118,21 @@ public class MemberJoinDTOTest {
         assertThat(validate.iterator().next().getMessage()).contains("올바른 형식의 이메일 주소여야 합니다");
     }
 
+    @Test
+    @DisplayName("PasswordUpdateRequestDTO는 Password 조건을 만족하지 못하면 오류를 반환한다")
+    public void member_password_pattern_valid(){
+        //given
+        MemberUpdateDTO.MemberPasswordUpdateRequestDTO newPassword = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
+                .newPassword("Te")
+                .build();
+
+        //when
+        Set<ConstraintViolation<MemberUpdateDTO.MemberPasswordUpdateRequestDTO>> validate = validator.validate(newPassword);
+
+        // then
+        assertThat(validate).isNotNull();
+        assertThat(validate.iterator().next().getMessage()).contains("비밀번호는 8~12자의 영문, 숫자, 특수문자를 포함해야 합니다");
+    }
+
 
 }
