@@ -1,11 +1,8 @@
 package com.example.bolmal.member.web.controller;
 
 import com.example.bolmal.common.apiPayLoad.ApiResponse;
-import com.example.bolmal.member.web.dto.MemberFindUsernameDTO;
-import com.example.bolmal.member.web.dto.MemberProfileDTO;
-import com.example.bolmal.member.web.dto.MemberUpdateDTO;
+import com.example.bolmal.member.web.dto.*;
 import com.example.bolmal.member.web.port.MemberService;
-import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -75,8 +72,8 @@ public class MemberController {
     }
 
 
-    @Operation(summary = "비밀번호 재설정 API")
-    @PatchMapping("/passwords")
+    @Operation(summary = "마이프로필 비밀번호 재설정 API")
+    @PatchMapping("/profiles/passwords")
     public ApiResponse<String> changePassword(@AuthenticationPrincipal UserDetails userDetails,
                                               @Valid @RequestBody MemberUpdateDTO.MemberPasswordUpdateRequestDTO request) {
 
@@ -86,8 +83,8 @@ public class MemberController {
     }
 
 
-    @Operation(summary = "비밀번호 검증 API")
-    @PatchMapping("/valid/password")
+    @Operation(summary = "마이프로필 비밀번호 검증 API")
+    @PatchMapping("/profiles/passwords/valid")
     public ApiResponse<String> validPassword(@AuthenticationPrincipal UserDetails userDetails,
                                              @Valid @RequestBody MemberUpdateDTO.MemberPasswordUpdateRequestDTO request) {
         memberService.validPassword(userDetails.getUsername(), request);
@@ -96,7 +93,7 @@ public class MemberController {
 
 
     @Operation(summary = "아이디 찾기 API")
-    @GetMapping("/username")
+    @GetMapping("/usernames")
     public ApiResponse<MemberFindUsernameDTO.MemberFindUsernameResponseDTO> getUsername(
             @Valid @ModelAttribute MemberFindUsernameDTO.MemberFindUsernameRequestDTO request
     ){
@@ -104,6 +101,18 @@ public class MemberController {
         MemberFindUsernameDTO.MemberFindUsernameResponseDTO result = memberService.getUsername(request);
         return ApiResponse.onSuccess(result);
     }
+
+    @Operation(summary = "비밀번호 찾기(재설정) API")
+    @PatchMapping("/passwords")
+    public ApiResponse<MemberFindPasswordDTO.MemberFindPasswordResponseDTO> getUsername(
+            @Valid @RequestBody MemberFindPasswordDTO.MemberFindPasswordRequestDTO request
+    ){
+
+        MemberFindPasswordDTO.MemberFindPasswordResponseDTO result = memberService.getPassword(request);
+        return ApiResponse.onSuccess(result);
+    }
+
+
 
 
 

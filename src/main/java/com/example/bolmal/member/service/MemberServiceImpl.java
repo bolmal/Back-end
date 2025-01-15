@@ -11,10 +11,7 @@ import com.example.bolmal.member.service.port.AgreementRepository;
 import com.example.bolmal.member.service.port.BCrypt;
 import com.example.bolmal.member.service.port.LocalDateTimeHolder;
 import com.example.bolmal.member.service.port.MemberRepository;
-import com.example.bolmal.member.web.dto.MemberFindUsernameDTO;
-import com.example.bolmal.member.web.dto.MemberJoinDTO;
-import com.example.bolmal.member.web.dto.MemberProfileDTO;
-import com.example.bolmal.member.web.dto.MemberUpdateDTO;
+import com.example.bolmal.member.web.dto.*;
 import com.example.bolmal.member.web.port.MemberService;
 import jakarta.validation.Valid;
 import lombok.Builder;
@@ -137,6 +134,17 @@ public class MemberServiceImpl implements MemberService {
 
         return Member.toMemberFindUsernameResponseDTO(result);
 
+    }
+
+    @Override
+    public MemberFindPasswordDTO.MemberFindPasswordResponseDTO getPassword(MemberFindPasswordDTO.MemberFindPasswordRequestDTO request){
+
+        Member findMember = findMemberByUsername(request.getUsername());
+
+        Member result = memberRepository.findByNameAndPhoneNumber(request.getName(), request.getPhoneNumber());
+        Member resetMember = Member.resetPassword(result, request.getNewPassword(), bCrypt);
+
+        return Member.toMemberFindPasswordResponseDTO(resetMember,request);
     }
 
 

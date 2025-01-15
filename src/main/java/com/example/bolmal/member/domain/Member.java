@@ -7,10 +7,7 @@ import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.domain.enums.SubStatus;
 import com.example.bolmal.member.service.port.BCrypt;
 import com.example.bolmal.member.service.port.LocalDateTimeHolder;
-import com.example.bolmal.member.web.dto.MemberFindUsernameDTO;
-import com.example.bolmal.member.web.dto.MemberJoinDTO;
-import com.example.bolmal.member.web.dto.MemberProfileDTO;
-import com.example.bolmal.member.web.dto.MemberUpdateDTO;
+import com.example.bolmal.member.web.dto.*;
 import jakarta.persistence.Column;
 import lombok.*;
 
@@ -140,6 +137,14 @@ public class Member extends BaseEntity {
         return MemberFindUsernameDTO.MemberFindUsernameResponseDTO.builder()
                 .memberId(member.getId())
                 .username(member.getUsername())
+                .build();
+    }
+
+    public static MemberFindPasswordDTO.MemberFindPasswordResponseDTO toMemberFindPasswordResponseDTO(Member member,
+                                                                                                      MemberFindPasswordDTO.MemberFindPasswordRequestDTO request){
+        return MemberFindPasswordDTO.MemberFindPasswordResponseDTO.builder()
+                .memberId(member.getId())
+                .newPassword(request.getNewPassword())
                 .build();
     }
 

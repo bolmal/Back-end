@@ -4,10 +4,7 @@ import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.service.port.LocalDateTimeHolder;
-import com.example.bolmal.member.web.dto.MemberFindUsernameDTO;
-import com.example.bolmal.member.web.dto.MemberJoinDTO;
-import com.example.bolmal.member.web.dto.MemberProfileDTO;
-import com.example.bolmal.member.web.dto.MemberUpdateDTO;
+import com.example.bolmal.member.web.dto.*;
 import com.example.bolmal.member.web.port.MemberService;
 
 import java.time.LocalDateTime;
@@ -83,6 +80,11 @@ public class FakeMemberService implements MemberService {
 
     @Override
     public MemberFindUsernameDTO.MemberFindUsernameResponseDTO getUsername(MemberFindUsernameDTO.MemberFindUsernameRequestDTO request) {
+        return null;
+    }
+
+    @Override
+    public MemberFindPasswordDTO.MemberFindPasswordResponseDTO getPassword(MemberFindPasswordDTO.MemberFindPasswordRequestDTO request) {
         return null;
     }
 

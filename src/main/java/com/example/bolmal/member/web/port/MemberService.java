@@ -1,10 +1,7 @@
 package com.example.bolmal.member.web.port;
 
 import com.example.bolmal.member.service.port.LocalDateTimeHolder;
-import com.example.bolmal.member.web.dto.MemberFindUsernameDTO;
-import com.example.bolmal.member.web.dto.MemberJoinDTO;
-import com.example.bolmal.member.web.dto.MemberProfileDTO;
-import com.example.bolmal.member.web.dto.MemberUpdateDTO;
+import com.example.bolmal.member.web.dto.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,6 +25,8 @@ public interface MemberService {
     boolean validPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request);
 
     MemberFindUsernameDTO.MemberFindUsernameResponseDTO getUsername(MemberFindUsernameDTO.MemberFindUsernameRequestDTO request);
+
+    MemberFindPasswordDTO.MemberFindPasswordResponseDTO getPassword(MemberFindPasswordDTO.MemberFindPasswordRequestDTO request);
 
     // 매일 자정에 실행
     void deleteOldInactiveMembers(long days);
