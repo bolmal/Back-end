@@ -1,5 +1,7 @@
 package com.example.bolmal.member.infrastructure.repository;
 
+import com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus;
+import com.example.bolmal.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.infrastructure.entity.MemberEntity;
@@ -55,8 +57,11 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Member findByNameAndPhoneNumber(String name, String phoneNumber) {
-        return memberJpaRepository.findByNameAndPhoneNumber(name,phoneNumber).toModel();
+        return Optional.ofNullable(memberJpaRepository.findByNameAndPhoneNumber(name, phoneNumber))
+                .map(MemberEntity::toModel)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
+
 
 
 }

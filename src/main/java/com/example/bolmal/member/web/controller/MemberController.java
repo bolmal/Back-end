@@ -96,9 +96,9 @@ public class MemberController {
 
 
     @Operation(summary = "아이디 찾기 API")
-    @PostMapping("/username")
+    @GetMapping("/username")
     public ApiResponse<MemberFindUsernameDTO.MemberFindUsernameResponseDTO> getUsername(
-            @Valid @RequestBody MemberFindUsernameDTO.MemberFindUsernameRequestDTO request
+            @Valid @ModelAttribute MemberFindUsernameDTO.MemberFindUsernameRequestDTO request
     ){
 
         MemberFindUsernameDTO.MemberFindUsernameResponseDTO result = memberService.getUsername(request);
