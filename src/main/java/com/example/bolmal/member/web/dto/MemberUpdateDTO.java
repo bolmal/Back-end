@@ -54,6 +54,9 @@ public class MemberUpdateDTO {
     }
 
 
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
     @Getter
     public static class MemberPasswordUpdateRequestDTO{
 

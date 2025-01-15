@@ -15,6 +15,11 @@ public class FakeBCrypt implements BCrypt {
         return rawPassword + mockStr;
     }
 
+    @Override
+    public boolean matches(String oldPassword, String newPassword) {
+        return (oldPassword).equals(newPassword+mockStr);
+    }
+
 
     @Test
     @DisplayName("BCryptPasswordEncoder를 추상화하여 비밀번호를 인코딩 할 수 있다")

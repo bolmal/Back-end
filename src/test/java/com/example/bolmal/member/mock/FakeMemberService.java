@@ -71,6 +71,11 @@ public class FakeMemberService implements MemberService {
     }
 
     @Override
+    public String resetPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request) {
+        return "";
+    }
+
+    @Override
     public void deleteOldInactiveMembers(long days) {
 
     }

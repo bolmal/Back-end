@@ -27,13 +27,13 @@ class MemberServiceTest {
 
     private MemberServiceImpl memberService;
     FakeMemberRepository fakeMemberRepository = new FakeMemberRepository();
+    FakeBCrypt fakeBCrypt = new FakeBCrypt();
     FakeLocalDateTimeHolder fakeLocalDateTimeHolder = new FakeLocalDateTimeHolder();
 
     @BeforeEach
     void setUp() {
 
         FakeAgreementRepository fakeAgreementRepository = new FakeAgreementRepository();
-        FakeBCrypt fakeBCrypt = new FakeBCrypt();
 
         this.memberService = MemberServiceImpl.builder()
                 .memberRepository(fakeMemberRepository)
@@ -42,7 +42,7 @@ class MemberServiceTest {
                 .localDate(fakeLocalDateTimeHolder)
                 .build();
 
-        Member member1 = fakeMemberRepository.save(
+        fakeMemberRepository.save(
                 Member.builder()
                         .id(1L)
                         .username("testtest")
@@ -280,6 +280,44 @@ class MemberServiceTest {
         assertThatThrownBy(()->memberService.rollback("testtest"))
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code",MEMBER_NOT_INACTIVE);
+    }
+
+    @Test
+    @DisplayName("resetPassword()를 이용하여 비밀번호를 초기화 할 수 있다")
+    public void member_password(){
+        //given
+        MemberUpdateDTO.MemberPasswordUpdateRequestDTO newPassword = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
+                .newPassword("TestT123!")
+                .build();
+
+        //when
+        memberService.resetPassword("testtest", newPassword);
+        Member byUsername = fakeMemberRepository.findByUsername("testtest")
+                .orElseThrow();
+
+        //then
+        assertThat(fakeBCrypt.encode(newPassword.getNewPassword())).isEqualTo(byUsername.getPassword());
+
+    }
+
+    @Test
+    @DisplayName("정해진 형식에 맞지 않는 비밀번호로 재설정을 시도 할 시 예외를 반환한다")
+    public void member_password_pattern_valid(){
+        //given
+
+        //when
+
+        //then
+    }
+
+    @Test
+    @DisplayName("이전과 같은 비밀번호로 변경을 시도 할 시 예외를 반환한다")
+    public void member_password_duplicate_valid(){
+        //given
+
+        //when
+
+        //then
     }
 
 }
