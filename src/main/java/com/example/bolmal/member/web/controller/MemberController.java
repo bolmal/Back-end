@@ -77,9 +77,9 @@ public class MemberController {
     @Operation(summary = "비밀번호 재설정 API")
     @PatchMapping("/passwords")
     public ApiResponse<String> changePassword(@AuthenticationPrincipal UserDetails userDetails,
-                                              @RequestParam String newPassword) {
+                                              @Valid @RequestBody MemberUpdateDTO.MemberPasswordUpdateRequestDTO request) {
 
-        String newPasswords = memberService.resetPassword(userDetails.getUsername(), newPassword);
+        String newPasswords = memberService.resetPassword(userDetails.getUsername(), request);
 
         return ApiResponse.onSuccess(newPasswords);
     }

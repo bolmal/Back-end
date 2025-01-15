@@ -100,11 +100,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public String resetPassword(String username, String newPassword){
+    public String resetPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request){
 
         Member findMember = findMemberByUsername(username);
 
-        Member changedMember = Member.resetPassword(findMember, newPassword, bCrypt);
+        // 이전의 비밀번호와 같은 비밀번호인지 검증
+        newPasswordValid(request.getNewPassword(), findMember.getPassword(), bCrypt);
+
+        Member changedMember = Member.resetPassword(findMember, request.getNewPassword(), bCrypt);
         memberRepository.save(changedMember);
 
         return changedMember.getUsername();
@@ -114,6 +117,13 @@ public class MemberServiceImpl implements MemberService {
 
 
 
+
+
+    private static void newPasswordValid(String rawPassword, String encodedPassword,BCrypt bCrypt){
+        if(bCrypt.matches(rawPassword,encodedPassword)){
+            throw new MemberHandler(ErrorStatus.MEMBER_PASSWORD_DUPLICATE);
+        }
+    }
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void final_delete(){

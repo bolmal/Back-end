@@ -52,4 +52,13 @@ public class MemberUpdateDTO {
         Long memberId;
 
     }
+
+
+    @Getter
+    public static class MemberPasswordUpdateRequestDTO{
+
+        @PasswordPatternValid
+        String newPassword;
+
+    }
 }

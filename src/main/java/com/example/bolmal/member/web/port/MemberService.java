@@ -22,7 +22,7 @@ public interface MemberService {
 
     void rollback(String username);
 
-    String resetPassword(String username, String newPassword);
+    String resetPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request);
 
     // 매일 자정에 실행
     void deleteOldInactiveMembers(long days);
