@@ -65,12 +65,26 @@ public class MemberController {
     }
 
 
-    @Operation(summary = "비활성화 회원, 활성으로 돌리기")
+    @Operation(summary = "비활성화 회원, 활성으로 전환 API")
     @PatchMapping("/rollback")
     public ApiResponse<String> rollback(@AuthenticationPrincipal UserDetails userDetails) {
         memberService.rollback(userDetails.getUsername());
 
         return ApiResponse.onSuccess("정상적으로 복구되었습니다");
+    }
+
+
+    @Operation(summary = "비밀번호 재설정 API")
+    @PatchMapping("/password")
+    public ApiResponse<String> changePassword(@AuthenticationPrincipal UserDetails userDetails) {
+        return ApiResponse.onSuccess("new password");
+    }
+
+
+    @Operation(summary = "비밀번호 검증 API")
+    @PatchMapping("/valid/password")
+    public ApiResponse<String> validPassword(@AuthenticationPrincipal UserDetails userDetails) {
+        return ApiResponse.onSuccess("비밀번호가 정상적으로 검증 되었습니다");
     }
 
 

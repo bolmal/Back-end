@@ -273,8 +273,6 @@ class MemberServiceTest {
     @DisplayName("활성 상태인 회원을 rollback() 할 수 없다")
     public void member_rollback_valid(){
         //given
-        Member byUsername = fakeMemberRepository.findByUsername("testtest")
-                .orElseThrow();
 
         //when
 
