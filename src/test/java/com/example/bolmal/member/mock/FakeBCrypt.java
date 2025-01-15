@@ -1,5 +1,7 @@
 package com.example.bolmal.member.mock;
 
+import com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus;
+import com.example.bolmal.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmal.member.service.port.BCrypt;
 import com.example.bolmal.member.service.port.MemberRepository;
 import org.assertj.core.api.Assertions;
@@ -17,7 +19,10 @@ public class FakeBCrypt implements BCrypt {
 
     @Override
     public boolean matches(String oldPassword, String newPassword) {
-        return (oldPassword).equals(newPassword+mockStr);
+        if ((oldPassword).equals(newPassword+mockStr)){
+            throw new MemberHandler(ErrorStatus.MEMBER_PASSWORD_DUPLICATE);
+        }
+        return true;
     }
 
 
