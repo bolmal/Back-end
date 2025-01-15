@@ -104,20 +104,11 @@ public class MemberController {
         -> 아아디 반환
 
      * */
+    @Operation(summary = "아이디 찾기 API")
+    @GetMapping("/username")
+    public void getUsername(){
+    }
 
-
-
-
-    /**
-
-        회원정보 찾기 - 비밀번호 재설정
-
-        1. 아이디 존재여부 확인하고
-        2. 이름
-        3. 휴대폰 번호 인증하고
-        4. 비밀번호 재설정
-
-     * */
 
 
 }
