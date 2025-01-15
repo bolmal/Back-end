@@ -135,10 +135,7 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND);
         }
 
-        return MemberFindUsernameDTO.MemberFindUsernameResponseDTO.builder()
-                .memberId(result.getId())
-                .username(result.getUsername())
-                .build();
+        return Member.toMemberFindUsernameResponseDTO(result);
 
     }
 

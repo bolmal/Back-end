@@ -7,6 +7,7 @@ import com.example.bolmal.member.domain.enums.Status;
 import com.example.bolmal.member.domain.enums.SubStatus;
 import com.example.bolmal.member.service.port.BCrypt;
 import com.example.bolmal.member.service.port.LocalDateTimeHolder;
+import com.example.bolmal.member.web.dto.MemberFindUsernameDTO;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
@@ -95,19 +96,6 @@ public class Member extends BaseEntity {
 
     }
 
-    public static MemberProfileDTO.MemberProfileResponseDTO toMemberProfileResponseDTO(Member member){
-
-        return MemberProfileDTO.MemberProfileResponseDTO.builder()
-                .username(member.getUsername())
-                .name(member.getName())
-                .gender(member.getGender())
-                .birthDate(member.getBirthday())
-                .email(member.getEmail())
-                .phoneNumber(member.getPhoneNumber())
-                .imagePath(member.getProfileImage())
-                .build();
-    }
-
     public static Member delete(Member member, LocalDateTimeHolder localDate){
 
         member.setStatus(Status.INACTIVE);
@@ -130,5 +118,29 @@ public class Member extends BaseEntity {
         return member;
     }
 
+
+
+
+    // ----
+
+    public static MemberProfileDTO.MemberProfileResponseDTO toMemberProfileResponseDTO(Member member){
+
+        return MemberProfileDTO.MemberProfileResponseDTO.builder()
+                .username(member.getUsername())
+                .name(member.getName())
+                .gender(member.getGender())
+                .birthDate(member.getBirthday())
+                .email(member.getEmail())
+                .phoneNumber(member.getPhoneNumber())
+                .imagePath(member.getProfileImage())
+                .build();
+    }
+
+    public static MemberFindUsernameDTO.MemberFindUsernameResponseDTO toMemberFindUsernameResponseDTO(Member member){
+        return MemberFindUsernameDTO.MemberFindUsernameResponseDTO.builder()
+                .memberId(member.getId())
+                .username(member.getUsername())
+                .build();
+    }
 
 }
