@@ -24,6 +24,8 @@ public interface MemberService {
 
     String resetPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request);
 
+    boolean validPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request);
+
     // 매일 자정에 실행
     void deleteOldInactiveMembers(long days);
 }

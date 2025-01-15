@@ -114,6 +114,20 @@ public class MemberServiceImpl implements MemberService {
 
     }
 
+    @Override
+    public boolean validPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request) {
+
+        Member findMember = findMemberByUsername(username);
+
+        // 두 비밀번호가 서로 일치함이 true가 나오면 에러를 반환한다
+        if(bCrypt.matches(request.getNewPassword(), findMember.getPassword())){
+            throw new MemberHandler(ErrorStatus.MEMBER_PASSWORD_DUPLICATE);
+        }
+
+        return true;
+
+    }
+
 
 
 

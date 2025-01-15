@@ -48,12 +48,12 @@ public class FakeBCrypt implements BCrypt {
         String rawPassword = "test";
 
         //when
-        String encodedPassword = encode(rawPassword); // 인코딩된 값
-        String inputPassword = "test"; // 비교할 비밀번호
+        String encodedPassword = encode(rawPassword);
+        String inputPassword = "test";
 
-        boolean matches = matches(encodedPassword, inputPassword); // encodedPassword와 inputPassword 비교
+        boolean matches = matches(encodedPassword, inputPassword);
 
         //then
-        assertTrue(matches);  // 두 비밀번호가 일치하는지 확인
+        assertTrue(matches);
     }
 }

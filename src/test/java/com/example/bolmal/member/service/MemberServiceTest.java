@@ -314,7 +314,7 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("resetPassword()를 이용하여 비밀번호를 초기화 할 수 있다")
-    public void member_password() {
+    public void member_password(){
         //given
         MemberUpdateDTO.MemberPasswordUpdateRequestDTO newPassword = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
                 .newPassword("TestTTTT123!")
@@ -329,6 +329,23 @@ class MemberServiceTest {
 
         //then
         assertThat(fakeBCrypt.encode(newPassword.getNewPassword())).isEqualTo(password);
+
+    }
+
+    @Test
+    @DisplayName("이전과 같은 비밀번호로 변경을 시도 할 시 예외를 반환한다")
+    public void member_password_duplicate_valid(){
+        //given
+        MemberUpdateDTO.MemberPasswordUpdateRequestDTO newPassword = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
+                .newPassword("Test123!") // 기존 비밀번호와 동일한 값
+                .build();
+
+        Member byUsername = fakeMemberRepository.findByUsername("testtest")
+                .orElseThrow();
+
+        String resetPassword = memberService.resetPassword("testtest", newPassword);
+        //when & then
+
 
     }
 
