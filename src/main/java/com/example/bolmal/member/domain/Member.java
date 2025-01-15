@@ -4,11 +4,13 @@ import com.example.bolmal.common.domain.BaseEntity;
 import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
+import com.example.bolmal.member.domain.enums.SubStatus;
 import com.example.bolmal.member.service.port.BCrypt;
 import com.example.bolmal.member.service.port.LocalDateTimeHolder;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
+import jakarta.persistence.Column;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -50,6 +52,12 @@ public class Member extends BaseEntity {
 
     private String profileImage;
 
+    private Integer alarmAccount;
+
+    private Integer bookmarkAccount;
+
+    private SubStatus subStatus;
+
 
     public static Member JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request, BCrypt bCrypt){
 
@@ -64,6 +72,9 @@ public class Member extends BaseEntity {
                 .email(request.getEmail())
                 .status(Status.ACTIVE)
                 .gender(request.getGender())
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
                 .build();
     }
 

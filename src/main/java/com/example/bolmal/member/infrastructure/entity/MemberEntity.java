@@ -8,6 +8,7 @@ import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
+import com.example.bolmal.member.domain.enums.SubStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -67,6 +68,23 @@ public class MemberEntity extends BaseEntity {
     private Gender gender;
 
     private String profileImage;
+
+    @Column(nullable = false)
+    private Integer alarmAccount;
+
+    @Column(nullable = false)
+    private Integer bookmarkAccount;
+
+    @Column(nullable = false)
+    private SubStatus subStatus;
+
+
+
+
+
+
+
+
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private AgreementEntity agreementEntity;
