@@ -1,6 +1,7 @@
 package com.example.bolmal.member.web.port;
 
 import com.example.bolmal.member.service.port.LocalDateTimeHolder;
+import com.example.bolmal.member.web.dto.MemberFindUsernameDTO;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
@@ -25,6 +26,8 @@ public interface MemberService {
     String resetPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request);
 
     boolean validPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request);
+
+    MemberFindUsernameDTO.MemberFindUsernameResponseDTO getUsername(MemberFindUsernameDTO.MemberFindUsernameRequestDTO request);
 
     // 매일 자정에 실행
     void deleteOldInactiveMembers(long days);

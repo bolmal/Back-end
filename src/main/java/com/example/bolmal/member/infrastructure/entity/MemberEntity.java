@@ -12,6 +12,7 @@ import com.example.bolmal.member.domain.enums.SubStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -121,6 +122,9 @@ public class MemberEntity extends BaseEntity {
         memberEntity.inactiveDate = member.getInactiveDate();
         memberEntity.gender = member.getGender();
         memberEntity.profileImage = member.getProfileImage();
+        memberEntity.alarmAccount = member.getAlarmAccount();
+        memberEntity.bookmarkAccount = member.getBookmarkAccount();
+        memberEntity.subStatus = member.getSubStatus();
 
         return memberEntity;
     }

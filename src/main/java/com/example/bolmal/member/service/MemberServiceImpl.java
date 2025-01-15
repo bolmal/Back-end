@@ -11,6 +11,7 @@ import com.example.bolmal.member.service.port.AgreementRepository;
 import com.example.bolmal.member.service.port.BCrypt;
 import com.example.bolmal.member.service.port.LocalDateTimeHolder;
 import com.example.bolmal.member.service.port.MemberRepository;
+import com.example.bolmal.member.web.dto.MemberFindUsernameDTO;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
@@ -122,6 +123,22 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return true;
+
+    }
+
+    @Override
+    public MemberFindUsernameDTO.MemberFindUsernameResponseDTO getUsername(MemberFindUsernameDTO.MemberFindUsernameRequestDTO request){
+
+        Member result = memberRepository.findByNameAndPhoneNumber(request.getName(), request.getPhoneNumber());
+
+        if(result == null){
+            throw new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND);
+        }
+
+        return MemberFindUsernameDTO.MemberFindUsernameResponseDTO.builder()
+                .memberId(result.getId())
+                .username(result.getUsername())
+                .build();
 
     }
 

@@ -1,6 +1,7 @@
 package com.example.bolmal.member.web.controller;
 
 import com.example.bolmal.common.apiPayLoad.ApiResponse;
+import com.example.bolmal.member.web.dto.MemberFindUsernameDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
 import com.example.bolmal.member.web.port.MemberService;
@@ -94,19 +95,14 @@ public class MemberController {
     }
 
 
-    /**
-
-        회원정보 찾기 - 아아디
-
-        1. 이름
-        2. 핸드폰 번호
-
-        -> 아아디 반환
-
-     * */
     @Operation(summary = "아이디 찾기 API")
-    @GetMapping("/username")
-    public void getUsername(){
+    @PostMapping("/username")
+    public ApiResponse<MemberFindUsernameDTO.MemberFindUsernameResponseDTO> getUsername(
+            @Valid @RequestBody MemberFindUsernameDTO.MemberFindUsernameRequestDTO request
+    ){
+
+        MemberFindUsernameDTO.MemberFindUsernameResponseDTO result = memberService.getUsername(request);
+        return ApiResponse.onSuccess(result);
     }
 
 

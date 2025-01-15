@@ -53,5 +53,10 @@ public class MemberRepositoryImpl implements MemberRepository {
         memberJpaRepository.deleteAll(memberEntities);
     }
 
+    @Override
+    public Member findByNameAndPhoneNumber(String name, String phoneNumber) {
+        return memberJpaRepository.findByNameAndPhoneNumber(name,phoneNumber).toModel();
+    }
+
 
 }
