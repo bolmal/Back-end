@@ -9,6 +9,7 @@ import com.example.bolmal.member.mock.FakeAgreementRepository;
 import com.example.bolmal.member.mock.FakeBCrypt;
 import com.example.bolmal.member.mock.FakeLocalDateTimeHolder;
 import com.example.bolmal.member.mock.FakeMemberRepository;
+import com.example.bolmal.member.web.dto.MemberFindUsernameDTO;
 import com.example.bolmal.member.web.dto.MemberJoinDTO;
 import com.example.bolmal.member.web.dto.MemberProfileDTO;
 import com.example.bolmal.member.web.dto.MemberUpdateDTO;
@@ -344,6 +345,39 @@ class MemberServiceTest {
         assertThatThrownBy(()-> memberService.validPassword("testtest", newPassword))
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code",MEMBER_PASSWORD_DUPLICATE);
+    }
+
+    @Test
+    @DisplayName("회원의 전화번호와 이름을 이용하여 회원의 username을 찾을 수 있다")
+    public void member_username(){
+        //given
+        MemberFindUsernameDTO.MemberFindUsernameRequestDTO requestDTO = MemberFindUsernameDTO.MemberFindUsernameRequestDTO.builder()
+                .name("test")
+                .phoneNumber("test")
+                .build();
+
+        //when
+        MemberFindUsernameDTO.MemberFindUsernameResponseDTO result = memberService.getUsername(requestDTO);
+
+        //then
+        assertThat(result).isNotNull();
+        assertThat(result.getUsername()).isEqualTo("testtest");
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원의 전화번호와 이름으로는 조회 할 수 없다")
+    public void member_username_valid(){
+        //given
+        MemberFindUsernameDTO.MemberFindUsernameRequestDTO requestDTO = MemberFindUsernameDTO.MemberFindUsernameRequestDTO.builder()
+                .name("test1")
+                .phoneNumber("test1")
+                .build();
+
+        //when
+        assertThatThrownBy(()-> memberService.getUsername(requestDTO))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code",MEMBER_NOT_FOUND);
     }
 
 

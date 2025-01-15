@@ -1,5 +1,7 @@
 package com.example.bolmal.member.mock;
 
+import com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus;
+import com.example.bolmal.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
@@ -62,6 +64,14 @@ public class FakeMemberRepository implements MemberRepository {
     @Override
     public void deleteAll(List<Member> membersToDelete) {
         data.removeAll(membersToDelete);
+    }
+
+    @Override
+    public Member findByNameAndPhoneNumber(String name, String phoneNumber) {
+        return data.stream()
+                .filter(item -> item.getName().equals(name) && item.getPhoneNumber().equals(phoneNumber))
+                .findAny()
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND)); // MemberHandler 생성자 호출 시 lambda 사용
     }
 
     public void clear() {
