@@ -46,6 +46,7 @@ public class AgreementEntity extends BaseEntity {
         agreementEntity.privacyAgreement = agreement.getPrivacyAgreement();
         agreementEntity.financialAgreement = agreement.getFinancialAgreement();
         agreementEntity.advAgreement = agreement.getAdvAgreement();
+        agreementEntity.member = MemberEntity.fromModel(agreement.getMember());
 
         return agreementEntity;
     }

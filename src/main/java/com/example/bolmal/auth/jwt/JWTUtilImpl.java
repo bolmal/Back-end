@@ -1,8 +1,8 @@
 package com.example.bolmal.auth.jwt;
 
 import com.example.bolmal.auth.service.port.CurrentTime;
-import com.example.bolmal.member.service.port.MemberRepository;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,50 +14,67 @@ import java.util.Date;
 @Component
 public class JWTUtilImpl implements JWTUtil {
 
-    private SecretKey secretKey;
+    private final SecretKey secretKey;
 
-    public JWTUtilImpl(@Value("${spring.jwt.secret}")String secret) {
-
-
-        secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+    public JWTUtilImpl(@Value("${spring.jwt.secret}") String secret) {
+        if (secret == null) {
+            throw new IllegalStateException("Secret is null!");
+        }
+        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS256.getJcaName());
     }
 
     @Override
     public String getUsername(String token) {
-
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("username", String.class);
     }
 
     @Override
     public String getRole(String token) {
-
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class);
     }
 
-
-    //카테고리 추출
     @Override
     public String getCategory(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("category", String.class);
     }
 
     @Override
     public Boolean isExpired(String token) {
+        Date expiration = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+        return expiration.before(new Date());
     }
 
     @Override
     public String createJwt(String category, String username, String role, Long expiredMs, CurrentTime currentTime) {
-
         expiredMs = expiredMs * 1000L;
 
         return Jwts.builder()
-                .claim("category",category)
+                .claim("category", category)
                 .claim("username", username)
                 .claim("role", role)
-                .issuedAt(new Date(currentTime.getCurrentTime()))
-                .expiration(new Date(currentTime.getCurrentTime() + expiredMs))
+                .setIssuedAt(new Date(currentTime.getCurrentTime()))
+                .setExpiration(new Date(currentTime.getCurrentTime() + expiredMs))
                 .signWith(secretKey)
                 .compact();
     }

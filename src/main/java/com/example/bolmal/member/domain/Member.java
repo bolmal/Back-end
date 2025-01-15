@@ -4,9 +4,11 @@ import com.example.bolmal.common.domain.BaseEntity;
 import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
+import com.example.bolmal.member.domain.enums.SubStatus;
 import com.example.bolmal.member.service.port.BCrypt;
-import com.example.bolmal.member.service.port.MemberRepository;
-import com.example.bolmal.member.web.dto.MemberJoinDTO;
+import com.example.bolmal.member.service.port.LocalDateTimeHolder;
+import com.example.bolmal.member.web.dto.*;
+import jakarta.persistence.Column;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Setter
 public class Member extends BaseEntity {
 
 
@@ -43,6 +46,16 @@ public class Member extends BaseEntity {
 
     private Gender gender;
 
+    private Agreement agreement;
+
+    private String profileImage;
+
+    private Integer alarmAccount;
+
+    private Integer bookmarkAccount;
+
+    private SubStatus subStatus;
+
 
     public static Member JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request, BCrypt bCrypt){
 
@@ -57,8 +70,82 @@ public class Member extends BaseEntity {
                 .email(request.getEmail())
                 .status(Status.ACTIVE)
                 .gender(request.getGender())
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
                 .build();
     }
 
+    public static Member update(MemberUpdateDTO.MemberUpdateRequestDTO request, Member member){
+
+
+        member.setUsername(request.getUsername());
+        // 비밀번는 따로 변경하기
+
+        member.setName(request.getName());
+        member.setName(request.getName());
+        member.setGender(request.getGender());
+        member.setBirthday(request.getBirthDate());
+        member.setEmail(request.getEmail());
+        member.setPhoneNumber(request.getPhoneNumber());
+
+        return member;
+
+    }
+
+    public static Member delete(Member member, LocalDateTimeHolder localDate){
+
+        member.setStatus(Status.INACTIVE);
+        member.setInactiveDate(localDate.now());
+
+        return member;
+    }
+
+    public static Member rollback(Member member, LocalDateTimeHolder localDate){
+
+        member.setStatus(Status.ACTIVE);
+        member.setInactiveDate(localDate.now());
+
+        return member;
+    }
+
+    public static Member resetPassword(Member member, String newPassword, BCrypt bCrypt){
+        member.setPassword(bCrypt.encode(newPassword));
+
+        return member;
+    }
+
+
+
+
+    // ----
+
+    public static MemberProfileDTO.MemberProfileResponseDTO toMemberProfileResponseDTO(Member member){
+
+        return MemberProfileDTO.MemberProfileResponseDTO.builder()
+                .username(member.getUsername())
+                .name(member.getName())
+                .gender(member.getGender())
+                .birthDate(member.getBirthday())
+                .email(member.getEmail())
+                .phoneNumber(member.getPhoneNumber())
+                .imagePath(member.getProfileImage())
+                .build();
+    }
+
+    public static MemberFindUsernameDTO.MemberFindUsernameResponseDTO toMemberFindUsernameResponseDTO(Member member){
+        return MemberFindUsernameDTO.MemberFindUsernameResponseDTO.builder()
+                .memberId(member.getId())
+                .username(member.getUsername())
+                .build();
+    }
+
+    public static MemberFindPasswordDTO.MemberFindPasswordResponseDTO toMemberFindPasswordResponseDTO(Member member,
+                                                                                                      MemberFindPasswordDTO.MemberFindPasswordRequestDTO request){
+        return MemberFindPasswordDTO.MemberFindPasswordResponseDTO.builder()
+                .memberId(member.getId())
+                .newPassword(request.getNewPassword())
+                .build();
+    }
 
 }

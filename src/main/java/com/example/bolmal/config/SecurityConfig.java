@@ -97,7 +97,8 @@ public class SecurityConfig {
                 .requestMatchers("/health").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()// Swagger 관련 경로를 허용
-                .requestMatchers("members/join","/login").permitAll()
+                .requestMatchers("members/join","/login","members/username","members/passwords").permitAll()
+                .requestMatchers("phone-numbers/**").permitAll()
 
                 .anyRequest().authenticated());
 

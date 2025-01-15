@@ -8,8 +8,11 @@ import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
 import com.example.bolmal.member.domain.enums.Status;
+import com.example.bolmal.member.domain.enums.SubStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +24,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@DynamicUpdate
 public class MemberEntity extends BaseEntity {
 
     @Id
@@ -64,6 +68,25 @@ public class MemberEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    private String profileImage;
+
+    @Column(nullable = false)
+    private Integer alarmAccount;
+
+    @Column(nullable = false)
+    private Integer bookmarkAccount;
+
+    @Column(nullable = false)
+    private SubStatus subStatus;
+
+
+
+
+
+
+
+
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private AgreementEntity agreementEntity;
 
@@ -98,6 +121,10 @@ public class MemberEntity extends BaseEntity {
         memberEntity.status = member.getStatus();
         memberEntity.inactiveDate = member.getInactiveDate();
         memberEntity.gender = member.getGender();
+        memberEntity.profileImage = member.getProfileImage();
+        memberEntity.alarmAccount = member.getAlarmAccount();
+        memberEntity.bookmarkAccount = member.getBookmarkAccount();
+        memberEntity.subStatus = member.getSubStatus();
 
         return memberEntity;
     }

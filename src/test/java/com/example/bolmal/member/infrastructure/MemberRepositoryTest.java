@@ -1,8 +1,7 @@
 package com.example.bolmal.member.infrastructure;
 
-import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.infrastructure.entity.MemberEntity;
-import com.example.bolmal.member.service.port.MemberRepository;
+import com.example.bolmal.member.infrastructure.repository.MemberJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

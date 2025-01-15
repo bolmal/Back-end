@@ -2,8 +2,8 @@ package com.example.bolmal.auth.mock;
 
 import com.example.bolmal.auth.jwt.JWTUtil;
 import com.example.bolmal.auth.service.port.CurrentTime;
-import com.example.bolmal.member.service.port.MemberRepository;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.SecretKey;
@@ -16,7 +16,7 @@ public class FakeJWTUtil implements JWTUtil {
     SecretKey secretKey;
 
     public FakeJWTUtil(@Value("${spring.jwt.secret}") String secret) {
-        secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS256.getJcaName());
     }
 
     @Override
@@ -40,11 +40,11 @@ public class FakeJWTUtil implements JWTUtil {
     }
 
     public Date getExpirationDate(String token) {
-        return Jwts.parser()
-                .verifyWith(secretKey)
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
                 .build()
-                .parseSignedClaims(token)
-                .getPayload()
+                .parseClaimsJws(token)
+                .getBody()
                 .getExpiration();
     }
 
@@ -56,8 +56,8 @@ public class FakeJWTUtil implements JWTUtil {
                 .claim("category", category)
                 .claim("username", username)
                 .claim("role", role)
-                .issuedAt(new Date(fakeCurrentTime.getCurrentTime()))
-                .expiration(new Date(fakeCurrentTime.getCurrentTime() + expiredMs))
+                .setIssuedAt(new Date(fakeCurrentTime.getCurrentTime()))
+                .setExpiration(new Date(fakeCurrentTime.getCurrentTime() + expiredMs))
                 .signWith(secretKey)
                 .compact();
     }
