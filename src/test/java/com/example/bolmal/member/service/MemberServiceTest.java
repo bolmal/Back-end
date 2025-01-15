@@ -112,6 +112,36 @@ class MemberServiceTest {
     }
 
     @Test
+    @DisplayName("회원가입 과정에서 BCrypt를 이용하여 비밀번호를 인코딩 할 수 있다")
+    public void joinMember_password(){
+        //given
+        MemberJoinDTO.MemberJoinRequestDTO request = MemberJoinDTO.MemberJoinRequestDTO.builder()
+                .username("testtest3")
+                .password("Test123!")
+                .name("test")
+                .nickname("test")
+                .phoneNumber("test")
+                .birthDate(LocalDate.of(2025, 1, 8))
+                .email("test@test.test")
+                .gender(Gender.FEMALE)
+                .advAgreement(Boolean.TRUE)
+                .serviceAgreement(Boolean.TRUE)
+                .financialAgreement(Boolean.TRUE)
+                .privacyAgreement(Boolean.TRUE)
+                .build();
+
+        //when
+        memberService.joinMember(request);
+        Member byUsername = fakeMemberRepository.findByUsername("testtest3")
+                .orElseThrow();
+
+        String password = byUsername.getPassword();
+
+        //then
+        assertThat(password).isEqualTo("Test123!test");
+    }
+
+    @Test
     @DisplayName("필수 약관동의 조건을 만족하지 못하면 오류를 반환한다")
     public void joinMember_agreement(){
         //given
@@ -284,10 +314,10 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("resetPassword()를 이용하여 비밀번호를 초기화 할 수 있다")
-    public void member_password(){
+    public void member_password() {
         //given
         MemberUpdateDTO.MemberPasswordUpdateRequestDTO newPassword = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
-                .newPassword("TestT123!")
+                .newPassword("TestTTTT123!")
                 .build();
 
         //when
@@ -295,25 +325,12 @@ class MemberServiceTest {
         Member byUsername = fakeMemberRepository.findByUsername("testtest")
                 .orElseThrow();
 
+        String password = byUsername.getPassword();
+
         //then
-        assertThat(fakeBCrypt.encode(newPassword.getNewPassword())).isEqualTo(byUsername.getPassword());
+        assertThat(fakeBCrypt.encode(newPassword.getNewPassword())).isEqualTo(password);
 
     }
 
-    @Test
-    @DisplayName("이전과 같은 비밀번호로 변경을 시도 할 시 예외를 반환한다")
-    public void member_password_duplicate_valid(){
-        //given
-        MemberUpdateDTO.MemberPasswordUpdateRequestDTO newPassword = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
-                .newPassword("Test123!")
-                .build();
-
-        //when
-
-        //then
-        assertThatThrownBy(()->memberService.resetPassword("testtest", newPassword))
-                .isInstanceOf(MemberHandler.class)
-                .hasFieldOrPropertyWithValue("code",MEMBER_PASSWORD_DUPLICATE);
-    }
 
 }

@@ -8,6 +8,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+
 public class FakeBCrypt implements BCrypt {
 
     private final String mockStr = "test";
@@ -19,16 +22,16 @@ public class FakeBCrypt implements BCrypt {
 
     @Override
     public boolean matches(String oldPassword, String newPassword) {
-        if ((oldPassword).equals(newPassword+mockStr)){
-            throw new MemberHandler(ErrorStatus.MEMBER_PASSWORD_DUPLICATE);
+        if (oldPassword.equals(encode(newPassword))) {
+            return true;
         }
-        return true;
+        return false;
     }
 
 
     @Test
     @DisplayName("BCryptPasswordEncoder를 추상화하여 비밀번호를 인코딩 할 수 있다")
-    public void title(){
+    public void bcryptPasswordEncoder_encode(){
         //given
         String s = "test";
 
@@ -37,5 +40,20 @@ public class FakeBCrypt implements BCrypt {
 
         //then
         Assertions.assertThat(result).isEqualTo("testtest");
+    }
+
+    @Test
+    @DisplayName("BCryptPasswordEncoder를 추상화하여 두 비밀번호의 일치여부를 판단 할 수 있다")
+    public void bcryptPasswordEncoder_matches() {
+        String rawPassword = "test";
+
+        //when
+        String encodedPassword = encode(rawPassword); // 인코딩된 값
+        String inputPassword = "test"; // 비교할 비밀번호
+
+        boolean matches = matches(encodedPassword, inputPassword); // encodedPassword와 inputPassword 비교
+
+        //then
+        assertTrue(matches);  // 두 비밀번호가 일치하는지 확인
     }
 }
