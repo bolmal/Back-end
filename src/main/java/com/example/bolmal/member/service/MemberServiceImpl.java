@@ -104,9 +104,6 @@ public class MemberServiceImpl implements MemberService {
 
         Member findMember = findMemberByUsername(username);
 
-        // 이전의 비밀번호와 같은 비밀번호인지 검증
-        newPasswordValid(request.getNewPassword(), findMember.getPassword(), bCrypt);
-
         Member changedMember = Member.resetPassword(findMember, request.getNewPassword(), bCrypt);
         memberRepository.save(changedMember);
 
@@ -130,16 +127,6 @@ public class MemberServiceImpl implements MemberService {
 
 
 
-
-
-
-    private static void newPasswordValid(String rawPassword, String encodedPassword,BCrypt bCrypt){
-
-        // 두 비밀번호가 서로 일치함이 true가 나오면 에러를 반환한다
-        if(bCrypt.matches(rawPassword,encodedPassword)){
-            throw new MemberHandler(ErrorStatus.MEMBER_PASSWORD_DUPLICATE);
-        }
-    }
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void final_delete(){

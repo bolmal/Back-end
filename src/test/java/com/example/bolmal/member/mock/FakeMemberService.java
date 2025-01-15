@@ -76,6 +76,11 @@ public class FakeMemberService implements MemberService {
     }
 
     @Override
+    public boolean validPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request) {
+        return false;
+    }
+
+    @Override
     public void deleteOldInactiveMembers(long days) {
 
     }

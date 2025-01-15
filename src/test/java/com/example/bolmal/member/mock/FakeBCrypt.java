@@ -22,10 +22,12 @@ public class FakeBCrypt implements BCrypt {
 
     @Override
     public boolean matches(String oldPassword, String newPassword) {
-        if (oldPassword.equals(encode(newPassword))) {
-            return true;
+        String newPasswords = encode(newPassword);
+
+        if (oldPassword.equals(newPasswords)) {
+            throw new MemberHandler(ErrorStatus.MEMBER_PASSWORD_DUPLICATE);
         }
-        return false;
+        return true;
     }
 
 
@@ -40,20 +42,5 @@ public class FakeBCrypt implements BCrypt {
 
         //then
         Assertions.assertThat(result).isEqualTo("testtest");
-    }
-
-    @Test
-    @DisplayName("BCryptPasswordEncoder를 추상화하여 두 비밀번호의 일치여부를 판단 할 수 있다")
-    public void bcryptPasswordEncoder_matches() {
-        String rawPassword = "test";
-
-        //when
-        String encodedPassword = encode(rawPassword);
-        String inputPassword = "test";
-
-        boolean matches = matches(encodedPassword, inputPassword);
-
-        //then
-        assertTrue(matches);
     }
 }

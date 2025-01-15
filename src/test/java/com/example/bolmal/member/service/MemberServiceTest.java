@@ -333,20 +333,17 @@ class MemberServiceTest {
     }
 
     @Test
-    @DisplayName("이전과 같은 비밀번호로 변경을 시도 할 시 예외를 반환한다")
+    @DisplayName("이전과 같은 비밀번호로 변경을 시도 할 시 에러를 반환한다")
     public void member_password_duplicate_valid(){
         //given
         MemberUpdateDTO.MemberPasswordUpdateRequestDTO newPassword = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
                 .newPassword("Test123!") // 기존 비밀번호와 동일한 값
                 .build();
 
-        Member byUsername = fakeMemberRepository.findByUsername("testtest")
-                .orElseThrow();
-
-        String resetPassword = memberService.resetPassword("testtest", newPassword);
         //when & then
-
-
+        assertThatThrownBy(()-> memberService.validPassword("testtest", newPassword))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code",MEMBER_PASSWORD_DUPLICATE);
     }
 
 
