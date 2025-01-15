@@ -22,6 +22,8 @@ public interface MemberService {
 
     void rollback(String username);
 
+    String resetPassword(String username, String newPassword);
+
     // 매일 자정에 실행
     void deleteOldInactiveMembers(long days);
 }

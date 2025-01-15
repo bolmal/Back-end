@@ -99,6 +99,18 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(rollbackMember);
     }
 
+    @Override
+    public String resetPassword(String username, String newPassword){
+
+        Member findMember = findMemberByUsername(username);
+
+        Member changedMember = Member.resetPassword(findMember, newPassword, bCrypt);
+        memberRepository.save(changedMember);
+
+        return changedMember.getUsername();
+
+    }
+
 
 
 

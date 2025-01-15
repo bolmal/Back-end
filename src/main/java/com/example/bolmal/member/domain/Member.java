@@ -113,5 +113,11 @@ public class Member extends BaseEntity {
         return member;
     }
 
+    public static Member resetPassword(Member member, String newPassword, BCrypt bCrypt){
+        member.setPassword(bCrypt.encode(newPassword));
+
+        return member;
+    }
+
 
 }
