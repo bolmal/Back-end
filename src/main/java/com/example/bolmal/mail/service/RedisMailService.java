@@ -27,7 +27,7 @@ public class RedisMailService {
 
     private final JavaMailSender mailSender;
     private final RedisUtil redisUtil;
-    private static final String configEmail= "sunrox1107@gmail.com";
+    private static final String configEmail= "leedslaboratory@gmail.com";
 
     private String createdCode() {
         int leftLimit = 48; // number '0'
