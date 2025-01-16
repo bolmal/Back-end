@@ -2,6 +2,7 @@ package com.example.bolmal.member.web.dto;
 
 
 import com.example.bolmal.BolmalApplication;
+import com.example.bolmal.mail.service.MailServiceImpl;
 import com.example.bolmal.member.domain.Member;
 import com.example.bolmal.member.domain.enums.Gender;
 import com.example.bolmal.member.domain.enums.Role;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
@@ -35,6 +37,9 @@ public class MemberJoinDTOTest {
 
     @Autowired
     private Validator validator;
+
+    @MockBean
+    private MailServiceImpl mailService;
 
 
     @Test

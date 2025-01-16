@@ -1,11 +1,13 @@
 package com.example.bolmal.mail.util;
 
 import com.example.bolmal.common.util.RedisUtil;
+import com.example.bolmal.mail.service.MailServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -16,6 +18,9 @@ class RedisApplicationTest {
 
     @Autowired
     private RedisUtil redisUtil;
+
+    @MockBean
+    private MailServiceImpl mailService;
 
 
     @Test

@@ -1,5 +1,14 @@
 spring:
+  config:
+    activate:
+      on-profile: test
 
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
 
   datasource :
     url: jdbc:h2:mem:bolamal
