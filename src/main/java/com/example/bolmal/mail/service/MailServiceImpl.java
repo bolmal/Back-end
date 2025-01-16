@@ -30,7 +30,7 @@ public class MailServiceImpl implements MailService {
     private final JavaMailSender mailSender;
     private final RedisUtil redisUtil;
 
-    @Value("${management.mail.username}")
+    @Value("${spring.mail.username}")
     private String configEmail;
 
     /**
