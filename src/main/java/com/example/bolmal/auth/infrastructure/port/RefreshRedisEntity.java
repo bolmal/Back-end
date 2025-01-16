@@ -6,7 +6,8 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.annotation.Id;
 import lombok.*;
 
-@RedisHash(value = "Refresh",timeToLive = 60 * 1000L)
+// 30일로 설정 - 하드코딩으로 되어있어서 수정이 필요함 FIXME
+@RedisHash(value = "Refresh", timeToLive = 30L * 24 * 60 * 60 * 1000)
 @Getter
 @Setter
 @Builder
