@@ -47,7 +47,6 @@ management:
     tags:
       application: bolmal
 
-
   mail:
     host: smtp.gmail.com
     port: 587
