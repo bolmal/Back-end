@@ -125,7 +125,7 @@ public class MailServiceImpl implements MailService {
         message.setFrom(configEmail);
         message.setText(setContext(authCode), "utf-8", "html");
 
-        redisUtil.setDataExpire(email, authCode, 60 * 5L);
+        redisUtil.setDataExpire("Email_Auth: "+email, authCode, 60 * 5L);
 
         return message;
     }

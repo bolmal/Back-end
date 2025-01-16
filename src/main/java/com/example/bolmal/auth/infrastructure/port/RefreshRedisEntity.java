@@ -6,23 +6,23 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.annotation.Id;
 import lombok.*;
 
-@RedisHash("Refresh")
+@RedisHash(value = "Refresh",timeToLive = 60 * 1000L)
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RefreshEntityRedis {
+public class RefreshRedisEntity {
 
-    @Id
     private String id;  // Redis에서 id는 보통 String 타입입니다.
 
+    @Id
     private String username;
     private String refresh;
     private String expiration;
 
-    public static RefreshEntityRedis fromModel(Refresh refresh) {
-        return RefreshEntityRedis.builder()
+    public static RefreshRedisEntity fromModel(Refresh refresh) {
+        return RefreshRedisEntity.builder()
                 .id(refresh.getId().toString())  // id를 String으로 변환하여 사용
                 .username(refresh.getUsername())
                 .refresh(refresh.getRefresh())

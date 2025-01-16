@@ -4,6 +4,7 @@ package com.example.bolmal.auth.service;
 import com.example.bolmal.auth.domain.Refresh;
 import com.example.bolmal.auth.service.port.CurrentTime;
 import com.example.bolmal.auth.service.port.RefreshRepository;
+import com.example.bolmal.common.util.RedisIdGenerator;
 import com.example.bolmal.member.service.port.MemberRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.Date;
 public class RefreshTokenService {
 
     private final RefreshRepository refreshRepository;
+    private final RedisIdGenerator redisIdGenerator;
 
     public Refresh addRefreshEntity(String username, String refresh, Long expiredMs, CurrentTime currentTime) {
 
@@ -26,7 +28,9 @@ public class RefreshTokenService {
 
         Date date = new Date(currentTime.getCurrentTime() + expiredMs);
 
+        Long id = redisIdGenerator.generateId("Refresh_Token: "+username);
         Refresh refreshToken = Refresh.builder()
+                .id(id)
                 .username(username)
                 .refresh(refresh)
                 .expiration(date.toString())
