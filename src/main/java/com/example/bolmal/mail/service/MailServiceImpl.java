@@ -2,14 +2,13 @@ package com.example.bolmal.mail.service;
 
 import com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmal.common.apiPayLoad.exception.handler.MailHandler;
-import com.example.bolmal.mail.util.RedisUtil;
+import com.example.bolmal.common.util.RedisUtil;
 import com.example.bolmal.mail.web.port.MailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -126,7 +125,7 @@ public class MailServiceImpl implements MailService {
         message.setFrom(configEmail);
         message.setText(setContext(authCode), "utf-8", "html");
 
-        redisUtil.setDataExpire(email, authCode, 60 * 5L);
+        redisUtil.setDataExpire("Email_Auth: "+email, authCode, 60 * 5L);
 
         return message;
     }
