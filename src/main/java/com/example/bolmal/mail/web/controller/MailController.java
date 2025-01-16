@@ -1,7 +1,6 @@
 package com.example.bolmal.mail.web.controller;
 
 import com.example.bolmal.common.apiPayLoad.ApiResponse;
-import com.example.bolmal.mail.service.MailServiceImpl;
 import com.example.bolmal.mail.web.dto.EmailRequestDto;
 import com.example.bolmal.mail.web.port.MailService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,9 +13,9 @@ import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/email")
+@RequestMapping("/emails")
 @Tag(name = "이메일 인증 API")
-public class EmailController {
+public class MailController {
 
     private final MailService emailService;
 
@@ -34,10 +33,8 @@ public class EmailController {
     public ApiResponse<String> sendEmailAndCode(@PathVariable String email_addr,
                                                    @RequestBody EmailRequestDto dto) throws NoSuchAlgorithmException {
 
-        if (emailService.verifyEmailCode(email_addr, dto.getCode())) {
-            return ApiResponse.onSuccess(emailService.makeMemberId(email_addr));
-        }
+        emailService.verifyEmailCode(email_addr, dto.getCode());
 
-        return ApiResponse.onFailure("FAIL","인증에 실패하였습니다",null);
+        return ApiResponse.onSuccess("이메일 인증에 성공하였습니다");
     }
 }

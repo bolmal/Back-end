@@ -1,5 +1,7 @@
 package com.example.bolmal.mail.service;
 
+import com.example.bolmal.common.apiPayLoad.code.status.ErrorStatus;
+import com.example.bolmal.common.apiPayLoad.exception.handler.MailHandler;
 import com.example.bolmal.mail.util.RedisUtil;
 import com.example.bolmal.mail.web.port.MailService;
 import jakarta.mail.MessagingException;
@@ -59,11 +61,18 @@ public class MailServiceImpl implements MailService {
      * */
     @Override
     public Boolean verifyEmailCode(String email, String code) {
+
         String codeFoundByEmail = redisUtil.getData(email);
+
         if (codeFoundByEmail == null) {
-            return false;
+            throw new MailHandler(ErrorStatus.MAIL_NOT_SEND);
         }
-        return codeFoundByEmail.equals(code);
+
+        if (!code.equals(codeFoundByEmail)) {
+            throw new MailHandler(ErrorStatus.MAIL_NOT_VALID);
+        }
+
+        return true;
     }
 
 
@@ -123,22 +132,6 @@ public class MailServiceImpl implements MailService {
 
     /**
      *
-     * 해당하는 멤버ID를 제작하는 메서드입니다
-     *
-     * 추후 멤버식별자를 구성할 때 사용 할 수 있겠지만,
-     * 당장은 auto_increasement로 사용하겠습니다
-     *
-     * */
-    @Override
-    public String makeMemberId(String email) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        md.update(email.getBytes());
-        md.update(LocalDateTime.now().toString().getBytes());
-        return Arrays.toString(md.digest());
-    }
-
-    /**
-     *
      * 랜덤코드를 발급하는 메서드입니다
      *
      * */
@@ -153,6 +146,23 @@ public class MailServiceImpl implements MailService {
                 .limit(targetStringLength)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
+    }
+
+
+    /**
+     *
+     * 해당하는 멤버ID를 제작하는 메서드입니다
+     *
+     * 추후 멤버식별자를 구성할 때 사용 할 수 있겠지만,
+     * 당장은 auto_increasement로 사용하겠습니다
+     *
+     * */
+    @Override
+    public String makeMemberId(String email) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(email.getBytes());
+        md.update(LocalDateTime.now().toString().getBytes());
+        return Arrays.toString(md.digest());
     }
 }
 
