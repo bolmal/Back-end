@@ -25,7 +25,6 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-@Profile("local")
 public class MailServiceImpl implements MailService {
 
     private final JavaMailSender mailSender;
