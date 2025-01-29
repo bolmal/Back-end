@@ -30,6 +30,8 @@ public class MemberServiceImpl implements MemberService {
     public MemberJoinDTO.MemberJoinResponseDTO joinMember(@Valid MemberJoinDTO.MemberJoinRequestDTO request){
 
         authenticateAgreement(request);
+        authenticateUsernameValid(request.getUsername());
+
         String encodedPassword = bCryptPasswordEncoder.encode(request.getPassword());
         Member newMember= Member.JoinDTOto(request,encodedPassword);
         Member savedMember = memberRepository.save(newMember);
@@ -42,6 +44,14 @@ public class MemberServiceImpl implements MemberService {
                 .build();
     }
 
+
+    private void authenticateUsernameValid(String username) {
+        boolean usernameValid = memberRepository.existsByUsername(username);
+
+        if (usernameValid) {
+            throw new MemberHandler(ErrorStatus.MEMBER_USERNAME_DUPLICATE);
+        }
+    }
 
     private static void authenticateAgreement(MemberJoinDTO.MemberJoinRequestDTO request) {
         if (!Boolean.TRUE.equals(request.getPrivacyAgreement())
