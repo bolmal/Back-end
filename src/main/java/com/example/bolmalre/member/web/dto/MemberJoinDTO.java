@@ -4,6 +4,7 @@ import com.example.bolmalre.member.domain.enums.Gender;
 import com.example.bolmalre.member.validation.annotation.PasswordPatternValid;
 import com.example.bolmalre.member.validation.annotation.PhoneNumberValid;
 import com.example.bolmalre.member.validation.annotation.UsernameDuplicate;
+import com.example.bolmalre.member.validation.annotation.UsernamePatternValid;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -19,6 +20,7 @@ public class MemberJoinDTO {
     public static class MemberJoinRequestDTO{
 
         @UsernameDuplicate
+        @UsernamePatternValid
         @Schema(description = "ID입니다 <br> 영문 소문자, 숫자로 4~16자로 구성")
         String username;
 
