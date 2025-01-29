@@ -3,8 +3,8 @@ package com.example.bolmalre.auth.jwt;
 
 import com.example.bolmalre.auth.web.dto.CustomUserDetails;
 import com.example.bolmalre.config.JWTConfig;
-import com.example.bolmalre.member.Member;
-import com.example.bolmalre.member.enums.Role;
+import com.example.bolmalre.member.domain.Member;
+import com.example.bolmalre.member.domain.enums.Role;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

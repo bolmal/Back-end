@@ -1,6 +1,6 @@
-package com.example.bolmalre.member;
+package com.example.bolmalre.member.web.dto;
 
-import com.example.bolmalre.member.enums.Gender;
+import com.example.bolmalre.member.domain.enums.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import lombok.*;

@@ -1,6 +1,8 @@
-package com.example.bolmalre.member;
+package com.example.bolmalre.member.web.controller;
 
 import com.example.bolmalre.common.apiPayLoad.ApiResponse;
+import com.example.bolmalre.member.web.dto.MemberJoinDTO;
+import com.example.bolmalre.member.web.port.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

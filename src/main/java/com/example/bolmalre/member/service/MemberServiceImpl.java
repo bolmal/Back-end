@@ -1,7 +1,13 @@
-package com.example.bolmalre.member;
+package com.example.bolmalre.member.service;
 
 import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
+import com.example.bolmalre.member.web.dto.MemberJoinDTO;
+import com.example.bolmalre.member.web.port.MemberService;
+import com.example.bolmalre.member.domain.Agreement;
+import com.example.bolmalre.member.domain.Member;
+import com.example.bolmalre.member.infrastructure.AgreementRepository;
+import com.example.bolmalre.member.infrastructure.MemberRepository;
 import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;

@@ -1,11 +1,12 @@
-package com.example.bolmalre.member;
+package com.example.bolmalre.member.domain;
 
 
 import com.example.bolmalre.common.domain.BaseEntity;
-import com.example.bolmalre.member.enums.Gender;
-import com.example.bolmalre.member.enums.Role;
-import com.example.bolmalre.member.enums.Status;
-import com.example.bolmalre.member.enums.SubStatus;
+import com.example.bolmalre.member.web.dto.MemberJoinDTO;
+import com.example.bolmalre.member.domain.enums.Gender;
+import com.example.bolmalre.member.domain.enums.Role;
+import com.example.bolmalre.member.domain.enums.Status;
+import com.example.bolmalre.member.domain.enums.SubStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;

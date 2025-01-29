@@ -1,5 +1,6 @@
-package com.example.bolmalre.member;
+package com.example.bolmalre.member.infrastructure;
 
+import com.example.bolmalre.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
