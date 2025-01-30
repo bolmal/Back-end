@@ -86,7 +86,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void rollback(String username) {
         Member memberByUsername = findMemberByUsername(username);
-        Member.rollback(memberByUsername);
+        Member.rollback(memberByUsername,localDateHolder);
     }
 
     @Override

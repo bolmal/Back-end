@@ -455,9 +455,32 @@ class MemberServiceImplTest {
     @DisplayName("rollback() 메서드를 통해 회원을 활성화 상태로 전환 할 수 있다")
     public void rollback_test(){
         //given
+        Member member = Member.builder()
+                .id(1L)
+                .username("test123")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .profileImage(null)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
 
         //when
+        Mockito.when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        Mockito.when(localDateHolder.now()).thenReturn(LocalDateTime.of(1, 1, 1, 1, 1));
+        memberService.delete("test123");
+        memberService.rollback("test123");
 
         //then
+        assert member != null;
+        assertThat(member.getStatus()).isEqualTo(Status.ACTIVE);
+        assertThat(member.getInactiveDate()).isEqualTo(LocalDateTime.of(1, 1, 1, 1, 1));
     }
 }

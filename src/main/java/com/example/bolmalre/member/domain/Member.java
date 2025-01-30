@@ -91,8 +91,8 @@
                 member.status = Status.INACTIVE;
             }
 
-            public static void rollback(Member member){
-                member.inactiveDate = LocalDateTime.now();
+            public static void rollback(Member member,LocalDateHolder localDateHolder){
+                member.inactiveDate = localDateHolder.now();
                 member.status = Status.ACTIVE;
             }
 
