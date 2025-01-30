@@ -64,7 +64,18 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberProfileDTO.MemberProfileResponseDTO get(String username) {
-        return null;
+
+        Member member = findMemberByUsername(username);
+
+        return MemberProfileDTO.MemberProfileResponseDTO.builder()
+                .username(member.getUsername())
+                .name(member.getName())
+                .gender(member.getGender())
+                .birthDate(member.getBirthday())
+                .email(member.getEmail())
+                .phoneNumber(member.getPhoneNumber())
+                .imagePath(member.getProfileImage())
+                .build();
     }
 
     @Override
