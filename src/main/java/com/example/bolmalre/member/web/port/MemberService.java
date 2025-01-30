@@ -2,6 +2,7 @@ package com.example.bolmalre.member.web.port;
 
 import com.example.bolmalre.member.web.dto.*;
 import jakarta.validation.Valid;
+import org.springframework.scheduling.annotation.Scheduled;
 
 public interface MemberService {
     MemberJoinDTO.MemberJoinResponseDTO joinMember(@Valid MemberJoinDTO.MemberJoinRequestDTO request);
@@ -22,4 +23,7 @@ public interface MemberService {
 
     MemberFindPasswordDTO.MemberFindPasswordResponseDTO getPassword(MemberFindPasswordDTO.MemberFindPasswordRequestDTO request);
 
+    // 매일 자정에 실행
+    @Scheduled(cron = "0 0 0 * * ?")
+    void deleteOldInactiveMembers();
 }

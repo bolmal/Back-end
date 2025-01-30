@@ -3,6 +3,7 @@ package com.example.bolmalre.member.service;
 import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.converter.MemberConverter;
+import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.web.dto.*;
 import com.example.bolmalre.member.web.port.MemberService;
 import com.example.bolmalre.member.domain.Agreement;
@@ -12,11 +13,13 @@ import com.example.bolmalre.member.infrastructure.MemberRepository;
 import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Service
@@ -103,6 +106,21 @@ public class MemberServiceImpl implements MemberService {
         return null;
     }
 
+
+
+
+    // 매일 자정에 실행
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Override
+    public void deleteOldInactiveMembers() {
+
+        LocalDateTime cutoffDate = LocalDateTime.now().minusDays(30);  // 30일 이전 날짜 계산
+        List<Member> membersToDelete = memberRepository.findInactiveMembersForDeletion(Status.INACTIVE, cutoffDate);
+
+        // 30일 지난 회원 삭제
+        memberRepository.deleteAll(membersToDelete);
+
+    }
 
     private void authenticateUsernameValid(String username) {
         boolean usernameValid = memberRepository.existsByUsername(username);
