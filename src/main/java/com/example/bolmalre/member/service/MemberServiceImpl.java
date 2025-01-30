@@ -2,7 +2,7 @@ package com.example.bolmalre.member.service;
 
 import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
-import com.example.bolmalre.member.web.dto.MemberJoinDTO;
+import com.example.bolmalre.member.web.dto.*;
 import com.example.bolmalre.member.web.port.MemberService;
 import com.example.bolmalre.member.domain.Agreement;
 import com.example.bolmalre.member.domain.Member;
@@ -44,6 +44,52 @@ public class MemberServiceImpl implements MemberService {
                 .build();
     }
 
+    @Override
+    public MemberUpdateDTO.MemberUpdateResponseDTO update(MemberUpdateDTO.MemberUpdateRequestDTO request, String username) {
+
+        Member memberByUsername = findMemberByUsername(username);
+        Member.update(memberByUsername,request);
+
+        return MemberUpdateDTO.MemberUpdateResponseDTO.builder()
+                .memberId(memberByUsername.getId())
+                .build();
+    }
+
+    @Override
+    public MemberProfileDTO.MemberProfileResponseDTO get(String username) {
+        return null;
+    }
+
+    @Override
+    public void delete(String username) {
+
+    }
+
+    @Override
+    public void rollback(String username) {
+
+    }
+
+    @Override
+    public String resetPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request) {
+        return "";
+    }
+
+    @Override
+    public void validPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request) {
+
+    }
+
+    @Override
+    public MemberFindUsernameDTO.MemberFindUsernameResponseDTO getUsername(MemberFindUsernameDTO.MemberFindUsernameRequestDTO request) {
+        return null;
+    }
+
+    @Override
+    public MemberFindPasswordDTO.MemberFindPasswordResponseDTO getPassword(MemberFindPasswordDTO.MemberFindPasswordRequestDTO request) {
+        return null;
+    }
+
 
     private void authenticateUsernameValid(String username) {
         boolean usernameValid = memberRepository.existsByUsername(username);
@@ -61,4 +107,8 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    private Member findMemberByUsername(String username) {
+        return memberRepository.findByUsername(username)
+                .orElseThrow(()->new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+    }
 }

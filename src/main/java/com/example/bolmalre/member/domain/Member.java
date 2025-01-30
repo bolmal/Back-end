@@ -7,6 +7,7 @@ import com.example.bolmalre.member.domain.enums.Gender;
 import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
+import com.example.bolmalre.member.web.dto.MemberUpdateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -93,6 +94,16 @@ public class Member extends BaseEntity {
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
                 .build();
+    }
+
+    public static Member update(Member member,MemberUpdateDTO.MemberUpdateRequestDTO request){
+        member.username = request.getUsername();
+        member.name = request.getName();
+        member.gender = request.getGender();
+        member.phoneNumber = request.getPhoneNumber();
+        member.birthday = request.getBirthDate();
+
+        return member;
     }
 
 
