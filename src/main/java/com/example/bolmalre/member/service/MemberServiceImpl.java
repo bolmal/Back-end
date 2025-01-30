@@ -2,6 +2,7 @@ package com.example.bolmalre.member.service;
 
 import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
+import com.example.bolmalre.member.converter.MemberConverter;
 import com.example.bolmalre.member.web.dto.*;
 import com.example.bolmalre.member.web.port.MemberService;
 import com.example.bolmalre.member.domain.Agreement;
@@ -67,15 +68,7 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = findMemberByUsername(username);
 
-        return MemberProfileDTO.MemberProfileResponseDTO.builder()
-                .username(member.getUsername())
-                .name(member.getName())
-                .gender(member.getGender())
-                .birthDate(member.getBirthday())
-                .email(member.getEmail())
-                .phoneNumber(member.getPhoneNumber())
-                .imagePath(member.getProfileImage())
-                .build();
+        return MemberConverter.toMemberProfileResponseDTO(member);
     }
 
     @Override
