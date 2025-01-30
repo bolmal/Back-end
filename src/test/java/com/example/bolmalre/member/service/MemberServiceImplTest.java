@@ -10,6 +10,7 @@ import com.example.bolmalre.member.domain.enums.SubStatus;
 import com.example.bolmalre.member.infrastructure.AgreementRepository;
 import com.example.bolmalre.member.infrastructure.MemberRepository;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
+import com.example.bolmalre.member.web.dto.MemberProfileDTO;
 import com.example.bolmalre.member.web.dto.MemberUpdateDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,8 +25,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.MEMBER_AGREEMENT;
-import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.MEMBER_USERNAME_DUPLICATE;
+import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -354,5 +354,61 @@ class MemberServiceImplTest {
         assertThat(member.getPhoneNumber()).isEqualTo(updateRequestDTO.getPhoneNumber());
 
         Mockito.verify(memberRepository, Mockito.times(1)).save(member);
+    }
+
+
+    @Test
+    @DisplayName("get() 메서드를 이용해서 회원정보를 조회 할 수 있다")
+    public void get_test(){
+        //given
+        Member member = Member.builder()
+                .id(1L)
+                .username("test123")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .profileImage(null)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
+
+        //when
+        Mockito.when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+
+        //then
+        assert member != null;
+        MemberProfileDTO.MemberProfileResponseDTO response = memberService.get("test123");
+
+        assertThat(response).isNotNull();
+
+        assertThat(member.getUsername()).isEqualTo(response.getUsername());
+        assertThat(member.getName()).isEqualTo(response.getName());
+        assertThat(member.getGender()).isEqualTo(response.getGender());
+        assertThat(member.getBirthday()).isEqualTo(response.getBirthDate());
+        assertThat(member.getEmail()).isEqualTo(response.getEmail());
+        assertThat(member.getPhoneNumber()).isEqualTo(response.getPhoneNumber());
+        assertThat(member.getProfileImage()).isEqualTo(response.getImagePath());
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원을 조회하면 정해진 에러를 반환한다")
+    public void title(){
+        //given
+        String ERROR_USERNAME = "error123";
+
+        //when
+        Mockito.when(memberRepository.findByUsername(ERROR_USERNAME)).thenReturn(Optional.empty());
+
+        //then
+        assertThatThrownBy(() -> memberService.get(ERROR_USERNAME))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
     }
 }
