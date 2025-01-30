@@ -96,14 +96,13 @@ public class Member extends BaseEntity {
                 .build();
     }
 
-    public static Member update(Member member,MemberUpdateDTO.MemberUpdateRequestDTO request){
+    public static void update(Member member,MemberUpdateDTO.MemberUpdateRequestDTO request){
         member.username = request.getUsername();
         member.name = request.getName();
         member.gender = request.getGender();
         member.phoneNumber = request.getPhoneNumber();
+        member.email = request.getEmail();
         member.birthday = request.getBirthDate();
-
-        return member;
     }
 
 

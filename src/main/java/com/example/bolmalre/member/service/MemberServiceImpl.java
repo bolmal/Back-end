@@ -104,7 +104,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     private void authenticateUsernameUpdateValid(Member member, String newUsername) {
-        // 기존 username과 같으면 검증할 필요 없음
+
         if (member.getUsername().equals(newUsername)) {
             return;
         }
