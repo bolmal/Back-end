@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 @Service
 @Transactional
@@ -48,6 +50,8 @@ public class MemberServiceImpl implements MemberService {
     public MemberUpdateDTO.MemberUpdateResponseDTO update(MemberUpdateDTO.MemberUpdateRequestDTO request, String username) {
 
         Member memberByUsername = findMemberByUsername(username);
+        authenticateUsernameUpdateValid(memberByUsername, request.getUsername());
+
         Member.update(memberByUsername,request);
 
         return MemberUpdateDTO.MemberUpdateResponseDTO.builder()
@@ -95,6 +99,19 @@ public class MemberServiceImpl implements MemberService {
         boolean usernameValid = memberRepository.existsByUsername(username);
 
         if (usernameValid) {
+            throw new MemberHandler(ErrorStatus.MEMBER_USERNAME_DUPLICATE);
+        }
+    }
+
+    private void authenticateUsernameUpdateValid(Member member, String newUsername) {
+        // 기존 username과 같으면 검증할 필요 없음
+        if (member.getUsername().equals(newUsername)) {
+            return;
+        }
+
+        // 변경하려는 username이 이미 존재하는지 확인
+        boolean usernameExists = memberRepository.existsByUsername(newUsername);
+        if (usernameExists) {
             throw new MemberHandler(ErrorStatus.MEMBER_USERNAME_DUPLICATE);
         }
     }

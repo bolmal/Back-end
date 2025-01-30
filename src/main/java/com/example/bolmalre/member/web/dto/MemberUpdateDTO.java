@@ -20,7 +20,6 @@ public class MemberUpdateDTO {
     @Getter
     public static class MemberUpdateRequestDTO{
 
-        @UsernameDuplicate
         @UsernamePatternValid
         @Schema(description = "ID입니다 <br> 영문 소문자, 숫자로 4~16자로 구성")
         String username;
