@@ -399,7 +399,7 @@ class MemberServiceImplTest {
 
     @Test
     @DisplayName("존재하지 않는 회원을 조회하면 정해진 에러를 반환한다")
-    public void title(){
+    public void get_valid_test(){
         //given
         String ERROR_USERNAME = "error123";
 
@@ -410,5 +410,47 @@ class MemberServiceImplTest {
         assertThatThrownBy(() -> memberService.get(ERROR_USERNAME))
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+    }
+
+
+    @Test
+    @DisplayName("delete() 메서드를 통해 회원을 비활성화 상태로 전환 할 수 있다")
+    public void delete_test(){
+        //given
+        Member member = Member.builder()
+                .id(1L)
+                .username("test123")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .profileImage(null)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
+
+        //when
+        Mockito.when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        memberService.delete("test123");
+
+        //then
+        assert member != null;
+        assertThat(member.getStatus()).isEqualTo(Status.INACTIVE);
+    }
+
+
+    @Test
+    @DisplayName("rollback() 메서드를 통해 회원을 활성화 상태로 전환 할 수 있다")
+    public void rollback_test(){
+        //given
+
+        //when
+
+        //then
     }
 }

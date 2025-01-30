@@ -4,6 +4,7 @@ import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.converter.MemberConverter;
 import com.example.bolmalre.member.domain.enums.Status;
+import com.example.bolmalre.member.infrastructure.LocalDateHolder;
 import com.example.bolmalre.member.web.dto.*;
 import com.example.bolmalre.member.web.port.MemberService;
 import com.example.bolmalre.member.domain.Agreement;
@@ -31,6 +32,8 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AgreementRepository agreementRepository;
+
+    private final LocalDateHolder localDateHolder;
 
     @Override
     public MemberJoinDTO.MemberJoinResponseDTO joinMember(@Valid MemberJoinDTO.MemberJoinRequestDTO request){
@@ -77,7 +80,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void delete(String username) {
         Member memberByUsername = findMemberByUsername(username);
-        Member.delete(memberByUsername);
+        Member.delete(memberByUsername,localDateHolder);
     }
 
     @Override

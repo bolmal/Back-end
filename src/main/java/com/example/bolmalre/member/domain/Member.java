@@ -2,6 +2,7 @@
 
 
         import com.example.bolmalre.common.domain.BaseEntity;
+        import com.example.bolmalre.member.infrastructure.LocalDateHolder;
         import com.example.bolmalre.member.web.dto.MemberJoinDTO;
         import com.example.bolmalre.member.domain.enums.Gender;
         import com.example.bolmalre.member.domain.enums.Role;
@@ -85,8 +86,8 @@
                 member.birthday = request.getBirthDate();
             }
 
-            public static void delete(Member member){
-                member.inactiveDate = LocalDateTime.now();
+            public static void delete(Member member, LocalDateHolder localDateHolder){
+                member.inactiveDate = localDateHolder.now();
                 member.status = Status.INACTIVE;
             }
 
