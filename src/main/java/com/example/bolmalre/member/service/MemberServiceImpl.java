@@ -73,14 +73,14 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void delete(String username) {
-
-
-
+        Member memberByUsername = findMemberByUsername(username);
+        Member.delete(memberByUsername);
     }
 
     @Override
     public void rollback(String username) {
-
+        Member memberByUsername = findMemberByUsername(username);
+        Member.rollback(memberByUsername);
     }
 
     @Override

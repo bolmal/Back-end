@@ -85,5 +85,15 @@ public class Member extends BaseEntity {
         member.birthday = request.getBirthDate();
     }
 
+    public static void delete(Member member){
+        member.inactiveDate = LocalDateTime.now();
+        member.status = Status.INACTIVE;
+    }
+
+    public static void rollback(Member member){
+        member.inactiveDate = LocalDateTime.now();
+        member.status = Status.ACTIVE;
+    }
+
 
 }
