@@ -76,26 +76,6 @@ public class Member extends BaseEntity {
 
 
 
-
-    public static Member JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request, String encodedPassword){
-
-        return Member.builder()
-                .username(request.getUsername())
-                .password(encodedPassword)
-                .name(request.getName())
-                .role(Role.ROLE_USER)
-                .phoneNumber(request.getPhoneNumber())
-                .birthday(request.getBirthDate())
-                .email(request.getEmail())
-                .status(Status.ACTIVE)
-                .gender(request.getGender())
-                .profileImage(null)
-                .alarmAccount(0)
-                .bookmarkAccount(0)
-                .subStatus(SubStatus.UNSUBSCRIBE)
-                .build();
-    }
-
     public static void update(Member member,MemberUpdateDTO.MemberUpdateRequestDTO request){
         member.username = request.getUsername();
         member.name = request.getName();

@@ -36,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
         authenticateUsernameValid(request.getUsername());
 
         String encodedPassword = bCryptPasswordEncoder.encode(request.getPassword());
-        Member newMember= Member.JoinDTOto(request,encodedPassword);
+        Member newMember= MemberConverter.toMember(request,encodedPassword);
         Member savedMember = memberRepository.save(newMember);
 
         Agreement newAgreement = Agreement.JoinDTOto(request,savedMember);
@@ -73,6 +73,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void delete(String username) {
+
+
 
     }
 
