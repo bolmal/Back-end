@@ -79,13 +79,25 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void delete(String username) {
+
         Member memberByUsername = findMemberByUsername(username);
+
+        if (memberByUsername.getStatus().equals(Status.INACTIVE)){
+            throw new MemberHandler(ErrorStatus.MEMBER_ALREADY_INACTIVE);
+        }
+
         Member.delete(memberByUsername,localDateHolder);
     }
 
     @Override
     public void rollback(String username) {
+
         Member memberByUsername = findMemberByUsername(username);
+
+        if (memberByUsername.getStatus().equals(Status.ACTIVE)){
+            throw new MemberHandler(ErrorStatus.MEMBER_ALREADY_ACTIVE);
+        }
+
         Member.rollback(memberByUsername,localDateHolder);
     }
 

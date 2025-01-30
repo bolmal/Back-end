@@ -468,6 +468,37 @@ class MemberServiceImplTest {
 
 
     @Test
+    @DisplayName("이미 비활성화 상태인 회원을 삭제하면 정해진 에러를 반환한다")
+    public void delete_status_invalid_test(){
+        //given
+        Member member = Member.builder()
+                .id(1L)
+                .username("test123")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.INACTIVE)
+                .gender(Gender.MALE)
+                .profileImage(null)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
+
+        //when
+        Mockito.when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+
+        //then
+        assertThatThrownBy(() -> memberService.delete("test123"))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_ALREADY_INACTIVE);
+    }
+
+
+    @Test
     @DisplayName("rollback() 메서드를 통해 회원을 활성화 상태로 전환 할 수 있다")
     public void rollback_test(){
         //given
@@ -514,5 +545,36 @@ class MemberServiceImplTest {
         assertThatThrownBy(() -> memberService.rollback(ERROR_USERNAME))
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+    }
+
+
+    @Test
+    @DisplayName("이미 활성화 상태인 회원을 삭제하면 정해진 에러를 반환한다")
+    public void rollback_status_invalid_test(){
+        //given
+        Member member = Member.builder()
+                .id(1L)
+                .username("test123")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .profileImage(null)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
+
+        //when
+        Mockito.when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+
+        //then
+        assertThatThrownBy(() -> memberService.rollback("test123"))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_ALREADY_ACTIVE);
     }
 }
