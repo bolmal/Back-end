@@ -118,8 +118,7 @@ public class MemberServiceImpl implements MemberService {
         List<Member> membersToDelete = memberRepository.findInactiveMembersForDeletion(Status.INACTIVE, cutoffDate);
 
         // 30일 지난 회원 삭제
-        memberRepository.deleteAll(membersToDelete);
-
+        agreementRepository.deleteAllByMemberIn(membersToDelete);
     }
 
     private void authenticateUsernameValid(String username) {

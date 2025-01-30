@@ -29,7 +29,7 @@ public class Agreement extends BaseEntity {
     @Column(nullable = false)
     private Boolean advAgreement;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     @JoinColumn(name = "member_id")
     private Member member;
 
