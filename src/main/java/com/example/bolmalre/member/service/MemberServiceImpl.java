@@ -47,12 +47,15 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public MemberUpdateDTO.MemberUpdateResponseDTO update(MemberUpdateDTO.MemberUpdateRequestDTO request, String username) {
 
         Member memberByUsername = findMemberByUsername(username);
         authenticateUsernameUpdateValid(memberByUsername, request.getUsername());
 
         Member.update(memberByUsername,request);
+
+        memberRepository.save(memberByUsername);
 
         return MemberUpdateDTO.MemberUpdateResponseDTO.builder()
                 .memberId(memberByUsername.getId())
@@ -109,7 +112,6 @@ public class MemberServiceImpl implements MemberService {
             return;
         }
 
-        // 변경하려는 username이 이미 존재하는지 확인
         boolean usernameExists = memberRepository.existsByUsername(newUsername);
         if (usernameExists) {
             throw new MemberHandler(ErrorStatus.MEMBER_USERNAME_DUPLICATE);
