@@ -8,6 +8,7 @@ import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
 import com.example.bolmalre.member.infrastructure.AgreementRepository;
+import com.example.bolmalre.member.infrastructure.LocalDateHolder;
 import com.example.bolmalre.member.infrastructure.MemberRepository;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
 import com.example.bolmalre.member.web.dto.MemberProfileDTO;
@@ -23,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.*;
@@ -41,6 +43,9 @@ class MemberServiceImplTest {
 
     @Mock
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Mock
+    LocalDateHolder localDateHolder;
 
     @InjectMocks
     MemberServiceImpl memberService;
@@ -436,11 +441,13 @@ class MemberServiceImplTest {
 
         //when
         Mockito.when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        Mockito.when(localDateHolder.now()).thenReturn(LocalDateTime.of(1, 1, 1, 1, 1));
         memberService.delete("test123");
 
         //then
         assert member != null;
         assertThat(member.getStatus()).isEqualTo(Status.INACTIVE);
+        assertThat(member.getInactiveDate()).isEqualTo(LocalDateTime.of(1, 1, 1, 1, 1));
     }
 
 
