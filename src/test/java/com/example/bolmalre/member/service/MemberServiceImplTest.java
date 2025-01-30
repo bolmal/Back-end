@@ -92,6 +92,57 @@ class MemberServiceImplTest {
 
 
     @Test
+    @DisplayName("회원가입 시 BCrypt로 비밀번호가 해싱된다")
+    public void joinMember_withPasswordHashing_test() {
+        // given
+        MemberJoinDTO.MemberJoinRequestDTO requestDTO = MemberJoinDTO.MemberJoinRequestDTO.builder()
+                .username("test123")
+                .password("Test123!")  // 평문 비밀번호
+                .name("test")
+                .gender(Gender.MALE)
+                .birthDate(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .phoneNumber("010-1234-5678")
+                .serviceAgreement(true)
+                .privacyAgreement(true)
+                .financialAgreement(true)
+                .advAgreement(false)
+                .build();
+
+        // mock 객체 준비
+        Member mockMember = Member.builder()
+                .id(1L)
+                .username("testUser")
+                .password("encodedPassword")  // 해싱된 비밀번호
+                .build();
+
+        Agreement mockAgreement = Agreement.builder()
+                .id(1L)
+                .member(mockMember)
+                .serviceAgreement(true)
+                .build();
+
+        String encodedPassword = "encodedPassword";  // 해싱된 비밀번호
+        Mockito.when(bCryptPasswordEncoder.encode(Mockito.anyString())).thenReturn(encodedPassword);
+        Mockito.when(memberRepository.save(Mockito.any(Member.class))).thenReturn(mockMember);
+        Mockito.when(agreementRepository.save(Mockito.any(Agreement.class))).thenReturn(mockAgreement);
+
+        // when
+        MemberJoinDTO.MemberJoinResponseDTO responseDTO = memberService.joinMember(requestDTO);
+
+        // then
+        assertThat(responseDTO).isNotNull();
+        assertThat(responseDTO.getMemberId()).isEqualTo(mockMember.getId());
+
+        assertThat(mockMember.getPassword()).isEqualTo(encodedPassword);
+
+        Mockito.verify(bCryptPasswordEncoder, Mockito.times(1)).encode(Mockito.anyString());
+        Mockito.verify(memberRepository, Mockito.times(1)).save(Mockito.any(Member.class));
+    }
+
+
+
+    @Test
     @DisplayName("이미 존재하는 username으로 회원가입을 요청하면 예외가 발생해야 한다")
     void joinMember_duplicateUsername_test() {
         // given
@@ -116,7 +167,6 @@ class MemberServiceImplTest {
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_USERNAME_DUPLICATE);
 
-        // memberRepository.save()가 호출되지 않아야 함
         Mockito.verify(memberRepository, Mockito.never()).save(Mockito.any(Member.class));
     }
 
@@ -260,7 +310,7 @@ class MemberServiceImplTest {
 
     @Test
     @DisplayName("업데이트 로직 실행 시, username이 변하지 않더라도 중복오류가 발생하지 않는다")
-    public void title(){
+    public void update_username_invalid(){
         // given
         Member member = Member.builder()
                 .id(1L)

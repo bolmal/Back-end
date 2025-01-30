@@ -18,10 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 class MemberJoinDTOTest {
 
-
     @Autowired
     private Validator validator;
-
 
     @Test
     @DisplayName("조건에 부합하는 DTO가 입력되면 오류를 반환하지 않는다")
