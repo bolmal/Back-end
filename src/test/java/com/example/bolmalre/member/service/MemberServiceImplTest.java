@@ -23,8 +23,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.*;

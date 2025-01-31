@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.ImageHandler;
+import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.MemberProfileImage;
 import com.example.bolmalre.member.infrastructure.MemberProfileImageRepository;
@@ -37,7 +38,6 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
     private final MemberProfileImageRepository memberProfileImageRepository;
 
     private final AmazonS3 amazonS3;
-    private final EntityManager entityManager;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
@@ -53,6 +53,11 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
     public List<String> uploadImages(List<MultipartFile> files, String dirName, String username) {
 
         List<MemberProfileImage> images = new ArrayList<>();
+
+        if (files.size() > 1) {
+            throw new MemberHandler(ErrorStatus.MEMBER_IMAGE_COUNT_ERROR);
+        }
+
         Member memberByUsername = getMemberByUsername(username);
 
         try {
@@ -87,7 +92,6 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
         }
 
         // 엔티티 매니저를 사용하여 flush() 호출
-        entityManager.flush();  // 영속성 컨텍스트의 상태를 DB에 강제로 반영
 
         // S3에서 이미지 삭제 및 데이터베이스 레코드 삭제
         for (MemberProfileImage memberProfileImage : byMemberEntity) {
