@@ -310,7 +310,59 @@ class MemberProfileImageServiceImplTest {
     }
 
 
+    @Test
+    @DisplayName("findImagesByUsername() 을 통해 회원의 프로필 사진을 조회 할 수 있다")
+    public void findImagesByUsername_Success() throws FileNotFoundException {
+        //given
 
+        /**
+         * 오 직접 생성한 member 객체는 Mock객체가 아니기 때문에 Mockito를 사용 할 수 없다고 합니다
+         * */
+        testMember = spy(testMember);
+        testMember.setMemberProfileImages(List.of(testMemberProfileImage));
+
+        when(memberRepository.findByUsername(anyString())).thenReturn(Optional.of(testMember));
+        doReturn(List.of(testMemberProfileImage)).when(testMember).getMemberProfileImages();
+
+        //when
+        List<String> response = memberProfileImageService.findImagesByUsername("test123");
+
+        //then
+        assertThat(response).isNotNull();
+        assertThat(response).hasSize(1);
+        assertThat(response.get(0)).isEqualTo(testMemberProfileImage.getImageLink());
+        assertThat(response.get(0)).isEqualTo(testMemberProfileImage.getFileName());
+        assertThat(response.get(0)).isEqualTo(testMemberProfileImage.getImageName());
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원의 프로필 사진을 조회하면 정해진 오류를 반환한다")
+    public void findImagesByUsername_MemberNotFound() throws FileNotFoundException {
+        //given
+        when(memberRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> memberProfileImageService.findImagesByUsername("error_username"))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+    }
+
+
+    @Test
+    @DisplayName("회원의 프로필사진이 존재하지 않으면 정해진 오류를 반환한다")
+    public void findImagesByUsername_ImageNotFound() throws FileNotFoundException {
+        //given
+        testMember = spy(testMember);
+
+        when(memberRepository.findByUsername(anyString())).thenReturn(Optional.of(testMember));
+        doReturn(List.of()).when(testMember).getMemberProfileImages();
+
+        // when & then
+        assertThatThrownBy(() -> memberProfileImageService.findImagesByUsername("error_username"))
+                .isInstanceOf(ImageHandler.class)
+                .hasFieldOrPropertyWithValue("code", IMAGE_NOT_FOUND);
+    }
 
 
 }
