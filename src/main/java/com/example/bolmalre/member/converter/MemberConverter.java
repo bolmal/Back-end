@@ -1,6 +1,9 @@
 package com.example.bolmalre.member.converter;
 
+import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
+import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.domain.Member;
+import com.example.bolmalre.member.domain.MemberProfileImage;
 import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
@@ -8,6 +11,9 @@ import com.example.bolmalre.member.web.dto.MemberFindPasswordDTO;
 import com.example.bolmalre.member.web.dto.MemberFindUsernameDTO;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
 import com.example.bolmalre.member.web.dto.MemberProfileDTO;
+
+import java.util.List;
+import java.util.Optional;
 
 public class MemberConverter {
 
@@ -22,7 +28,6 @@ public class MemberConverter {
                 .email(request.getEmail())
                 .status(Status.ACTIVE)
                 .gender(request.getGender())
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -30,6 +35,12 @@ public class MemberConverter {
     }
 
     public static MemberProfileDTO.MemberProfileResponseDTO toMemberProfileResponseDTO(Member member) {
+
+        List<MemberProfileImage> memberProfileImages = member.getMemberProfileImages();
+
+        MemberProfileImage first = memberProfileImages.stream().findFirst()
+                .orElseThrow(()->new MemberHandler(ErrorStatus.IMAGE_NOT_FOUND));
+
         return MemberProfileDTO.MemberProfileResponseDTO.builder()
                 .username(member.getUsername())
                 .name(member.getName())
@@ -37,7 +48,7 @@ public class MemberConverter {
                 .birthDate(member.getBirthday())
                 .email(member.getEmail())
                 .phoneNumber(member.getPhoneNumber())
-                .imagePath(member.getProfileImage())
+                .imagePath(first.getImageLink())
                 .build();
     }
 

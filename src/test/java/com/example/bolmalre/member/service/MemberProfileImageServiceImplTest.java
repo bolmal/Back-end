@@ -29,12 +29,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.MEMBER_ALREADY_ACTIVE;
+import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.MEMBER_IMAGE_EXIST;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -61,6 +61,8 @@ class MemberProfileImageServiceImplTest {
 
     private Member testMember;
     private MockMultipartFile testFile;
+    private MemberProfileImage testMemberProfileImage;
+
 
 
     @BeforeEach
@@ -78,7 +80,6 @@ class MemberProfileImageServiceImplTest {
                 .email("test@example.com")
                 .status(Status.ACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -90,6 +91,15 @@ class MemberProfileImageServiceImplTest {
                 "image/jpeg",
                 "test image content".getBytes()
         );
+
+        testMemberProfileImage = MemberProfileImage.builder()
+                .imageLink("test")
+                .imageName("test")
+                .fileName("test")
+                .member(testMember)
+                .build();
+
+        testMember.setMemberProfileImages(List.of(testMemberProfileImage));
     }
 
 
@@ -122,11 +132,30 @@ class MemberProfileImageServiceImplTest {
     @DisplayName("uploadImage()를 통해 이미지를 업로드 할 수 있다")
     void uploadImages_Success() throws IOException {
         // given
+        Member member = spy(Member.builder()
+                .id(1L)
+                .username("test1234")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build());
+
+        // getMemberProfileImages가 빈 리스트를 반환하도록 설정
+        when(member.getMemberProfileImages()).thenReturn(new ArrayList<>());
+
         String dirName = "profile";
         List<MultipartFile> files = Collections.singletonList(testFile);
         String expectedUrl = "https://test-bucket.s3.amazonaws.com/profile/test.jpg";
 
-        when(memberRepository.findByUsername(anyString())).thenReturn(Optional.of(testMember));
+        when(memberRepository.findByUsername(anyString())).thenReturn(Optional.of(member));
         when(amazonS3.putObject(any(PutObjectRequest.class))).thenReturn(null);
         when(amazonS3.getUrl(anyString(), anyString())).thenReturn(new URL(expectedUrl));
 
@@ -134,26 +163,26 @@ class MemberProfileImageServiceImplTest {
                 .imageLink(expectedUrl)
                 .fileName("profile/test.jpg")
                 .imageName("test.jpg")
-                .member(testMember)
+                .member(member)
                 .build();
 
         when(memberProfileImageRepository.saveAll(any())).thenReturn(Collections.singletonList(expectedImage));
 
         // when
-        List<String> result = memberProfileImageService.uploadImages(files, dirName, "test123");
+        List<String> result = memberProfileImageService.uploadImages(files, dirName, "test1234");
 
         // then
         assertThat(result).isNotNull();
         assertThat(result).hasSize(1);
         assertThat(result.get(0)).isEqualTo(expectedUrl);
 
-        verify(memberRepository).findByUsername("test123");
+        verify(memberRepository).findByUsername("test1234");
         verify(memberProfileImageRepository).saveAll(any());
     }
 
 
     @Test
-    @DisplayName("이미지 업로드 시 파일이 2개 이상일 경우 정해진 오류가 발생한다")
+    @DisplayName("이미지 업로드 시 파일이 2개 이상일 경우 정해진 오류를 반환한다")
     void uploadImages_TooManyFiles() {
         // given
         List<MultipartFile> files = List.of(testFile, testFile);
@@ -167,7 +196,7 @@ class MemberProfileImageServiceImplTest {
 
 
     @Test
-    @DisplayName("존재하지 않는 사용자로 이미지 업로드 시도 시 정해진 오류가 발생한다")
+    @DisplayName("존재하지 않는 사용자로 이미지 업로드 시도 시 정해진 오류를 반환한다")
     void uploadImages_UserNotFound() {
         // given
         List<MultipartFile> files = Collections.singletonList(testFile);
@@ -182,6 +211,34 @@ class MemberProfileImageServiceImplTest {
     }
 
 
+    @Test
+    @DisplayName("이미 프로필 사진이 등록된 회원이 이미지를 등록하면 오류를 반환한다")
+    public void uploadImages_ImageExists(){
+        //given
+        String expectedUrl = "https://test-bucket.s3.amazonaws.com/profile/test.jpg";
+        String dirName = "profile";
+
+        // Member를 spy로 생성
+        Member spyMember = spy(testMember);
+
+        MemberProfileImage existImage = MemberProfileImage.builder()
+                .imageLink(expectedUrl)
+                .fileName("profile/test.jpg")
+                .imageName("test.jpg")
+                .member(spyMember)
+                .build();
+
+        List<MultipartFile> files = Collections.singletonList(testFile);
+        List<MemberProfileImage> expectedImages = Collections.singletonList(existImage);
+
+        when(spyMember.getMemberProfileImages()).thenReturn(expectedImages);
+        when(memberRepository.findByUsername(anyString())).thenReturn(Optional.of(spyMember));
+
+        // when & then
+        assertThatThrownBy(() -> memberProfileImageService.uploadImages(files, dirName, "test123"))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_IMAGE_EXIST);
+    }
 
 
 

@@ -49,49 +49,54 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
      *
      * 추가로 여러장을 받도록 구현해놓은 이유는 나중에 여러장 받는 메서드를 구현할때 활용도를 높이기 위해서 그렇게 구현하였습니다. 참고해주세요!
      * */
-    @Override
-    public List<String> uploadImages(List<MultipartFile> files, String dirName, String username) {
+        @Override
+        public List<String> uploadImages(List<MultipartFile> files, String dirName, String username) {
 
-        List<MemberProfileImage> images = new ArrayList<>();
+            List<MemberProfileImage> images = new ArrayList<>();
 
-        if (files.size() > 1) {
-            throw new MemberHandler(ErrorStatus.MEMBER_IMAGE_COUNT_ERROR);
-        }
+            if (files.size() > 1) {
+                throw new MemberHandler(ErrorStatus.MEMBER_IMAGE_COUNT_ERROR);
+            }
 
-        Member memberByUsername = getMemberByUsername(username);
+            Member memberByUsername = getMemberByUsername(username);
+            List<MemberProfileImage> memberProfileImages = memberByUsername.getMemberProfileImages();
 
-        try {
-            images = files.parallelStream()
-                    .map(file -> uploadImage(dirName, file,memberByUsername))
+            if (!memberProfileImages.isEmpty()) {
+                throw new MemberHandler(ErrorStatus.MEMBER_IMAGE_EXIST);
+            }
+
+            try {
+                images = files.parallelStream()
+                        .map(file -> uploadImage(dirName, file,memberByUsername))
+                        .collect(Collectors.toList());
+
+                memberByUsername.setMemberProfileImages(images);
+
+                memberProfileImageRepository.saveAll(images);
+
+            } catch (Exception e) {
+                throw new ImageHandler(ErrorStatus.IMAGE_UPLOAD_ERROR);
+            }
+
+            return images.stream()
+                    .map(MemberProfileImage::getImageLink)
                     .collect(Collectors.toList());
-
-            memberProfileImageRepository.saveAll(images);
-
-        } catch (Exception e) {
-            throw new ImageHandler(ErrorStatus.IMAGE_UPLOAD_ERROR);
         }
-
-        return images.stream()
-                .map(MemberProfileImage::getImageLink)
-                .collect(Collectors.toList());
-    }
 
 
     @Override
     @Transactional
     public void deleteImage(String username) throws FileNotFoundException {
 
-        // MealDiaryId에 해당하는 이미지 리스트 조회
+        // username 에 해당하는 이미지 리스트 조회
         List<String> findImagesByMealDiary = findImagesByUsername(username);
 
         Member memberByUsername = getMemberByUsername(username);
         List<MemberProfileImage> byMemberEntity = memberProfileImageRepository.findByMember(memberByUsername);
 
-        if (findImagesByMealDiary == null || findImagesByMealDiary.isEmpty()) {
+        if (findImagesByMealDiary.isEmpty()) {
             throw new ImageHandler(ErrorStatus.IMAGE_NOT_FOUND);
         }
-
-        // 엔티티 매니저를 사용하여 flush() 호출
 
         // S3에서 이미지 삭제 및 데이터베이스 레코드 삭제
         for (MemberProfileImage memberProfileImage : byMemberEntity) {

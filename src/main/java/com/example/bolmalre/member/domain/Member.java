@@ -61,8 +61,6 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    private String profileImage;
-
     @Column(nullable = false)
     private Integer alarmAccount;
 
@@ -105,5 +103,9 @@ public class Member extends BaseEntity {
 
     public void removeMemberProfileImage(MemberProfileImage memberProfileImage) {
         memberProfileImages.remove(memberProfileImage);
+    }
+
+    public static void setMemberProfileImages(Member member,List<MemberProfileImage> memberProfileImages) {
+        member.memberProfileImages.addAll(memberProfileImages);
     }
 }
