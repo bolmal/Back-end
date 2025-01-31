@@ -4,6 +4,7 @@ import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
+import com.example.bolmalre.member.web.dto.MemberFindPasswordDTO;
 import com.example.bolmalre.member.web.dto.MemberFindUsernameDTO;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
 import com.example.bolmalre.member.web.dto.MemberProfileDTO;
@@ -44,6 +45,13 @@ public class MemberConverter {
         return MemberFindUsernameDTO.MemberFindUsernameResponseDTO.builder()
                 .memberId(member.getId())
                 .username(member.getUsername())
+                .build();
+    }
+
+    public static MemberFindPasswordDTO.MemberFindPasswordResponseDTO toMemberFindPasswordResponseDTO(Member member, String password) {
+        return MemberFindPasswordDTO.MemberFindPasswordResponseDTO.builder()
+                .memberId(member.getId())
+                .newPassword(password)
                 .build();
     }
 }
