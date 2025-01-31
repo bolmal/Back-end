@@ -113,8 +113,13 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void validPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request) {
+    public void validPassword(String username, MemberUpdateDTO.MemberPasswordValidRequestDTO request) {
 
+        Member memberByUsername = findMemberByUsername(username);
+
+        if(!bCryptPasswordEncoder.matches(request.getValidPassword(), memberByUsername.getPassword())){
+            throw new MemberHandler(ErrorStatus.MEMBER_PASSWORD_VALID);
+        }
     }
 
     @Override

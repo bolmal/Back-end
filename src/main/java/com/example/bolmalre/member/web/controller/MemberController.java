@@ -85,7 +85,7 @@ public class MemberController {
     @Operation(summary = "마이프로필 비밀번호 검증 API")
     @PatchMapping("/profiles/passwords/valid")
     public ApiResponse<String> validPassword(@AuthenticationPrincipal UserDetails userDetails,
-                                             @Valid @RequestBody MemberUpdateDTO.MemberPasswordUpdateRequestDTO request) {
+                                             @Valid @RequestBody MemberUpdateDTO.MemberPasswordValidRequestDTO request) {
         memberService.validPassword(userDetails.getUsername(), request);
         return ApiResponse.onSuccess("비밀번호가 정상적으로 검증 되었습니다");
     }

@@ -17,7 +17,7 @@ public interface MemberService {
 
     String resetPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request);
 
-    void validPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request);
+    void validPassword(String username, MemberUpdateDTO.MemberPasswordValidRequestDTO request);
 
     MemberFindUsernameDTO.MemberFindUsernameResponseDTO getUsername(MemberFindUsernameDTO.MemberFindUsernameRequestDTO request);
 
