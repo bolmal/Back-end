@@ -11,6 +11,7 @@ import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.MemberProfileImage;
 import com.example.bolmalre.member.infrastructure.MemberProfileImageRepository;
 import com.example.bolmalre.member.infrastructure.MemberRepository;
+import com.example.bolmalre.member.web.port.MemberService;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
-public class MemberProfileImageServiceImpl implements MemberProfileImageService {
+public class MemberProfileImageServiceImpl implements MemberService.MemberProfileImageService {
 
 
     private final MemberRepository memberRepository;
@@ -45,6 +46,8 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
      * 이미지를 업로드하는 메서드입니다
      *
      * 사용하시는 옵션에 맞게 수정해서 사용해주시면 될 것 같습니다
+     *
+     * 추가로 여러장을 받도록 구현해놓은 이유는 나중에 여러장 받는 메서드를 구현할때 활용도를 높이기 위해서 그렇게 구현하였습니다. 참고해주세요!
      * */
     @Override
     public List<String> uploadImages(List<MultipartFile> files, String dirName, String username) {

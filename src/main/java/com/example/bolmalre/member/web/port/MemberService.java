@@ -3,6 +3,12 @@ package com.example.bolmalre.member.web.port;
 import com.example.bolmalre.member.web.dto.*;
 import jakarta.validation.Valid;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileNotFoundException;
+import java.util.List;
 
 public interface MemberService {
     MemberJoinDTO.MemberJoinResponseDTO joinMember(@Valid MemberJoinDTO.MemberJoinRequestDTO request);
@@ -26,4 +32,17 @@ public interface MemberService {
     // 매일 자정에 실행
     @Scheduled(cron = "0 0 0 * * ?")
     void deleteOldInactiveMembers();
+
+    @Service
+    interface MemberProfileImageService {
+
+        List<String> uploadImages(List<MultipartFile> files, String dirName, String username);
+
+        @Transactional
+        void deleteImage(String username) throws FileNotFoundException;
+
+        String findImageByFileName(String fileName);
+
+        List<String> findImagesByUsername(String username);
+    }
 }

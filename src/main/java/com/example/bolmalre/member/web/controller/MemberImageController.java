@@ -3,7 +3,7 @@ package com.example.bolmalre.member.web.controller;
 
 
 import com.example.bolmalre.common.apiPayLoad.ApiResponse;
-import com.example.bolmalre.member.service.MemberProfileImageService;
+import com.example.bolmalre.member.web.port.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.List;
 public class MemberImageController {
 
 
-    private final MemberProfileImageService memberProfileImageService;
+    private final MemberService.MemberProfileImageService memberProfileImageService;
 
 
     //이미지 파일들 s3에 저장 후 테이블 추가
