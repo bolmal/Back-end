@@ -582,5 +582,58 @@ class MemberServiceImplTest {
                 .hasFieldOrPropertyWithValue("code", MEMBER_ALREADY_ACTIVE);
     }
 
+    @Test
+    @DisplayName("resetPassword() 를 통해서 마이페이지에서 비밀번호를 재설정 할 수 있다")
+    public void resetPassword_test(){
+        //given
+        Member member = Member.builder()
+                .id(1L)
+                .username("test123")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .profileImage(null)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
 
+        when(bCryptPasswordEncoder.encode(Mockito.anyString())).thenReturn("updatedPassword");
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+
+        MemberUpdateDTO.MemberPasswordUpdateRequestDTO updateRequestDTO = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
+                .newPassword("updatedPassword")
+                .build();
+
+        //when
+        String response = memberService.resetPassword("test123", updateRequestDTO);
+
+        //then
+        assertThat(response).isEqualTo("updatedPassword");
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원이 비밀번호를 재설정하면 정해진 오류를 반환한다")
+    public void resetPassword_valid_test(){
+        //given
+        String ERROR_USERNAME = "error123";
+
+        MemberUpdateDTO.MemberPasswordUpdateRequestDTO updateRequestDTO = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
+                .newPassword("updatedPassword")
+                .build();
+
+        //when
+        when(memberRepository.findByUsername(ERROR_USERNAME)).thenReturn(Optional.empty());
+
+        //then
+        assertThatThrownBy(() -> memberService.resetPassword(ERROR_USERNAME, updateRequestDTO))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+    }
 }
