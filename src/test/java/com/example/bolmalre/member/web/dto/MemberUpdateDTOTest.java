@@ -107,4 +107,21 @@ class MemberUpdateDTOTest {
         assertThat(violations).extracting("message").contains("유효하지 않은 전화번호 형식입니다");
     }
 
+
+    @Test
+    @DisplayName("업데이트 시, 비밀번호 형식에 맞지 않으면 정해진 오류를 반환한다")
+    public void DTO_password_valid(){
+        //given
+        MemberUpdateDTO.MemberPasswordUpdateRequestDTO updateRequestDTO = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
+                .newPassword("updatedPassword")
+                .build();
+
+        //when
+        Set<ConstraintViolation<MemberUpdateDTO.MemberPasswordUpdateRequestDTO>> violations = validator.validate(updateRequestDTO);
+
+        // then
+        assertThat(violations).isNotEmpty();
+        assertThat(violations).extracting("message").contains("비밀번호는 8~12자의 영문, 숫자, 특수문자를 포함해야 합니다");
+    }
+
 }
