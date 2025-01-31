@@ -124,7 +124,14 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public MemberFindUsernameDTO.MemberFindUsernameResponseDTO getUsername(MemberFindUsernameDTO.MemberFindUsernameRequestDTO request) {
-        return null;
+
+        Member result = memberRepository.findByNameAndPhoneNumber(request.getName(), request.getPhoneNumber());
+
+        if(result == null){
+            throw new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND);
+        }
+
+        return MemberConverter.memberFindUsernameResponseDTO(result);
     }
 
     @Override

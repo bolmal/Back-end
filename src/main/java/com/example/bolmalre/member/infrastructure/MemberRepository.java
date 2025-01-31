@@ -15,4 +15,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT m FROM Member m WHERE m.status = :status AND m.inactiveDate <= :cutoffDate")
     List<Member> findInactiveMembersForDeletion(Status status, LocalDateTime cutoffDate);
+
+    Member findByNameAndPhoneNumber(String name, String phoneNumber);
 }

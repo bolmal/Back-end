@@ -1,6 +1,7 @@
 package com.example.bolmalre.member.web.dto;
 
 import com.example.bolmalre.member.validation.annotation.PhoneNumberValid;
+import com.example.bolmalre.member.validation.annotation.UsernamePatternValid;
 import lombok.*;
 
 public class MemberFindUsernameDTO {
@@ -26,6 +27,7 @@ public class MemberFindUsernameDTO {
 
         Long memberId;
 
+        @UsernamePatternValid
         String username;
 
     }

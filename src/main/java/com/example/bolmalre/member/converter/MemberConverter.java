@@ -4,6 +4,7 @@ import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
+import com.example.bolmalre.member.web.dto.MemberFindUsernameDTO;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
 import com.example.bolmalre.member.web.dto.MemberProfileDTO;
 
@@ -36,6 +37,13 @@ public class MemberConverter {
                 .email(member.getEmail())
                 .phoneNumber(member.getPhoneNumber())
                 .imagePath(member.getProfileImage())
+                .build();
+    }
+
+    public static MemberFindUsernameDTO.MemberFindUsernameResponseDTO memberFindUsernameResponseDTO(Member member) {
+        return MemberFindUsernameDTO.MemberFindUsernameResponseDTO.builder()
+                .memberId(member.getId())
+                .username(member.getUsername())
                 .build();
     }
 }
