@@ -54,16 +54,12 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
 
             List<MemberProfileImage> images = new ArrayList<>();
 
-            if (files.size() > 1) {
-                throw new MemberHandler(ErrorStatus.MEMBER_IMAGE_COUNT_ERROR);
-            }
+            fileCountValid(files);
 
             Member memberByUsername = getMemberByUsername(username);
             List<MemberProfileImage> memberProfileImages = memberByUsername.getMemberProfileImages();
 
-            if (!memberProfileImages.isEmpty()) {
-                throw new MemberHandler(ErrorStatus.MEMBER_IMAGE_EXIST);
-            }
+            memberProfileExistValid(memberProfileImages);
 
             try {
                 images = files.parallelStream()
@@ -89,12 +85,12 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
     public void deleteImage(String username) throws FileNotFoundException {
 
         // username 에 해당하는 이미지 리스트 조회
-        List<String> findImagesByMealDiary = findImagesByUsername(username);
+        List<String> findImageByMember = findImagesByUsername(username);
 
         Member memberByUsername = getMemberByUsername(username);
         List<MemberProfileImage> byMemberEntity = memberProfileImageRepository.findByMember(memberByUsername);
 
-        if (findImagesByMealDiary.isEmpty()) {
+        if (findImageByMember.isEmpty()) {
             throw new ImageHandler(ErrorStatus.IMAGE_NOT_FOUND);
         }
 
@@ -155,8 +151,9 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
     public List<String> findImagesByUsername(String username) {
 
         Member memberByUsername = getMemberByUsername(username);
+        List<MemberProfileImage> memberProfileImages = memberByUsername.getMemberProfileImages();
 
-        if (memberByUsername.getMemberProfileImages().isEmpty()) {
+        if (memberProfileImages.isEmpty()) {
             throw new ImageHandler(ErrorStatus.IMAGE_NOT_FOUND);
         }
 
@@ -212,6 +209,17 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
 
 
 
+    private static void memberProfileExistValid(List<MemberProfileImage> memberProfileImages) {
+        if (!memberProfileImages.isEmpty()) {
+            throw new MemberHandler(ErrorStatus.MEMBER_IMAGE_EXIST);
+        }
+    }
+
+    private static void fileCountValid(List<MultipartFile> files) {
+        if (files.size() > 1) {
+            throw new MemberHandler(ErrorStatus.MEMBER_IMAGE_COUNT_ERROR);
+        }
+    }
 
 
 
