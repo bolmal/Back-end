@@ -10,10 +10,7 @@ import com.example.bolmalre.member.domain.enums.SubStatus;
 import com.example.bolmalre.member.infrastructure.AgreementRepository;
 import com.example.bolmalre.member.infrastructure.LocalDateHolder;
 import com.example.bolmalre.member.infrastructure.MemberRepository;
-import com.example.bolmalre.member.web.dto.MemberJoinDTO;
-import com.example.bolmalre.member.web.dto.MemberPasswordValidDTO;
-import com.example.bolmalre.member.web.dto.MemberProfileDTO;
-import com.example.bolmalre.member.web.dto.MemberUpdateDTO;
+import com.example.bolmalre.member.web.dto.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -727,5 +724,80 @@ class MemberServiceImplTest {
         assertThatThrownBy(() -> memberService.validPassword("test123", updateRequestDTO))
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_PASSWORD_VALID);
+    }
+
+    @Test
+    @DisplayName("getUsername() 을 이용하여 회원의 username 을 조회 할 수 있다")
+    public void getUsername_test(){
+        //given
+        Member member = Member.builder()
+                .id(1L)
+                .username("test123")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .profileImage(null)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
+
+        when(memberRepository.findByNameAndPhoneNumber(anyString(), anyString())).thenReturn(member);
+
+        MemberFindUsernameDTO.MemberFindUsernameRequestDTO dto = MemberFindUsernameDTO.MemberFindUsernameRequestDTO.builder()
+                .name("test")
+                .phoneNumber("010-1234-5678")
+                .build();
+
+        //when
+        MemberFindUsernameDTO.MemberFindUsernameResponseDTO response = memberService.getUsername(dto);
+
+        //then
+        assertThat(response).isNotNull();
+        assertThat(response.getMemberId()).isEqualTo(1L);
+        assertThat(response.getUsername()).isEqualTo("test123");
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원의 username 조회 시, 정해진 오류를 반환한다")
+    public void getUsername_valid_test(){
+        //given
+        when(memberRepository.findByNameAndPhoneNumber(anyString(), anyString()))
+                .thenReturn(null);
+
+        MemberFindUsernameDTO.MemberFindUsernameRequestDTO dto = MemberFindUsernameDTO.MemberFindUsernameRequestDTO.builder()
+                .name("error_name")
+                .phoneNumber("010-1234-5678")
+                .build();
+
+        //when & then
+        assertThatThrownBy(() -> memberService.getUsername(dto))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+    }
+
+
+    @Test
+    @DisplayName("회원의 username은 일치하지만, 전화번호를 잘못 입력한 경우 정해진 오류를 반환한다")
+    public void getUsername_valid_phoneNumber_test(){
+        //given
+        when(memberRepository.findByNameAndPhoneNumber(anyString(), anyString()))
+                .thenReturn(null);
+
+        MemberFindUsernameDTO.MemberFindUsernameRequestDTO dto = MemberFindUsernameDTO.MemberFindUsernameRequestDTO.builder()
+                .name("error_name")
+                .phoneNumber("error_phoneNumber")
+                .build();
+
+        //when & then
+        assertThatThrownBy(() -> memberService.getUsername(dto))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
     }
 }
