@@ -156,6 +156,10 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
 
         Member memberByUsername = getMemberByUsername(username);
 
+        if (memberByUsername.getMemberProfileImages().isEmpty()) {
+            throw new ImageHandler(ErrorStatus.IMAGE_NOT_FOUND);
+        }
+
         return memberByUsername.getMemberProfileImages().stream()
                 .map(MemberProfileImage::getImageLink)
                 .collect(Collectors.toList());
@@ -214,6 +218,6 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
     // 회원 찾는 메서드
     public Member getMemberByUsername(String username){
         return memberRepository.findByUsername(username)
-                .orElseThrow(()-> new IllegalArgumentException("test"));
+                .orElseThrow(()-> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
     }
 }

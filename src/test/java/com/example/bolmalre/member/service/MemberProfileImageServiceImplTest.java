@@ -2,6 +2,7 @@ package com.example.bolmalre.member.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.example.bolmalre.common.apiPayLoad.exception.handler.ImageHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.MemberProfileImage;
@@ -17,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockMultipartFile;
@@ -25,14 +25,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 
-import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.MEMBER_ALREADY_ACTIVE;
-import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.MEMBER_IMAGE_EXIST;
+import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
@@ -85,13 +84,6 @@ class MemberProfileImageServiceImplTest {
                 .subStatus(SubStatus.UNSUBSCRIBE)
                 .build();
 
-        testFile = new MockMultipartFile(
-                "file",
-                "test.jpg",
-                "image/jpeg",
-                "test image content".getBytes()
-        );
-
         testMemberProfileImage = MemberProfileImage.builder()
                 .imageLink("test")
                 .imageName("test")
@@ -99,7 +91,12 @@ class MemberProfileImageServiceImplTest {
                 .member(testMember)
                 .build();
 
-        testMember.setMemberProfileImages(List.of(testMemberProfileImage));
+        testFile = new MockMultipartFile(
+                "file",
+                "test.jpg",
+                "image/jpeg",
+                "test image content".getBytes()
+        );
     }
 
 
@@ -132,6 +129,8 @@ class MemberProfileImageServiceImplTest {
     @DisplayName("uploadImage()를 통해 이미지를 업로드 할 수 있다")
     void uploadImages_Success() throws IOException {
         // given
+        testMember.setMemberProfileImages(List.of(testMemberProfileImage));
+
         Member member = spy(Member.builder()
                 .id(1L)
                 .username("test1234")
@@ -205,9 +204,9 @@ class MemberProfileImageServiceImplTest {
         when(memberRepository.findByUsername(anyString())).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(IllegalArgumentException.class, () ->
-                memberProfileImageService.uploadImages(files, dirName, "nonexistent")
-        );
+        assertThatThrownBy(() -> memberProfileImageService.deleteImage("error_username"))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
     }
 
 
@@ -239,6 +238,78 @@ class MemberProfileImageServiceImplTest {
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_IMAGE_EXIST);
     }
+
+
+    @Test
+    @DisplayName("deleteImage() 를 이용하여 프로필 이미지를 삭제할 수 있다")
+    public void deleteImage_Success() throws FileNotFoundException {
+        // given
+        List<MemberProfileImage> profileImages = new ArrayList<>(List.of(testMemberProfileImage));
+        testMember.setMemberProfileImages(new ArrayList<>(profileImages)); // 리스트 복사 후 설정
+
+        when(memberRepository.findByUsername(anyString())).thenReturn(Optional.of(testMember));
+        when(memberProfileImageRepository.findByMember(any())).thenReturn(new ArrayList<>(profileImages)); // 리스트 복사하여 반환
+        doNothing().when(amazonS3).deleteObject(anyString(), anyString());
+        doNothing().when(memberProfileImageRepository).delete(any());
+        when(memberRepository.save(any())).thenReturn(testMember);
+
+        // when
+        memberProfileImageService.deleteImage("test123");
+
+        // then
+        verify(memberRepository, times(2)).findByUsername("test123");
+        verify(memberProfileImageRepository, times(1)).findByMember(testMember);
+        verify(amazonS3, times(1)).deleteObject("test-bucket", "test");
+        verify(memberProfileImageRepository, times(1)).delete(any(MemberProfileImage.class));
+        verify(memberRepository, times(1)).save(testMember);
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원의 사진을 삭제하면 정해진 오류를 반환한다")
+    public void title(){
+        //given
+        when(memberRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> memberProfileImageService.deleteImage("error_username"))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+    }
+
+
+    @Test
+    @DisplayName("회원의 프로필 사진이 존재하지 않는데 삭제하면 정해진 오류를 반환한다")
+    public void deleteImage_ImageNotFound() throws FileNotFoundException {
+        //given
+        Member member = spy(Member.builder()
+                .id(1L)
+                .username("test123")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build());
+
+        List<MemberProfileImage> profileImages = new ArrayList<>();
+        doReturn(profileImages).when(member).getMemberProfileImages();
+
+        when(memberRepository.findByUsername(anyString())).thenReturn(Optional.of(member));
+
+        // when & then
+        assertThatThrownBy(() -> memberProfileImageService.deleteImage("test123"))
+                .isInstanceOf(ImageHandler.class)
+                .hasFieldOrPropertyWithValue("code", IMAGE_NOT_FOUND);
+    }
+
+
 
 
 
