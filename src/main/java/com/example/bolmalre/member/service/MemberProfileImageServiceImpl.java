@@ -161,7 +161,7 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
      *
      * 사용하시는 옵션에 맞게 수정해서 사용해주시면 될 것 같습니다
      * */
-    private MemberProfileImage uploadImage(String dirName, MultipartFile file, Member member) {
+    public MemberProfileImage uploadImage(String dirName, MultipartFile file, Member member) {
 
         String fileName = dirName + "/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
         ObjectMetadata metadata = new ObjectMetadata();
