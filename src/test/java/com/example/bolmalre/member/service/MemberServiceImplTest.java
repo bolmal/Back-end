@@ -25,11 +25,15 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
@@ -80,9 +84,9 @@ class MemberServiceImplTest {
                 .serviceAgreement(true)
                 .build();
 
-        Mockito.when(bCryptPasswordEncoder.encode(Mockito.anyString())).thenReturn("encodedPassword");
-        Mockito.when(memberRepository.save(Mockito.any(Member.class))).thenReturn(mockMember);
-        Mockito.when(agreementRepository.save(Mockito.any(Agreement.class))).thenReturn(mockAgreement);
+        when(bCryptPasswordEncoder.encode(Mockito.anyString())).thenReturn("encodedPassword");
+        when(memberRepository.save(Mockito.any(Member.class))).thenReturn(mockMember);
+        when(agreementRepository.save(Mockito.any(Agreement.class))).thenReturn(mockAgreement);
 
         // when
         MemberJoinDTO.MemberJoinResponseDTO responseDTO = memberService.joinMember(requestDTO);
@@ -92,7 +96,7 @@ class MemberServiceImplTest {
         assertThat(responseDTO.getMemberId()).isEqualTo(mockMember.getId());
 
         // Verify
-        Mockito.verify(memberRepository, Mockito.times(1)).save(Mockito.any(Member.class));
+        verify(memberRepository, Mockito.times(1)).save(Mockito.any(Member.class));
     }
 
 
@@ -128,9 +132,9 @@ class MemberServiceImplTest {
                 .build();
 
         String encodedPassword = "encodedPassword";  // 해싱된 비밀번호
-        Mockito.when(bCryptPasswordEncoder.encode(Mockito.anyString())).thenReturn(encodedPassword);
-        Mockito.when(memberRepository.save(Mockito.any(Member.class))).thenReturn(mockMember);
-        Mockito.when(agreementRepository.save(Mockito.any(Agreement.class))).thenReturn(mockAgreement);
+        when(bCryptPasswordEncoder.encode(Mockito.anyString())).thenReturn(encodedPassword);
+        when(memberRepository.save(Mockito.any(Member.class))).thenReturn(mockMember);
+        when(agreementRepository.save(Mockito.any(Agreement.class))).thenReturn(mockAgreement);
 
         // when
         MemberJoinDTO.MemberJoinResponseDTO responseDTO = memberService.joinMember(requestDTO);
@@ -141,8 +145,8 @@ class MemberServiceImplTest {
 
         assertThat(mockMember.getPassword()).isEqualTo(encodedPassword);
 
-        Mockito.verify(bCryptPasswordEncoder, Mockito.times(1)).encode(Mockito.anyString());
-        Mockito.verify(memberRepository, Mockito.times(1)).save(Mockito.any(Member.class));
+        verify(bCryptPasswordEncoder, Mockito.times(1)).encode(Mockito.anyString());
+        verify(memberRepository, Mockito.times(1)).save(Mockito.any(Member.class));
     }
 
 
@@ -165,14 +169,14 @@ class MemberServiceImplTest {
                 .advAgreement(false)
                 .build();
 
-        Mockito.when(memberRepository.existsByUsername("test123")).thenReturn(true);
+        when(memberRepository.existsByUsername("test123")).thenReturn(true);
 
         // when & then
         assertThatThrownBy(() -> memberService.joinMember(requestDTO))
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_USERNAME_DUPLICATE);
 
-        Mockito.verify(memberRepository, Mockito.never()).save(Mockito.any(Member.class));
+        verify(memberRepository, Mockito.never()).save(Mockito.any(Member.class));
     }
 
 
@@ -199,7 +203,7 @@ class MemberServiceImplTest {
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_AGREEMENT);
 
-        Mockito.verify(memberRepository, Mockito.never()).save(Mockito.any(Member.class));
+        verify(memberRepository, Mockito.never()).save(Mockito.any(Member.class));
     }
 
 
@@ -224,8 +228,8 @@ class MemberServiceImplTest {
                 .subStatus(SubStatus.UNSUBSCRIBE)
                 .build();
 
-        Mockito.when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
-        Mockito.when(memberRepository.save(Mockito.any(Member.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        when(memberRepository.save(Mockito.any(Member.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         MemberUpdateDTO.MemberUpdateRequestDTO updateRequestDTO = MemberUpdateDTO.MemberUpdateRequestDTO.builder()
                 .username("update123") // username 변경
@@ -248,7 +252,7 @@ class MemberServiceImplTest {
         assertThat(member.getEmail()).isEqualTo(updateRequestDTO.getEmail());
         assertThat(member.getPhoneNumber()).isEqualTo(updateRequestDTO.getPhoneNumber());
 
-        Mockito.verify(memberRepository, Mockito.times(1)).save(member);
+        verify(memberRepository, Mockito.times(1)).save(member);
     }
 
 
@@ -290,8 +294,8 @@ class MemberServiceImplTest {
                 .subStatus(SubStatus.UNSUBSCRIBE)
                 .build();
 
-        Mockito.when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
-        Mockito.when(memberRepository.existsByUsername(duplicateMember.getUsername())).thenReturn(true);
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        when(memberRepository.existsByUsername(duplicateMember.getUsername())).thenReturn(true);
 
         MemberUpdateDTO.MemberUpdateRequestDTO updateRequestDTO = MemberUpdateDTO.MemberUpdateRequestDTO.builder()
                 .username("testtest123!") // username 변경
@@ -309,7 +313,7 @@ class MemberServiceImplTest {
                 .hasFieldOrPropertyWithValue("code", MEMBER_USERNAME_DUPLICATE);
 
         //then
-        Mockito.verify(memberRepository, Mockito.times(0)).save(member);
+        verify(memberRepository, Mockito.times(0)).save(member);
     }
 
 
@@ -334,8 +338,8 @@ class MemberServiceImplTest {
                 .subStatus(SubStatus.UNSUBSCRIBE)
                 .build();
 
-        Mockito.when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
-        Mockito.when(memberRepository.save(Mockito.any(Member.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        when(memberRepository.save(Mockito.any(Member.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         MemberUpdateDTO.MemberUpdateRequestDTO updateRequestDTO = MemberUpdateDTO.MemberUpdateRequestDTO.builder()
                 .username("test123") // 같은 username이지만, 기존의 username이므로 에러가 반환되면 안됨
@@ -358,7 +362,7 @@ class MemberServiceImplTest {
         assertThat(member.getEmail()).isEqualTo(updateRequestDTO.getEmail());
         assertThat(member.getPhoneNumber()).isEqualTo(updateRequestDTO.getPhoneNumber());
 
-        Mockito.verify(memberRepository, Mockito.times(1)).save(member);
+        verify(memberRepository, Mockito.times(1)).save(member);
     }
 
 
@@ -384,7 +388,7 @@ class MemberServiceImplTest {
                 .build();
 
         //when
-        Mockito.when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
 
         //then
         assert member != null;
@@ -409,7 +413,7 @@ class MemberServiceImplTest {
         String ERROR_USERNAME = "error123";
 
         //when
-        Mockito.when(memberRepository.findByUsername(ERROR_USERNAME)).thenReturn(Optional.empty());
+        when(memberRepository.findByUsername(ERROR_USERNAME)).thenReturn(Optional.empty());
 
         //then
         assertThatThrownBy(() -> memberService.get(ERROR_USERNAME))
@@ -440,8 +444,8 @@ class MemberServiceImplTest {
                 .build();
 
         //when
-        Mockito.when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
-        Mockito.when(localDateHolder.now()).thenReturn(LocalDateTime.of(1, 1, 1, 1, 1));
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        when(localDateHolder.now()).thenReturn(LocalDateTime.of(1, 1, 1, 1, 1));
         memberService.delete("test123");
 
         //then
@@ -458,7 +462,7 @@ class MemberServiceImplTest {
         String ERROR_USERNAME = "error123";
 
         //when
-        Mockito.when(memberRepository.findByUsername(ERROR_USERNAME)).thenReturn(Optional.empty());
+        when(memberRepository.findByUsername(ERROR_USERNAME)).thenReturn(Optional.empty());
 
         //then
         assertThatThrownBy(() -> memberService.delete(ERROR_USERNAME))
@@ -489,7 +493,7 @@ class MemberServiceImplTest {
                 .build();
 
         //when
-        Mockito.when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
 
         //then
         assertThatThrownBy(() -> memberService.delete("test123"))
@@ -520,8 +524,8 @@ class MemberServiceImplTest {
                 .build();
 
         //when
-        Mockito.when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
-        Mockito.when(localDateHolder.now()).thenReturn(LocalDateTime.of(1, 1, 1, 1, 1));
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        when(localDateHolder.now()).thenReturn(LocalDateTime.of(1, 1, 1, 1, 1));
         memberService.delete("test123");
         memberService.rollback("test123");
 
@@ -539,7 +543,7 @@ class MemberServiceImplTest {
         String ERROR_USERNAME = "error123";
 
         //when
-        Mockito.when(memberRepository.findByUsername(ERROR_USERNAME)).thenReturn(Optional.empty());
+        when(memberRepository.findByUsername(ERROR_USERNAME)).thenReturn(Optional.empty());
 
         //then
         assertThatThrownBy(() -> memberService.rollback(ERROR_USERNAME))
@@ -570,11 +574,13 @@ class MemberServiceImplTest {
                 .build();
 
         //when
-        Mockito.when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
 
         //then
         assertThatThrownBy(() -> memberService.rollback("test123"))
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_ALREADY_ACTIVE);
     }
+
+
 }

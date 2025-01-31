@@ -103,7 +103,13 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public String resetPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request) {
-        return "";
+
+        Member memberByUsername = findMemberByUsername(username);
+        String newPassword = bCryptPasswordEncoder.encode(request.getNewPassword());
+
+        Member.resetPassword(memberByUsername,newPassword);
+
+        return request.getNewPassword();
     }
 
     @Override
