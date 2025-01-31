@@ -11,7 +11,7 @@ import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.MemberProfileImage;
 import com.example.bolmalre.member.infrastructure.MemberProfileImageRepository;
 import com.example.bolmalre.member.infrastructure.MemberRepository;
-import com.example.bolmalre.member.web.port.MemberService;
+import com.example.bolmalre.member.web.port.MemberProfileImageService;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
-public class MemberProfileImageServiceImpl implements MemberService.MemberProfileImageService {
+public class MemberProfileImageServiceImpl implements MemberProfileImageService {
 
 
     private final MemberRepository memberRepository;

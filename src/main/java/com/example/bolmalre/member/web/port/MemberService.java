@@ -32,17 +32,4 @@ public interface MemberService {
     // 매일 자정에 실행
     @Scheduled(cron = "0 0 0 * * ?")
     void deleteOldInactiveMembers();
-
-    @Service
-    interface MemberProfileImageService {
-
-        List<String> uploadImages(List<MultipartFile> files, String dirName, String username);
-
-        @Transactional
-        void deleteImage(String username) throws FileNotFoundException;
-
-        String findImageByFileName(String fileName);
-
-        List<String> findImagesByUsername(String username);
-    }
 }
