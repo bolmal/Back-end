@@ -113,7 +113,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void validPassword(String username, MemberUpdateDTO.MemberPasswordValidRequestDTO request) {
+    public void validPassword(String username, MemberPasswordValidDTO.MemberPasswordValidRequestDTO request) {
 
         Member memberByUsername = findMemberByUsername(username);
 

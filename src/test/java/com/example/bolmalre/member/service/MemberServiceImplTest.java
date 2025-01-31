@@ -11,6 +11,7 @@ import com.example.bolmalre.member.infrastructure.AgreementRepository;
 import com.example.bolmalre.member.infrastructure.LocalDateHolder;
 import com.example.bolmalre.member.infrastructure.MemberRepository;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
+import com.example.bolmalre.member.web.dto.MemberPasswordValidDTO;
 import com.example.bolmalre.member.web.dto.MemberProfileDTO;
 import com.example.bolmalre.member.web.dto.MemberUpdateDTO;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +33,7 @@ import java.util.Optional;
 import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -84,7 +86,7 @@ class MemberServiceImplTest {
                 .serviceAgreement(true)
                 .build();
 
-        when(bCryptPasswordEncoder.encode(Mockito.anyString())).thenReturn("encodedPassword");
+        when(bCryptPasswordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(memberRepository.save(Mockito.any(Member.class))).thenReturn(mockMember);
         when(agreementRepository.save(Mockito.any(Agreement.class))).thenReturn(mockAgreement);
 
@@ -132,7 +134,7 @@ class MemberServiceImplTest {
                 .build();
 
         String encodedPassword = "encodedPassword";  // 해싱된 비밀번호
-        when(bCryptPasswordEncoder.encode(Mockito.anyString())).thenReturn(encodedPassword);
+        when(bCryptPasswordEncoder.encode(anyString())).thenReturn(encodedPassword);
         when(memberRepository.save(Mockito.any(Member.class))).thenReturn(mockMember);
         when(agreementRepository.save(Mockito.any(Agreement.class))).thenReturn(mockAgreement);
 
@@ -145,7 +147,7 @@ class MemberServiceImplTest {
 
         assertThat(mockMember.getPassword()).isEqualTo(encodedPassword);
 
-        verify(bCryptPasswordEncoder, Mockito.times(1)).encode(Mockito.anyString());
+        verify(bCryptPasswordEncoder, Mockito.times(1)).encode(anyString());
         verify(memberRepository, Mockito.times(1)).save(Mockito.any(Member.class));
     }
 
@@ -603,7 +605,7 @@ class MemberServiceImplTest {
                 .subStatus(SubStatus.UNSUBSCRIBE)
                 .build();
 
-        when(bCryptPasswordEncoder.encode(Mockito.anyString())).thenReturn("updatedPassword");
+        when(bCryptPasswordEncoder.encode(anyString())).thenReturn("updatedPassword");
         when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
 
         MemberUpdateDTO.MemberPasswordUpdateRequestDTO updateRequestDTO = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
@@ -635,5 +637,95 @@ class MemberServiceImplTest {
         assertThatThrownBy(() -> memberService.resetPassword(ERROR_USERNAME, updateRequestDTO))
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+    }
+
+
+    @Test
+    @DisplayName("validPassword() 를 이용하여 회원의 비밀번호를 검증 할 수 있다")
+    public void validPassword_test(){
+        //given
+        Member member = Member.builder()
+                .id(1L)
+                .username("test123")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .profileImage(null)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
+
+        MemberPasswordValidDTO.MemberPasswordValidRequestDTO updateRequestDTO = MemberPasswordValidDTO.MemberPasswordValidRequestDTO.builder()
+                .validPassword("Test123!")
+                .build();
+
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        when(bCryptPasswordEncoder.matches(anyString(), anyString())).thenReturn(true);
+
+        //when
+        memberService.validPassword("test123", updateRequestDTO);
+
+        //then -> 반환값이 void 이므로 아무일도 일어나지 않아야함
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원의 비밀번호 검증을 시도하면 정해진 에러를 반환한다")
+    public void validPassword_valid_test(){
+        //given
+        String ERROR_USERNAME = "error123";
+
+        MemberPasswordValidDTO.MemberPasswordValidRequestDTO updateRequestDTO = MemberPasswordValidDTO.MemberPasswordValidRequestDTO.builder()
+                .validPassword("Test123!")
+                .build();
+
+        //when
+        when(memberRepository.findByUsername(ERROR_USERNAME)).thenReturn(Optional.empty());
+
+        //then
+        assertThatThrownBy(() -> memberService.validPassword(ERROR_USERNAME, updateRequestDTO))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+    }
+
+
+    @Test
+    @DisplayName("비밀번호 검증에 실패 할 시, 정해진 오류를 반환한다")
+    public void title(){
+        //given
+        Member member = Member.builder()
+                .id(1L)
+                .username("test123")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .profileImage(null)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
+
+        MemberPasswordValidDTO.MemberPasswordValidRequestDTO updateRequestDTO = MemberPasswordValidDTO.MemberPasswordValidRequestDTO.builder()
+                .validPassword("not_valid_password")
+                .build();
+
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        when(bCryptPasswordEncoder.matches(anyString(), anyString())).thenReturn(false);
+
+        //when & then
+        assertThatThrownBy(() -> memberService.validPassword("test123", updateRequestDTO))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_PASSWORD_VALID);
     }
 }

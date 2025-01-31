@@ -63,14 +63,4 @@ public class MemberUpdateDTO {
         @PasswordPatternValid
         String newPassword;
     }
-
-
-    @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @AllArgsConstructor
-    @Getter
-    public static class MemberPasswordValidRequestDTO{
-        @PasswordPatternValid
-        String validPassword;
-    }
 }
