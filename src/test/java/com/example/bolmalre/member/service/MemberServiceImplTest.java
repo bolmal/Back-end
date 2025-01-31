@@ -800,4 +800,107 @@ class MemberServiceImplTest {
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
     }
+
+
+    @Test
+    @DisplayName("getPassword() 를 통해 회원의 비밀번호를 초기화 할 수 있다")
+    public void getPassword_test(){
+        //given
+        Member member = Member.builder()
+                .id(1L)
+                .username("test123")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .profileImage(null)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
+
+        MemberFindPasswordDTO.MemberFindPasswordRequestDTO dto = MemberFindPasswordDTO.MemberFindPasswordRequestDTO.builder()
+                .username("test123")
+                .newPassword("updatedPassword")
+                .name("test")
+                .phoneNumber("010-1234-5678")
+                .build();
+
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        when(memberRepository.findByNameAndPhoneNumber("test","010-1234-5678")).thenReturn(member);
+        when(bCryptPasswordEncoder.encode(anyString())).thenReturn("encoded_password");
+
+        //when
+        MemberFindPasswordDTO.MemberFindPasswordResponseDTO response = memberService.getPassword(dto);
+
+        //then
+        assertThat(response).isNotNull();
+        assertThat(response.getMemberId()).isEqualTo(1L);
+        assertThat(response.getNewPassword()).isEqualTo("updatedPassword");
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 username을 통해 비밀번호를 초기화하면 오류를 반환한다")
+    public void getPassword_valid_test(){
+        //given
+        String ERROR_USERNAME = "error123";
+
+        MemberFindPasswordDTO.MemberFindPasswordRequestDTO dto = MemberFindPasswordDTO.MemberFindPasswordRequestDTO.builder()
+                .username(ERROR_USERNAME)
+                .newPassword("updatedPassword")
+                .name("test")
+                .phoneNumber("010-1234-5678")
+                .build();
+
+        when(memberRepository.findByUsername(ERROR_USERNAME)).thenReturn(Optional.empty());
+
+        //when & then
+        assertThatThrownBy(() -> memberService.getPassword(dto))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+    }
+
+
+    @Test
+    @DisplayName("존재하는 username의 전화번호, 이름을 잘못 입력하면 정해진 오류를 반환한다")
+    public void getPassword_valid_dto_test(){
+        //given
+
+        Member member = Member.builder()
+                .id(1L)
+                .username("test123")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .profileImage(null)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
+
+        MemberFindPasswordDTO.MemberFindPasswordRequestDTO dto = MemberFindPasswordDTO.MemberFindPasswordRequestDTO.builder()
+                .username("test123")
+                .newPassword("updatedPassword")
+                .name("error")
+                .phoneNumber("errorPhoneNumber")
+                .build();
+
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.of(member));
+        when(memberRepository.findByNameAndPhoneNumber(anyString(),anyString())).thenReturn(null);
+
+        //when & then
+        assertThatThrownBy(() -> memberService.getPassword(dto))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+    }
 }

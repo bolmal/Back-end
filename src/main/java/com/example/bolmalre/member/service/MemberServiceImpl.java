@@ -125,11 +125,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberFindUsernameDTO.MemberFindUsernameResponseDTO getUsername(MemberFindUsernameDTO.MemberFindUsernameRequestDTO request) {
 
-        Member result = memberRepository.findByNameAndPhoneNumber(request.getName(), request.getPhoneNumber());
-
-        if(result == null){
-            throw new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND);
-        }
+        Member result = authenticateNameAndPhoneNumber(request.getName(), request.getPhoneNumber());
 
         return MemberConverter.memberFindUsernameResponseDTO(result);
     }
@@ -140,13 +136,25 @@ public class MemberServiceImpl implements MemberService {
         authenticateUsername(request);
 
         String newPassword = bCryptPasswordEncoder.encode(request.getNewPassword());
-        Member result = memberRepository.findByNameAndPhoneNumber(request.getName(), request.getPhoneNumber());
+        Member result = authenticateNameAndPhoneNumber(request.getName(), request.getPhoneNumber());
         Member.resetPassword(result, newPassword);
 
         return MemberConverter.toMemberFindPasswordResponseDTO(result,request.getNewPassword());
     }
 
 
+
+
+
+
+    private Member authenticateNameAndPhoneNumber(String name, String phoneNumber) {
+        Member result = memberRepository.findByNameAndPhoneNumber(name, phoneNumber);
+        if(result == null){
+            throw new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND);
+        }
+
+        return result;
+    }
 
     private void authenticateUsername(MemberFindPasswordDTO.MemberFindPasswordRequestDTO request) {
         Member memberByUsername = findMemberByUsername(request.getUsername());
