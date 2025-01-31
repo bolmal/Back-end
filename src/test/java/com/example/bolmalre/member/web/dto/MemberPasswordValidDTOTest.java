@@ -38,7 +38,7 @@ class MemberPasswordValidDTOTest {
 
     @Test
     @DisplayName("비밀번호가 형식에 맞지 않으면 정해진 오류를 반환한다")
-    public void title(){
+    public void MemberPasswordValidDTO_valid_Test(){
         //given
         MemberPasswordValidDTO.MemberPasswordValidRequestDTO updateRequestDTO = MemberPasswordValidDTO.MemberPasswordValidRequestDTO.builder()
                 .validPassword("err")
@@ -48,7 +48,7 @@ class MemberPasswordValidDTOTest {
         Set<ConstraintViolation<MemberPasswordValidDTO.MemberPasswordValidRequestDTO>> violations = validator.validate(updateRequestDTO);
 
         // then
-        assertThat(violations).isNotEmpty();  // 검증 실패 시 violations은 비어 있지 않아야 함
+        assertThat(violations).isNotEmpty();
         assertThat(violations).extracting("message").contains("비밀번호는 8~12자의 영문, 숫자, 특수문자를 포함해야 합니다");  // 검증 메시지 확인
     }
 
