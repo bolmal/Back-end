@@ -1,12 +1,11 @@
 package com.example.bolmalre.member.domain;
 
 import com.example.bolmalre.common.domain.BaseEntity;
-import com.example.bolmalre.member.infrastructure.LocalDateHolder;
-import com.example.bolmalre.member.web.dto.MemberJoinDTO;
 import com.example.bolmalre.member.domain.enums.Gender;
 import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
+import com.example.bolmalre.member.infrastructure.LocalDateHolder;
 import com.example.bolmalre.member.web.dto.MemberUpdateDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,6 +13,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Builder
@@ -72,6 +72,14 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private SubStatus subStatus;
 
+    @Setter
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
+    private List<MemberProfileImage> memberProfileImages;
+
+
+
+
+
     public static void update(Member member, MemberUpdateDTO.MemberUpdateRequestDTO request) {
         member.username = request.getUsername();
         member.name = request.getName();
@@ -93,5 +101,9 @@ public class Member extends BaseEntity {
 
     public static void resetPassword(Member member, String newPassword){
         member.password = newPassword;
+    }
+
+    public void removeMemberProfileImage(MemberProfileImage memberProfileImage) {
+        memberProfileImages.remove(memberProfileImage);
     }
 }
