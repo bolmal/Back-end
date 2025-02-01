@@ -2,6 +2,7 @@ package com.example.bolmalre.bookmark.service;
 
 import com.example.bolmalre.artist.domain.Artist;
 import com.example.bolmalre.artist.infrastructure.ArtistRepository;
+import com.example.bolmalre.bookmark.converter.BookmarkConverter;
 import com.example.bolmalre.bookmark.domain.Bookmark;
 import com.example.bolmalre.bookmark.infrastructure.BookmarkRepository;
 import com.example.bolmalre.bookmark.web.dto.BookmarkRegisterDTO;
@@ -32,23 +33,15 @@ public class BookmarkServiceImpl implements BookmarkService {
 
         Member findMember = findMemberByUsername(username);
         authenticateBookmarkAccount(findMember);
-
         Artist findArtist = findArtistById(request.getArtistId());
-
         authenticateBookmarkExist(findMember, findArtist);
 
-        Bookmark newBookmark = Bookmark.builder()
-                .member(findMember)
-                .artist(findArtist)
-                .build();
+        Bookmark newBookmark = BookmarkConverter.toBookmark(findMember,findArtist);
 
         Bookmark bookmark = bookmarkRepository.save(newBookmark);
-
         Member.BookmarkDiscount(findMember);
 
-        return BookmarkRegisterDTO.BookmarkRegisterResponseDTO.builder()
-                .id(bookmark.getId())
-                .build();
+        return BookmarkConverter.toBookmarkRegisterResponseDTO(bookmark);
     }
 
 
