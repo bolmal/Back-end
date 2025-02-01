@@ -39,7 +39,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         Bookmark newBookmark = BookmarkConverter.toBookmark(findMember,findArtist);
 
         Bookmark bookmark = bookmarkRepository.save(newBookmark);
-        Member.BookmarkDiscount(findMember);
+        Member.bookmarkAccountMinus(findMember);
 
         return BookmarkConverter.toBookmarkRegisterResponseDTO(bookmark);
     }
