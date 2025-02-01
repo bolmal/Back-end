@@ -1,17 +1,28 @@
 package com.example.bolmalre.bookmark.web.controller;
 
+import com.example.bolmalre.bookmark.web.dto.BookmarkRegisterDTO;
+import com.example.bolmalre.bookmark.web.port.BookmarkService;
+import com.example.bolmalre.common.apiPayLoad.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/bookmarks")
-@Tag(name = "찜 기능 API")
+@Tag(name = "아티스트 찜 기능 API")
 @Builder
 public class BookmarkController {
+
+    private final BookmarkService bookmarkService;
 
 
 
@@ -26,7 +37,15 @@ public class BookmarkController {
      찜 설정이 완료되면 찜 설정확인 메일을 전송합니다
      알림받을 아티스트 정보
      * */
+    @PostMapping("")
+    @Operation(summary = "아티스트 찜 등록 API")
+    public ApiResponse<BookmarkRegisterDTO.BookmarkRegisterResponseDTO> registerBookmark(@AuthenticationPrincipal UserDetails userDetails,
+                                                                                         @Valid @RequestBody BookmarkRegisterDTO.BookmarkRegisterRequestDTO request) {
 
+        BookmarkRegisterDTO.BookmarkRegisterResponseDTO result = bookmarkService.register(userDetails.getUsername(), request);
+
+        return ApiResponse.onSuccess(result);
+    }
 
 
     /**
