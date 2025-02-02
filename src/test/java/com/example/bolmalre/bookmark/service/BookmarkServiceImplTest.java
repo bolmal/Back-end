@@ -9,6 +9,7 @@ import com.example.bolmalre.bookmark.web.dto.BookmarkGetArtistDTO;
 import com.example.bolmalre.bookmark.web.dto.BookmarkRegisterDTO;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.ArtistHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.BookmarkHandler;
+import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.enums.Gender;
@@ -16,6 +17,8 @@ import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
 import com.example.bolmalre.member.infrastructure.MemberRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,6 +59,9 @@ class BookmarkServiceImplTest {
 
     @Mock
     private JavaMailSender mailSender;
+
+    @Mock
+    private MimeMessage mimeMessage;
 
     Member testMember;
 
@@ -273,5 +279,46 @@ class BookmarkServiceImplTest {
         assertThatThrownBy(() -> bookmarkService.getArtist("test123"))
                 .isInstanceOf(BookmarkHandler.class)
                 .hasFieldOrPropertyWithValue("code", BOOKMARK_NOT_EXIST);
+    }
+
+
+    @Test
+    @DisplayName("bookmarkAlarm()을 이용하여 알림을 보낼 수 있다")
+    public void bookmarkAlarm_success() throws MessagingException {
+        //given
+        String toEmail = "user@example.com";
+        when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
+
+        //when
+        bookmarkService.bookmarkAlarm(toEmail);
+
+        //then
+        verify(mailSender, times(1)).send(any(MimeMessage.class));
+    }
+
+
+    @Test
+    @DisplayName("이메일 형식에 맞지 않으면 정해진 예외를 반환한다")
+    public void bookmarkAlarm_pattern(){
+        //given
+        String toEmail = "error";
+
+        //when & then
+        assertThatThrownBy(() -> bookmarkService.bookmarkAlarm(toEmail))
+                .isInstanceOf(MailHandler.class)
+                .hasFieldOrPropertyWithValue("code", MAIL_NOT_VALID);
+    }
+
+
+    @Test
+    @DisplayName("이메일 형식에 맞지 않으면 정해진 예외를 반환한다")
+    public void bookmarkAlarm_email_null(){
+        //given
+        String toEmail = "";
+
+        //when & then
+        assertThatThrownBy(() -> bookmarkService.bookmarkAlarm(toEmail))
+                .isInstanceOf(MailHandler.class)
+                .hasFieldOrPropertyWithValue("code", MAIL_NOT_VALID);
     }
 }
