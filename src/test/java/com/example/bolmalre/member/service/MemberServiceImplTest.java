@@ -3,6 +3,7 @@ package com.example.bolmalre.member.service;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.domain.Agreement;
 import com.example.bolmalre.member.domain.Member;
+import com.example.bolmalre.member.domain.MemberProfileImage;
 import com.example.bolmalre.member.domain.enums.Gender;
 import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
@@ -11,6 +12,7 @@ import com.example.bolmalre.member.infrastructure.AgreementRepository;
 import com.example.bolmalre.member.infrastructure.LocalDateHolder;
 import com.example.bolmalre.member.infrastructure.MemberRepository;
 import com.example.bolmalre.member.web.dto.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +25,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,6 +53,39 @@ class MemberServiceImplTest {
 
     @InjectMocks
     MemberServiceImpl memberService;
+
+    MemberProfileImage memberProfileImage;
+
+    Member testMember;
+
+    @BeforeEach
+    void setUp() {
+
+        testMember = Member.builder()
+                .id(1L)
+                .username("test123")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
+
+        memberProfileImage = MemberProfileImage.builder()
+                .imageLink("test")
+                .imageName("test")
+                .fileName("test")
+                .member(testMember)
+                .build();
+
+        testMember.setMemberProfileImages(List.of(memberProfileImage));
+    }
 
     @Test
     @DisplayName("joinMember() 메서드를 이용하여 회원가입을 할 수 있다")
@@ -221,7 +255,6 @@ class MemberServiceImplTest {
                 .email("test@example.com")
                 .status(Status.ACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -270,7 +303,6 @@ class MemberServiceImplTest {
                 .email("test@example.com")
                 .status(Status.ACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -287,7 +319,6 @@ class MemberServiceImplTest {
                 .email("test@example.com")
                 .status(Status.ACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -331,7 +362,6 @@ class MemberServiceImplTest {
                 .email("test@example.com")
                 .status(Status.ACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -369,39 +399,22 @@ class MemberServiceImplTest {
     @DisplayName("get() 메서드를 이용해서 회원정보를 조회 할 수 있다")
     public void get_test(){
         //given
-        Member member = Member.builder()
-                .id(1L)
-                .username("test123")
-                .password("Test123!")
-                .name("test")
-                .role(Role.ROLE_USER)
-                .phoneNumber("010-1234-5678")
-                .birthday(LocalDate.of(1995, 5, 20))
-                .email("test@example.com")
-                .status(Status.ACTIVE)
-                .gender(Gender.MALE)
-                .profileImage(null)
-                .alarmAccount(0)
-                .bookmarkAccount(0)
-                .subStatus(SubStatus.UNSUBSCRIBE)
-                .build();
 
         //when
-        when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(testMember));
 
         //then
-        assert member != null;
+        assert testMember != null;
         MemberProfileDTO.MemberProfileResponseDTO response = memberService.get("test123");
 
         assertThat(response).isNotNull();
 
-        assertThat(member.getUsername()).isEqualTo(response.getUsername());
-        assertThat(member.getName()).isEqualTo(response.getName());
-        assertThat(member.getGender()).isEqualTo(response.getGender());
-        assertThat(member.getBirthday()).isEqualTo(response.getBirthDate());
-        assertThat(member.getEmail()).isEqualTo(response.getEmail());
-        assertThat(member.getPhoneNumber()).isEqualTo(response.getPhoneNumber());
-        assertThat(member.getProfileImage()).isEqualTo(response.getImagePath());
+        assertThat(testMember.getUsername()).isEqualTo(response.getUsername());
+        assertThat(testMember.getName()).isEqualTo(response.getName());
+        assertThat(testMember.getGender()).isEqualTo(response.getGender());
+        assertThat(testMember.getBirthday()).isEqualTo(response.getBirthDate());
+        assertThat(testMember.getEmail()).isEqualTo(response.getEmail());
+        assertThat(testMember.getPhoneNumber()).isEqualTo(response.getPhoneNumber());
     }
 
 
@@ -436,7 +449,6 @@ class MemberServiceImplTest {
                 .email("test@example.com")
                 .status(Status.ACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -485,7 +497,6 @@ class MemberServiceImplTest {
                 .email("test@example.com")
                 .status(Status.INACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -516,7 +527,6 @@ class MemberServiceImplTest {
                 .email("test@example.com")
                 .status(Status.ACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -566,7 +576,6 @@ class MemberServiceImplTest {
                 .email("test@example.com")
                 .status(Status.ACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -596,7 +605,6 @@ class MemberServiceImplTest {
                 .email("test@example.com")
                 .status(Status.ACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -652,7 +660,6 @@ class MemberServiceImplTest {
                 .email("test@example.com")
                 .status(Status.ACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -707,7 +714,6 @@ class MemberServiceImplTest {
                 .email("test@example.com")
                 .status(Status.ACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -741,7 +747,6 @@ class MemberServiceImplTest {
                 .email("test@example.com")
                 .status(Status.ACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -817,7 +822,6 @@ class MemberServiceImplTest {
                 .email("test@example.com")
                 .status(Status.ACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
@@ -882,7 +886,6 @@ class MemberServiceImplTest {
                 .email("test@example.com")
                 .status(Status.ACTIVE)
                 .gender(Gender.MALE)
-                .profileImage(null)
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)

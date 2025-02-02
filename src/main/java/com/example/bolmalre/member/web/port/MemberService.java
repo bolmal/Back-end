@@ -3,6 +3,12 @@ package com.example.bolmalre.member.web.port;
 import com.example.bolmalre.member.web.dto.*;
 import jakarta.validation.Valid;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileNotFoundException;
+import java.util.List;
 
 public interface MemberService {
     MemberJoinDTO.MemberJoinResponseDTO joinMember(@Valid MemberJoinDTO.MemberJoinRequestDTO request);
