@@ -62,7 +62,7 @@ public class MemberController {
     }
 
 
-    @Operation(summary = "비활성화 회원, 활성으로 전환 API")
+    @Operation(summary = "회원 롤백 API")
     @PatchMapping("/rollback")
     public ApiResponse<String> rollback(@AuthenticationPrincipal UserDetails userDetails) {
         memberService.rollback(userDetails.getUsername());
