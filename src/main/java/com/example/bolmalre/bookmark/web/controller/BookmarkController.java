@@ -6,6 +6,7 @@ import com.example.bolmalre.bookmark.web.port.BookmarkService;
 import com.example.bolmalre.common.apiPayLoad.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
