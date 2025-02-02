@@ -189,4 +189,29 @@ class BookmarkServiceImplTest {
                 .hasFieldOrPropertyWithValue("code", BOOKMARK_EXIST);
     }
 
+
+    @Test
+    @DisplayName("subscribe() 를 호출하면 구독권이 정해진 만큼 증가한다")
+    public void subscribe_success(){
+        //given
+        when(memberRepository.findByUsername(any())).thenReturn(Optional.of(testMember));
+
+        //when
+        bookmarkService.subscribe("test123");
+
+        //then
+        assertThat(testMember.getBookmarkAccount()).isEqualTo(3);
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 username으로 구독권을 구매하면 정해진 예외를 반환한다")
+    public void subscribe_fail(){
+        //given
+        when(memberRepository.findByUsername(any())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> bookmarkService.subscribe("test123"))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+    }
 }
