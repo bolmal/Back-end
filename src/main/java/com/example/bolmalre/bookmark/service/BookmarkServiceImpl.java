@@ -5,6 +5,7 @@ import com.example.bolmalre.artist.infrastructure.ArtistRepository;
 import com.example.bolmalre.bookmark.converter.BookmarkConverter;
 import com.example.bolmalre.bookmark.domain.Bookmark;
 import com.example.bolmalre.bookmark.infrastructure.BookmarkRepository;
+import com.example.bolmalre.bookmark.web.dto.BookmarkGetArtistDTO;
 import com.example.bolmalre.bookmark.web.dto.BookmarkRegisterDTO;
 import com.example.bolmalre.bookmark.web.port.BookmarkService;
 import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
@@ -16,6 +17,9 @@ import com.example.bolmalre.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -50,6 +54,23 @@ public class BookmarkServiceImpl implements BookmarkService {
         Member memberByUsername = findMemberByUsername(username);
 
         Member.bookmarkAccountPlus(memberByUsername);
+    }
+
+
+    @Override
+    public List<BookmarkGetArtistDTO.BookmarkGetArtistResponseDTO> getArtist(String username){
+        Member findMember = findMemberByUsername(username);
+
+        List<Bookmark> byMember = bookmarkRepository.findByMember(findMember);
+
+        return byMember.stream()
+                .map(Bookmark::getArtist)
+                .map(artist -> BookmarkGetArtistDTO.BookmarkGetArtistResponseDTO.builder()
+                        .artistProfileImage(artist.getProfileImagePath())
+                        .artistName(artist.getName())
+                        .genre(artist.getGenre().name())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 
