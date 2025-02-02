@@ -25,6 +25,7 @@ public enum ErrorStatus implements BaseErrorCode {
     IMAGE_UPLOAD_ERROR(HttpStatus.BAD_GATEWAY,"IMAGE5004","이미지 등록 중 오류가 발생하였습니다"),
     IMAGE_DOWNLOAD_ERROR(HttpStatus.SERVICE_UNAVAILABLE,"IMAGE5003","이미지 다운로드 중 오류가 발생하였습니다"),
 
+    BOOKMARK_NOT_EXIST(HttpStatus.BAD_REQUEST,"BOOKMARK4003","찜한 아티스트가 존재하지 않습니다"),
     BOOKMARK_EXIST(HttpStatus.BAD_REQUEST,"BOOKMARK4002","이미 찜하고 있는 아티스트 입니다"),
     BOOKMARK_ACCOUNT_ZERO(HttpStatus.BAD_REQUEST,"BOOKMARK4001","찜 가능 횟수가 0입니다"),
 
