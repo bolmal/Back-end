@@ -5,6 +5,7 @@ import com.example.bolmalre.artist.domain.enums.Genre;
 import com.example.bolmalre.artist.infrastructure.ArtistRepository;
 import com.example.bolmalre.bookmark.domain.Bookmark;
 import com.example.bolmalre.bookmark.infrastructure.BookmarkRepository;
+import com.example.bolmalre.bookmark.web.dto.BookmarkGetArtistDTO;
 import com.example.bolmalre.bookmark.web.dto.BookmarkRegisterDTO;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.ArtistHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.BookmarkHandler;
@@ -25,6 +26,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.*;
@@ -77,6 +80,7 @@ class BookmarkServiceImplTest {
                 .id(1L)
                 .name("test_artist")
                 .genre(Genre.A)
+                .profileImagePath("test_profile_image")
                 .build();
     }
 
@@ -210,8 +214,60 @@ class BookmarkServiceImplTest {
         //given
         when(memberRepository.findByUsername(any())).thenReturn(Optional.empty());
 
+        // when & then
         assertThatThrownBy(() -> bookmarkService.subscribe("test123"))
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+    }
+
+
+    @Test
+    @DisplayName("getArtist()를 이용하여 찜한 아티스트를 조회 할 수 있다")
+    public void getArtist_success(){
+        //given
+        Bookmark testBookmark = Bookmark.builder()
+                .artist(testArtist)
+                .member(testMember)
+                .build();
+
+        when(memberRepository.findByUsername(any())).thenReturn(Optional.of(testMember));
+        when(bookmarkRepository.findByMember(any())).thenReturn(List.of(testBookmark));
+
+        //when
+        List<BookmarkGetArtistDTO.BookmarkGetArtistResponseDTO> response = bookmarkService.getArtist("test123");
+
+        //then
+        assertThat(response).isNotNull();
+        assertThat(response.size()).isEqualTo(1);
+        assertThat(response.get(0).getArtistName()).isEqualTo("test_artist");
+        assertThat(response.get(0).getGenre()).isEqualTo("A");
+        assertThat(response.get(0).getArtistProfileImage()).isEqualTo("test_profile_image");
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원의 찜한 Artist를 조회하면 정해진 예외를 반환한다")
+    public void getArtist_MemberNotFound(){
+        //given
+        when(memberRepository.findByUsername(any())).thenReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> bookmarkService.getArtist("test123"))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+    }
+
+
+    @Test
+    @DisplayName("조회할 Artist가 없으면 정해진 예외를 반환한다")
+    public void getArtist_ArtistNotFound(){
+        //given
+        when(memberRepository.findByUsername(any())).thenReturn(Optional.of(testMember));
+        when(bookmarkRepository.findByMember(any())).thenReturn(Collections.emptyList());
+
+        // when & then
+        assertThatThrownBy(() -> bookmarkService.getArtist("test123"))
+                .isInstanceOf(BookmarkHandler.class)
+                .hasFieldOrPropertyWithValue("code", BOOKMARK_NOT_EXIST);
     }
 }

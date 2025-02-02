@@ -59,14 +59,22 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public List<BookmarkGetArtistDTO.BookmarkGetArtistResponseDTO> getArtist(String username){
-        Member findMember = findMemberByUsername(username);
 
+        Member findMember = findMemberByUsername(username);
         List<Bookmark> byMember = bookmarkRepository.findByMember(findMember);
+        bookmarkExistValid(byMember);
 
         return BookmarkConverter.toBookmarkGetArtistResponseDTO(byMember);
     }
 
 
+
+
+    private static void bookmarkExistValid(List<Bookmark> byMember) {
+        if(byMember.isEmpty()){
+            throw new BookmarkHandler(ErrorStatus.BOOKMARK_NOT_EXIST);
+        }
+    }
 
 
     // 이미 찜을 하고 있는지 검증
