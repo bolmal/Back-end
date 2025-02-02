@@ -4,6 +4,7 @@ package com.example.bolmalre.concert.domain;
 import com.example.bolmalre.common.domain.BaseEntity;
 import com.example.bolmalre.concert.domain.enums.ConcertRound;
 import com.example.bolmalre.concert.domain.enums.OnlineStore;
+import com.example.bolmalre.member.domain.MemberProfileImage;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -60,14 +61,23 @@ public class Concert extends BaseEntity {
     private OnlineStore onlineStore;
 
     @Column(nullable = false)
-    private Integer viewCount;
+    private Integer dailyViewCount;
+
+    @Column(nullable = false)
+    private Integer weeklyViewCount;
 
     @Column(nullable = false)
     private boolean advertisement;
 
-    private String posterUrl;
-
     @OneToMany(mappedBy = "concert",cascade = CascadeType.ALL)
     private List<ConcertArtist> concertArtists = new ArrayList<>();
 
+
+    public void increaseDailyViewCount() {
+        this.dailyViewCount++;
+    }
+
+    public void increaseWeeklyViewCount() {
+        this.weeklyViewCount++;
+    }
 }
