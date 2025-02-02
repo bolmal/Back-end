@@ -1,5 +1,6 @@
 package com.example.bolmalre.bookmark.web.controller;
 
+import com.example.bolmalre.bookmark.web.dto.BookmarkGetArtistDTO;
 import com.example.bolmalre.bookmark.web.dto.BookmarkRegisterDTO;
 import com.example.bolmalre.bookmark.web.port.BookmarkService;
 import com.example.bolmalre.common.apiPayLoad.ApiResponse;
@@ -10,10 +11,9 @@ import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -71,4 +71,13 @@ public class BookmarkController {
      * 프로필 사진, 아티스트 이름, 장르
      *
      * */
+    @GetMapping("")
+    @Operation(summary = "찜한 아티스트 조회 API")
+    public ApiResponse<List<BookmarkGetArtistDTO.BookmarkGetArtistResponseDTO>> getArtist(@AuthenticationPrincipal UserDetails userDetails) {
+
+        List<BookmarkGetArtistDTO.BookmarkGetArtistResponseDTO> result =
+                bookmarkService.getArtist(userDetails.getUsername());
+
+        return ApiResponse.onSuccess(result);
+    }
 }

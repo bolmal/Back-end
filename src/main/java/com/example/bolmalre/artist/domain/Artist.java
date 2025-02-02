@@ -28,6 +28,9 @@ public class Artist extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Genre genre;
 
+    // 추후 아티스트 구현 시 리팩터링 FIXME
+    private String profileImagePath;
+
 
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL)
     private List<FavoriteArtist> favoriteArtists = new ArrayList<>();
