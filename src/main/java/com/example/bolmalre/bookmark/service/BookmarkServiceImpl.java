@@ -63,14 +63,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
         List<Bookmark> byMember = bookmarkRepository.findByMember(findMember);
 
-        return byMember.stream()
-                .map(Bookmark::getArtist)
-                .map(artist -> BookmarkGetArtistDTO.BookmarkGetArtistResponseDTO.builder()
-                        .artistProfileImage(artist.getProfileImagePath())
-                        .artistName(artist.getName())
-                        .genre(artist.getGenre().name())
-                        .build())
-                .collect(Collectors.toList());
+        return BookmarkConverter.toBookmarkGetArtistResponseDTO(byMember);
     }
 
 
