@@ -11,6 +11,7 @@ import com.example.bolmalre.bookmark.web.port.BookmarkService;
 import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.ArtistHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.BookmarkHandler;
+import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.infrastructure.MemberRepository;
@@ -28,6 +29,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -42,6 +44,9 @@ public class BookmarkServiceImpl implements BookmarkService {
     private final JavaMailSender mailSender;
     @Value("${spring.mail.username}")
     private String configEmail;
+
+    private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
 
     @Override
     public BookmarkRegisterDTO.BookmarkRegisterResponseDTO register(String username,
@@ -84,12 +89,19 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     public void bookmarkAlarm(String email) throws MessagingException {
 
-        log.info("알람이 전송되었습니다");
+        if (!isValidEmail(email)) {
+            throw new MailHandler(ErrorStatus.MAIL_NOT_VALID);
+        }
+
         MimeMessage emailForm = createEmailForm(email);
         mailSender.send(emailForm);
 
     }
 
+
+    private boolean isValidEmail(String email) {
+        return email != null && EMAIL_PATTERN.matcher(email).matches();
+    }
 
     private String setContext() {
         Context context = new Context();

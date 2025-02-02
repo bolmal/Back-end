@@ -23,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
@@ -52,6 +53,9 @@ class BookmarkServiceImplTest {
 
     @Mock
     MemberRepository memberRepository;
+
+    @Mock
+    private JavaMailSender mailSender;
 
     Member testMember;
 
