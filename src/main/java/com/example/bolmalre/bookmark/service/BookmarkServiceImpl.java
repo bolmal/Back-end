@@ -45,6 +45,14 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
 
+    @Override
+    public void subscribe(String username){
+        Member memberByUsername = findMemberByUsername(username);
+
+        Member.bookmarkAccountPlus(memberByUsername);
+    }
+
+
 
 
     // 이미 찜을 하고 있는지 검증

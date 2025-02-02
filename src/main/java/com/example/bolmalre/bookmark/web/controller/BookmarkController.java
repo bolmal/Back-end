@@ -25,6 +25,12 @@ public class BookmarkController {
     private final BookmarkService bookmarkService;
 
 
+    @PostMapping("/subscribes")
+    @Operation(summary = "아티스트 찜 구독권 구매 API")
+    public ApiResponse<String> subscribeBookmark(@AuthenticationPrincipal UserDetails userDetails) {
+        bookmarkService.subscribe(userDetails.getUsername());
+        return ApiResponse.onSuccess("성공적으로 구매가 완료되었습니다");
+    }
 
     /**
      찜 등록하기
@@ -46,6 +52,7 @@ public class BookmarkController {
 
         return ApiResponse.onSuccess(result);
     }
+
 
 
     /**

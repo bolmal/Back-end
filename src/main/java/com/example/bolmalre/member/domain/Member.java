@@ -110,6 +110,6 @@ public class Member extends BaseEntity {
     }
 
     public static void bookmarkAccountPlus(Member member) {
-        member.bookmarkAccount+=1;
+        member.bookmarkAccount+=3;
     }
 }
