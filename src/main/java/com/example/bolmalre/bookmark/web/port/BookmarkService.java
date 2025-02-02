@@ -2,6 +2,7 @@ package com.example.bolmalre.bookmark.web.port;
 
 import com.example.bolmalre.bookmark.web.dto.BookmarkGetArtistDTO;
 import com.example.bolmalre.bookmark.web.dto.BookmarkRegisterDTO;
+import jakarta.mail.MessagingException;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ public interface BookmarkService {
     void subscribe(String username);
 
     List<BookmarkGetArtistDTO.BookmarkGetArtistResponseDTO> getArtist(String username);
+
+    void bookmarkAlarm(String email) throws MessagingException;
 }
