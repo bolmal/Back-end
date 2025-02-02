@@ -1,4 +1,4 @@
-package com.example.bolmalre.member.enums;
+package com.example.bolmalre.member.domain.enums;
 
 public enum SubStatus {
     SUBSCRIBE, UNSUBSCRIBE

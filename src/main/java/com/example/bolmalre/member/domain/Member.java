@@ -1,19 +1,19 @@
-package com.example.bolmalre.member;
-
+package com.example.bolmalre.member.domain;
 
 import com.example.bolmalre.common.domain.BaseEntity;
-import com.example.bolmalre.member.enums.Gender;
-import com.example.bolmalre.member.enums.Role;
-import com.example.bolmalre.member.enums.Status;
-import com.example.bolmalre.member.enums.SubStatus;
+import com.example.bolmalre.member.infrastructure.LocalDateHolder;
+import com.example.bolmalre.member.web.dto.MemberJoinDTO;
+import com.example.bolmalre.member.domain.enums.Gender;
+import com.example.bolmalre.member.domain.enums.Role;
+import com.example.bolmalre.member.domain.enums.Status;
+import com.example.bolmalre.member.domain.enums.SubStatus;
+import com.example.bolmalre.member.web.dto.MemberUpdateDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-
 
 @Entity
 @Builder
@@ -49,7 +49,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    // 회원 ACTIVE,INACTIVE 상태 추가
+    // 회원 ACTIVE, INACTIVE 상태 추가
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -72,27 +72,26 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private SubStatus subStatus;
 
-
-
-
-    public static Member JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request, String encodedPassword){
-
-        return Member.builder()
-                .username(request.getUsername())
-                .password(encodedPassword)
-                .name(request.getName())
-                .role(Role.ROLE_USER)
-                .phoneNumber(request.getPhoneNumber())
-                .birthday(request.getBirthDate())
-                .email(request.getEmail())
-                .status(Status.ACTIVE)
-                .gender(request.getGender())
-                .profileImage(null)
-                .alarmAccount(0)
-                .bookmarkAccount(0)
-                .subStatus(SubStatus.UNSUBSCRIBE)
-                .build();
+    public static void update(Member member, MemberUpdateDTO.MemberUpdateRequestDTO request) {
+        member.username = request.getUsername();
+        member.name = request.getName();
+        member.gender = request.getGender();
+        member.phoneNumber = request.getPhoneNumber();
+        member.email = request.getEmail();
+        member.birthday = request.getBirthDate();
     }
 
+    public static void delete(Member member, LocalDateHolder localDateHolder) {
+        member.inactiveDate = localDateHolder.now();
+        member.status = Status.INACTIVE;
+    }
 
+    public static void rollback(Member member, LocalDateHolder localDateHolder) {
+        member.inactiveDate = localDateHolder.now();
+        member.status = Status.ACTIVE;
+    }
+
+    public static void resetPassword(Member member, String newPassword){
+        member.password = newPassword;
+    }
 }

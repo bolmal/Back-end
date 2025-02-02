@@ -1,7 +1,8 @@
-package com.example.bolmalre.member;
+package com.example.bolmalre.member.domain;
 
 
 import com.example.bolmalre.common.domain.BaseEntity;
+import com.example.bolmalre.member.web.dto.MemberJoinDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,12 +29,12 @@ public class Agreement extends BaseEntity {
     @Column(nullable = false)
     private Boolean advAgreement;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY,orphanRemoval = true)
     @JoinColumn(name = "member_id")
     private Member member;
 
 
-    public static Agreement JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request,Member member){
+    public static Agreement JoinDTOto(MemberJoinDTO.MemberJoinRequestDTO request, Member member){
         return Agreement.builder()
                 .advAgreement(request.getAdvAgreement())
                 .financialAgreement(request.getFinancialAgreement())

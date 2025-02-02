@@ -16,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -85,17 +86,17 @@ public class SecurityConfig {
 
 
 
-        http.csrf((auth)->auth.disable());
+        http.csrf(AbstractHttpConfigurer::disable);
 
-        http.formLogin((auth)->auth.disable());
-        http.httpBasic((auth)->auth.disable());
+        http.formLogin(AbstractHttpConfigurer::disable);
+        http.httpBasic(AbstractHttpConfigurer::disable);
 
 
         http.authorizeHttpRequests((auth)->auth
                 .requestMatchers("/health").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()// Swagger 관련 경로를 허용
-                .requestMatchers("members/join","/login","members/username","members/passwords").permitAll()
+                .requestMatchers("members/join","/login","members/usernames","members/passwords").permitAll()
                 .requestMatchers("phone-numbers/**").permitAll()
                 .requestMatchers("/emails/**").permitAll()
 

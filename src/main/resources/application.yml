@@ -18,8 +18,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/bolmal
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    username: root
+    password: Esc141414!
 
   jpa:
     properties:
@@ -29,7 +29,7 @@ spring:
         format_sql: true
         use_sql_comments: true
         hbm2ddl:
-          auto: create-drop
+          auto: update
         default_batch_fetch_size: 1000
 
   jwt:

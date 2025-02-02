@@ -4,7 +4,7 @@ package com.example.bolmalre.auth.filter;
 import com.example.bolmalre.auth.jwt.JWTUtilImpl;
 import com.example.bolmalre.auth.service.RefreshTokenService;
 import com.example.bolmalre.config.JWTConfig;
-import com.example.bolmalre.member.MemberJoinDTO;
+import com.example.bolmalre.member.web.dto.MemberJoinDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;

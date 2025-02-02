@@ -32,6 +32,9 @@ public enum ErrorStatus implements BaseErrorCode {
     MAIL_NOT_VALID(HttpStatus.BAD_REQUEST,"MAIL4002","인증번호가 일치하지 않습니다"),
     MAIL_NOT_SEND(HttpStatus.NOT_FOUND,"MAIL4001","요청받지 못한 이메일 입니다"),
 
+    MEMBER_PASSWORD_VALID(HttpStatus.BAD_REQUEST,"MEMBER4009","회원 비밀번호 검증에 실패하였습니다"),
+    MEMBER_ALREADY_ACTIVE(HttpStatus.BAD_REQUEST,"MEMBER4008","회원이 이미 활성 상태입니다"),
+    MEMBER_ALREADY_INACTIVE(HttpStatus.BAD_REQUEST,"MEMBER4007","회원이 이미 비활성 상태입니다"),
     MEMBER_PASSWORD_DUPLICATE(HttpStatus.BAD_REQUEST,"MEMBER4006","비밀번호가 변경되지 않았습니다"),
     MEMBER_NOT_INACTIVE(HttpStatus.BAD_REQUEST,"MEMBER4005","이미 비활성화 상태인 회원입니다"),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND,"MEMBER4004","회원을 찾을 수 없습니다"),
