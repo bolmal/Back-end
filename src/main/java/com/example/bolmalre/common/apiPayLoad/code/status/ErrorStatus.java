@@ -31,7 +31,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
     ARTIST_NOT_FOUND(HttpStatus.NOT_FOUND,"ARTIST4001","아티스트를 찾을 수 없습니다"),
 
-    MAIL_NOT_VALID(HttpStatus.BAD_REQUEST,"MAIL4002","인증번호가 일치하지 않습니다"),
+    MAIL_NOT_VALID(HttpStatus.BAD_REQUEST,"MAIL4003","메일의 형식이 유효하지 않습니다"),
+    CODE_NOT_VALID(HttpStatus.BAD_REQUEST,"MAIL4002","인증번호가 일치하지 않습니다"),
     MAIL_NOT_SEND(HttpStatus.NOT_FOUND,"MAIL4001","요청받지 못한 이메일 입니다"),
 
     MEMBER_PASSWORD_VALID(HttpStatus.BAD_REQUEST,"MEMBER4009","회원 비밀번호 검증에 실패하였습니다"),
