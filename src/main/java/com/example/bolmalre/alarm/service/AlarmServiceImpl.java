@@ -1,5 +1,6 @@
 package com.example.bolmalre.alarm.service;
 
+import com.example.bolmalre.alarm.converter.AlarmConverter;
 import com.example.bolmalre.alarm.domain.Alarm;
 import com.example.bolmalre.alarm.infrastructure.AlarmRepository;
 import com.example.bolmalre.alarm.web.dto.AlarmReadDTO;
@@ -62,17 +63,7 @@ public class AlarmServiceImpl implements AlarmService {
         Member memberByUsername = findMemberByUsername(username);
         List<Alarm> byMember = alarmRepository.findByMember(memberByUsername);
 
-        return byMember.stream()
-                .map(Alarm::getConcert)
-                .map(concert -> AlarmReadDTO.AlarmReadRequestDTO.builder()
-                        .concertPosterPath(concert.getViewingRestrict())
-                        .concertRound(concert.getConcertRound())
-                        .ticketOpenDate(concert.getTicketOpenDate())
-                        .concertName(concert.getConcertName())
-                        .concertDate(concert.getConcertDate())
-                        .onlineStore(concert.getOnlineStore())
-                        .build())
-                .toList();
+        return AlarmConverter.toAlarmReadRequestDTO(byMember);
     }
 
 
