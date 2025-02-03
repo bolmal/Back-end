@@ -1,6 +1,5 @@
 package com.example.bolmalre.member.domain;
 
-import com.example.bolmalre.bookmark.domain.Bookmark;
 import com.example.bolmalre.common.domain.BaseEntity;
 import com.example.bolmalre.member.domain.enums.Gender;
 import com.example.bolmalre.member.domain.enums.Role;
@@ -114,7 +113,11 @@ public class Member extends BaseEntity {
         member.bookmarkAccount+=3;
     }
 
-    public static void BookmarkDiscount(Member member) {
-        member.bookmarkAccount-=1;
+    public static void alarmAccountPlus(Member member) {
+        member.alarmAccount+=3;
+    }
+
+    public static void alarmAccountMinus(Member member) {
+        member.alarmAccount-=1;
     }
 }

@@ -27,11 +27,11 @@ public class AlarmMailUtil {
 
     private final LocalDateHolder localDateHolder;
 
-    @Scheduled(cron = "0 0 0 * * ?")
-    public void sendAlarmMail() {
-        LocalDateTime now = localDateHolder.now();
-        LocalDateTime oneWeekLater = now.plusDays(7);
-
+//    @Scheduled(cron = "0 0 0 * * ?")
+//    public void sendAlarmMail() {
+//        LocalDateTime now = localDateHolder.now();
+//        LocalDateTime oneWeekLater = now.plusDays(7);
+//
 //        List<String> emails = concertRepository.findConcertsWithTicketOpeningInAWeek(now, oneWeekLater).stream()
 //                .flatMap(concert -> alarmRepository.findByConcert(concert).stream()) // Concert -> Alarm 리스트 변환
 //                .map(Alarm::getMember) // Alarm -> Member 변환
@@ -46,6 +46,6 @@ public class AlarmMailUtil {
 //                throw new MailHandler(ErrorStatus.MAIL_NOT_SEND);
 //            }
 //        });
-    }
+//    }
 
 }

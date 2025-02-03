@@ -1,8 +1,10 @@
 package com.example.bolmalre.concert.web.dto;
 
-import com.example.bolmalre.concert.domain.enums.TicketRound;
 import com.example.bolmalre.concert.domain.enums.OnlineStore;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -21,13 +23,13 @@ public class SaveDTO {
         String concertName;
 
         @Schema(description = "공연 회차")
-        TicketRound ticketRound;
+        Integer concertRound;
 
         @Schema(description = "공연 장소")
         String concertPlace;
 
         @Schema(description = "공연 일시")
-        LocalDate concertDate;
+        List<LocalDate> concertDate;
 
         @Schema(description = "공연 티켓팅 오픈일")
         LocalDateTime ticketOpenDate;

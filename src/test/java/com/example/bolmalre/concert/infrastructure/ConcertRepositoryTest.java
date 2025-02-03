@@ -53,7 +53,6 @@ class ConcertRepositoryTest {
 
         Concert testConcert2 = Concert.builder()
                 .concertName("test2")
-
                 .concertRuntime("test2")
                 .concertPlace("test2")
                 .concertAge(0)
@@ -65,7 +64,6 @@ class ConcertRepositoryTest {
 
         Concert testConcert3 = Concert.builder()
                 .concertName("test3")
-                .concertRound(TicketRound.FIRST)
                 .concertDate(LocalDate.of(1,1,1))
                 .ticketOpenDate(now.plusDays(8))
                 .concertRuntime("test3")

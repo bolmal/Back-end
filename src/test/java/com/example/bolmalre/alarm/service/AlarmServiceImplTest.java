@@ -96,7 +96,10 @@ class AlarmServiceImplTest {
                 .concertPlace("test")
                 .price(0)
                 .concertAge(0)
+                .viewingRestrict("test")
                 .onlineStore(OnlineStore.INTERPARK)
+                .viewCount(0)
+                .recommendRate(0)
                 .advertisement(true)
                 .posterUrl("test")
                 .concertArtists(new ArrayList<>())
@@ -226,7 +229,7 @@ class AlarmServiceImplTest {
         //then
         assertThat(response).hasSize(1);
         assertThat(response.get(0).getConcertName()).isEqualTo("test");
-        assertThat(response.get(0).getTicketRound()).isEqualTo(TicketRound.FIRST);
+        assertThat(response.get(0).getConcertRound()).isEqualTo(ConcertRound.FIRST);
         assertThat(response.get(0).getConcertDate()).isEqualTo(LocalDate.of(1,1,1));
         assertThat(response.get(0).getTicketOpenDate()).isEqualTo(LocalDateTime.of(1,1,1,1,1));
         assertThat(response.get(0).getOnlineStore()).isEqualTo(OnlineStore.INTERPARK);
