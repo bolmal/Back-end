@@ -4,6 +4,7 @@ import com.example.bolmalre.artist.domain.Artist;
 import com.example.bolmalre.artist.infrastructure.ArtistRepository;
 import com.example.bolmalre.bookmark.domain.Bookmark;
 import com.example.bolmalre.bookmark.infrastructure.BookmarkRepository;
+import com.example.bolmalre.bookmark.util.BookmarkAlarmUtil;
 import com.example.bolmalre.bookmark.web.port.BookmarkService;
 import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
@@ -33,9 +34,7 @@ public class ConcertTempService {
 
     private final ConcertRepository concertRepository;
 
-    // 다른 의존성과 너무 결합이 많이 되어있다.....해결해야할듯
-    private final BookmarkService bookmarkService;
-    private final BookmarkRepository bookmarkRepository;
+    private final BookmarkAlarmUtil bookmarkAlarmUtil;
     private final ConcertArtistRepository concertArtistRepository;
     private final ArtistRepository artistRepository;
 
@@ -55,28 +54,6 @@ public class ConcertTempService {
                 .toList();
         concertArtistRepository.saveAll(concertArtists);
 
-        // 그 콘서트 아티스트를 통해서 북마크를 추출해서
-        List<Bookmark> byArtistIn = bookmarkRepository.findByArtistIn(artists);
-
-        // 북마크에서 회원의 이메일을 추출해서 메일로 전송한다
-        sendMail(byArtistIn);
-    }
-
-
-
-
-    private void sendMail(List<Bookmark> byArtistIn) {
-        List<String> emails = byArtistIn.stream()
-                .map(Bookmark::getMember)
-                .map(Member::getEmail)
-                .toList();
-
-        emails.forEach(email -> {
-            try {
-                bookmarkService.bookmarkAlarm(email);
-            } catch (MessagingException e) {
-                throw new MailHandler(ErrorStatus.MAIL_NOT_SEND);
-            }
-        });
+        bookmarkAlarmUtil.sendMail(artists);
     }
 }
