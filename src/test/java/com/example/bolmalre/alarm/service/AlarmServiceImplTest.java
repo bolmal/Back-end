@@ -138,6 +138,7 @@ class AlarmServiceImplTest {
         alarmService.register("test123",1L);
 
         //then
+        assertThat(testMember.getAlarmAccount()).isEqualTo(2);
         verify(alarmRepository,times(1)).save(any(Alarm.class));
     }
 

@@ -1,5 +1,6 @@
 package com.example.bolmalre.alarm.web.controller;
 
+import com.example.bolmalre.alarm.web.dto.AlarmReadDTO;
 import com.example.bolmalre.alarm.web.port.AlarmService;
 import com.example.bolmalre.common.apiPayLoad.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,9 +46,10 @@ public class AlarmController {
      * */
     @Operation(summary = "알림 등록 API")
     @PostMapping("")
-    public void register(@AuthenticationPrincipal UserDetails userDetails,
+    public ApiResponse<String> register(@AuthenticationPrincipal UserDetails userDetails,
                          @RequestParam Long concertId) {
-
+        alarmService.register(userDetails.getUsername(), concertId);
+        return ApiResponse.onSuccess("알림 등록이 성공적으로 완료되었습니다");
     }
 
 
@@ -53,9 +57,12 @@ public class AlarmController {
      * 알림 설정해둔 공연 조회
      *
      * */
-    @Operation(summary = "알림설정한 공연 조회 API")
+    @Operation(summary = "알림 설정한 공연 조회 API")
     @GetMapping("")
-    public void get() {
+    public ApiResponse<List<AlarmReadDTO.AlarmReadRequestDTO>> get(@AuthenticationPrincipal UserDetails userDetails) {
+        List<AlarmReadDTO.AlarmReadRequestDTO> result = alarmService.get(userDetails.getUsername());
+
+        return ApiResponse.onSuccess(result);
     }
 
 
