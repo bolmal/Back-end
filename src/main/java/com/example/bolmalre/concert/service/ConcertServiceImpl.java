@@ -45,18 +45,15 @@ public class ConcertServiceImpl implements ConcertService {
 
     }
 
-    // 홈 지금 볼래 말래? ( 로그인 여부 판별 필  ) FIXME (추천도 점수 추후 추가 (1차 배포엔 해당 사항 없음))
+    // 홈 지금 볼래 말래? ( 로그인 이전 ) FIXME (추천도 점수 추후 추가 (1차 배포엔 해당 사항 없음))
     @Override
-    public List<ConcertHomeDTO.RecommendConcertDTO> getRecommendConcertInfo() {
+    public List<ConcertHomeDTO.RecommendConcertDTO> getRecommendConcertInfoBeforeLogin() {
 
         boolean isLoggedIn = isUserLoggedIn();
 
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "dailyViewCount"));
 
-        Slice<Concert> concerts = isLoggedIn
-                ? null
-                : concertRepository.findTodayTopViewedConcerts(pageable);
-
+        Slice<Concert> concerts = concertRepository.findTodayTopViewedConcerts(pageable);
 
         return concerts.stream()
                 .map(concert ->
@@ -65,7 +62,17 @@ public class ConcertServiceImpl implements ConcertService {
 
     }
 
-    // 홈 이번주 가장 인기 있는 티켓( 주간 조회수 기준) FIXME( 알림 개수 추가 필요 )
+    // 홈 지금 볼래 말래? ( 로그인 이후)
+    @Override
+    public List<ConcertHomeDTO.RecommendConcertDTO> getRecommendConcertInfoAfterLogin(Long memberId) {
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "dailyViewCount"));
+
+        Slice<Concert> concerts;
+        return List.of();
+    }
+
+    // 홈 이번주 가장 인기 있는 티켓( 주간 조회수 기준) FIXME( 알림 개수 추가 필요 (1차 배포엔 해당 사항 없음) )
     @Override
     public List<ConcertHomeDTO.WeekHotConcertDTO> getWeekHotConcertInfo() {
 
