@@ -8,6 +8,7 @@ import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
 import com.example.bolmalre.concert.domain.Concert;
 import com.example.bolmalre.concert.infrastructure.ConcertRepository;
 import com.example.bolmalre.member.domain.Member;
+import com.example.bolmalre.member.infrastructure.LocalDateHolder;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,9 +25,11 @@ public class AlarmMailUtil {
     private final ConcertRepository concertRepository;
     private final AlarmRepository alarmRepository;
 
+    private final LocalDateHolder localDateHolder;
+
     @Scheduled(cron = "0 0 0 * * ?")
     public void sendAlarmMail() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = localDateHolder.now();
         LocalDateTime oneWeekLater = now.plusDays(7);
 
         List<String> emails = concertRepository.findConcertsWithTicketOpeningInAWeek(now, oneWeekLater).stream()

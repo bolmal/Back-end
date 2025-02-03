@@ -3,8 +3,12 @@ package com.example.bolmalre.concert.infrastructure;
 import com.example.bolmalre.concert.domain.Concert;
 import com.example.bolmalre.concert.domain.enums.ConcertRound;
 import com.example.bolmalre.concert.domain.enums.OnlineStore;
+import com.example.bolmalre.member.infrastructure.LocalDateHolder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -14,19 +18,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 
 @DataJpaTest
+@ExtendWith(MockitoExtension.class)
 class ConcertRepositoryTest {
 
     @Autowired
     private ConcertRepository concertRepository;
 
+    @Mock
+    LocalDateHolder localDateHolder;
+
     @Test
-    @DisplayName("특정 기간 동안 티켓 오픈되는 콘서트 목록을 조회할 수 있다.")
-    void testFindConcertsWithTicketOpeningInAWeek() {
-        // Given (테스트 데이터 저장)
-        LocalDateTime now = LocalDateTime.now();
+    @DisplayName("특정 기간 동안 티켓 오픈되는 콘서트 목록을 조회할 수 있다")
+    void findConcertsWithTicketOpeningInAWeek_success() {
+        // Given
+        when(localDateHolder.now()).thenReturn(LocalDateTime.of(1, 1, 1, 1, 1));
+
+        LocalDateTime now = localDateHolder.now();
         LocalDateTime sevenDaysLater = now.plusDays(7);
 
         Concert testConcert1 = Concert.builder()
