@@ -1,24 +1,26 @@
 package com.example.bolmalre.concert.domain;
 
 import com.example.bolmalre.common.domain.BaseEntity;
+import com.example.bolmalre.concert.domain.enums.TicketRound;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
 @Builder
-public class ConcertPrice extends BaseEntity {
+public class ConcertTicketRound extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String seatType;
+    private TicketRound ticketRound;
 
-    private Integer price;
-
+    private LocalDateTime ticketOpenDate;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
