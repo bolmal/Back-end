@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "알림 기능 API")
 public class AlarmController {
 
+
+    /**
+     * 알림 구매하기
+     * */
+
+
     /**
      알림 등록하기
 
@@ -23,19 +29,11 @@ public class AlarmController {
      알림받을 공연정보, 티켓팅 정보 포함
      * */
 
-    /**
-     *
-     * 등록 확인창 조회 API
-     *
-     * 이것도 필요한가
-     *
-     * */
 
     /**
      * 알림 설정해둔 공연 조회
      *
      * */
-
 
 
     /**
@@ -45,4 +43,6 @@ public class AlarmController {
      * 공연, 공지사항 제목, 작성일
      *
      * */
+
+    // 알림 전송하기
 }
