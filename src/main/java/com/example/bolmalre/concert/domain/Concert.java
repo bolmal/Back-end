@@ -56,13 +56,13 @@ public class Concert extends BaseEntity {
     private String description;
 
 
-    @Column(nullable = false, columnDefinition = "default 0")
+    @Column(nullable = false)
     private Integer dailyViewCount;
 
-    @Column(nullable = false, columnDefinition = "default 0")
+    @Column(nullable = false)
     private Integer weeklyViewCount;
 
-    @Column(nullable = false, columnDefinition = "default false")
+    @Column(nullable = false)
     private boolean advertisement;
 
 
