@@ -99,6 +99,7 @@ public class SecurityConfig {
                 .requestMatchers("members/join","/login","members/usernames","members/passwords").permitAll()
                 .requestMatchers("phone-numbers/**").permitAll()
                 .requestMatchers("/emails/**").permitAll()
+                .requestMatchers("/concerts/save/**").permitAll()
 
                 .anyRequest().authenticated());
 
