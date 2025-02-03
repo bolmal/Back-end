@@ -1,6 +1,6 @@
 package com.example.bolmalre.concert.web.dto;
 
-import com.example.bolmalre.concert.domain.enums.ConcertRound;
+import com.example.bolmalre.concert.domain.enums.TicketRound;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,7 +40,7 @@ public class ConcertHomeDTO {
         private String posterUrl;
 
         @Schema(description = "1차 티켓오픈, 2차 티켓오픈, 선예매 등 티켓회차")
-        private ConcertRound concertRound;
+        private TicketRound ticketRound;
 
         @Schema(description = "티켓팅 오픈 날짜+시간")
         private LocalDateTime ticketOpenDate;
@@ -65,7 +65,7 @@ public class ConcertHomeDTO {
         private String posterUrl;
 
         @Schema(description = "1차 티켓오픈, 2차 티켓오픈, 선예매 등 티켓회차")
-        private ConcertRound concertRound;
+        private TicketRound ticketRound;
 
         @Schema(description = "티켓팅 오픈 날짜+시간")
         private LocalDateTime ticketOpenDate;

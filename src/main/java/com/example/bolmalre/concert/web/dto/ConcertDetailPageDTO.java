@@ -1,6 +1,6 @@
 package com.example.bolmalre.concert.web.dto;
 
-import com.example.bolmalre.concert.domain.enums.ConcertRound;
+import com.example.bolmalre.concert.domain.enums.TicketRound;
 import com.example.bolmalre.concert.domain.enums.OnlineStore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +20,7 @@ public class ConcertDetailPageDTO {
 
         private Long id;
         private String concertName;
-        private ConcertRound concertRound;
+        private TicketRound ticketRound;
         private String concertPlace;
         private LocalDate concertDate;
         private LocalDateTime ticketOpenDate;

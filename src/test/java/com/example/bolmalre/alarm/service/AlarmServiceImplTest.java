@@ -8,7 +8,7 @@ import com.example.bolmalre.common.apiPayLoad.exception.handler.ConcertHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.concert.domain.Concert;
-import com.example.bolmalre.concert.domain.enums.ConcertRound;
+import com.example.bolmalre.concert.domain.enums.TicketRound;
 import com.example.bolmalre.concert.domain.enums.OnlineStore;
 import com.example.bolmalre.concert.infrastructure.ConcertRepository;
 import com.example.bolmalre.member.domain.Member;
@@ -89,17 +89,14 @@ class AlarmServiceImplTest {
         testConcert = Concert.builder()
                 .id(1L)
                 .concertName("test")
-                .concertRound(ConcertRound.FIRST)
+                .concertRound(TicketRound.FIRST)
                 .concertDate(LocalDate.of(1,1,1))
                 .ticketOpenDate(LocalDateTime.of(1,1,1,1,1))
                 .concertRuntime("test")
                 .concertPlace("test")
                 .price(0)
                 .concertAge(0)
-                .viewingRestrict("test")
                 .onlineStore(OnlineStore.INTERPARK)
-                .viewCount(0)
-                .recommendRate(0)
                 .advertisement(true)
                 .posterUrl("test")
                 .concertArtists(new ArrayList<>())
@@ -229,7 +226,7 @@ class AlarmServiceImplTest {
         //then
         assertThat(response).hasSize(1);
         assertThat(response.get(0).getConcertName()).isEqualTo("test");
-        assertThat(response.get(0).getConcertRound()).isEqualTo(ConcertRound.FIRST);
+        assertThat(response.get(0).getTicketRound()).isEqualTo(TicketRound.FIRST);
         assertThat(response.get(0).getConcertDate()).isEqualTo(LocalDate.of(1,1,1));
         assertThat(response.get(0).getTicketOpenDate()).isEqualTo(LocalDateTime.of(1,1,1,1,1));
         assertThat(response.get(0).getOnlineStore()).isEqualTo(OnlineStore.INTERPARK);
