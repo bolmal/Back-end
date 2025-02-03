@@ -122,7 +122,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
         MimeMessage message = mailSender.createMimeMessage();
         message.addRecipients(MimeMessage.RecipientType.TO, email);
-        message.setSubject("[볼래말래] 회원가입 이메일 2차확인 인증번호");
+        message.setSubject("[볼래말래] 찜 아티스트 정보 업데이트 알림");
         message.setFrom(configEmail);
         message.setText(setContext(), "utf-8", "html");
 

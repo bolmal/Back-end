@@ -5,6 +5,7 @@ import com.example.bolmalre.alarm.web.port.AlarmService;
 import com.example.bolmalre.common.apiPayLoad.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -78,5 +79,13 @@ public class AlarmController {
     public void notions() {
     }
 
+
     // 알림 전송하기
+    @Operation(summary = "알림 전송 API")
+    @PostMapping("/alarm")
+    public ApiResponse<String> send(String email) throws MessagingException {
+        alarmService.alarm(email);
+
+        return ApiResponse.onSuccess("알림이 성공적으로 전송되었습니다");
+    }
 }
