@@ -2,6 +2,7 @@ package com.example.bolmalre.alarm.service;
 
 import com.example.bolmalre.alarm.domain.Alarm;
 import com.example.bolmalre.alarm.infrastructure.AlarmRepository;
+import com.example.bolmalre.alarm.web.dto.AlarmReadDTO;
 import com.example.bolmalre.artist.domain.Artist;
 import com.example.bolmalre.artist.domain.enums.Genre;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.AlarmHandler;
@@ -29,6 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.*;
@@ -189,8 +191,8 @@ class AlarmServiceImplTest {
 
 
     @Test
-    @DisplayName("북마크 알림 숫자가 0일때 등록을 시도하면 정해진 예외를 반환한다")
-    public void title(){
+    @DisplayName("알림 가능 횟수가 0일때 등록을 시도하면 정해진 예외를 반환한다")
+    public void register_AccountZero(){
         //given
         when(memberRepository.findByUsername(any())).thenReturn(Optional.of(testMember));
         when(concertRepository.findById(any())).thenReturn(Optional.of(testConcert));
@@ -199,5 +201,44 @@ class AlarmServiceImplTest {
         assertThatThrownBy(() -> alarmService.register("test123",1L))
                 .isInstanceOf(AlarmHandler.class)
                 .hasFieldOrPropertyWithValue("code", ALARM_ACCOUNT_ZERO);
+    }
+
+
+    @Test
+    @DisplayName("get()을 이용하여 회원이 알림 신청한 공연의 정보를 조회 할 수 있다")
+    public void get_success(){
+        //given
+        Alarm testAlarm = Alarm.builder()
+                .member(testMember)
+                .concert(testConcert)
+                .build();
+
+        when(memberRepository.findByUsername(any())).thenReturn(Optional.of(testMember));
+        when(alarmRepository.findByMember(any())).thenReturn(List.of(testAlarm));
+
+        //when
+        List<AlarmReadDTO.AlarmReadRequestDTO> response = alarmService.get("test123");
+
+        //then
+        assertThat(response).hasSize(1);
+        assertThat(response.get(0).getConcertName()).isEqualTo("test");
+        assertThat(response.get(0).getConcertRound()).isEqualTo(ConcertRound.FIRST);
+        assertThat(response.get(0).getConcertDate()).isEqualTo(LocalDate.of(1,1,1));
+        assertThat(response.get(0).getTicketOpenDate()).isEqualTo(LocalDateTime.of(1,1,1,1,1));
+        assertThat(response.get(0).getOnlineStore()).isEqualTo(OnlineStore.INTERPARK);
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원이 조회를 요청하면 정해진 예외를 반환한다")
+    public void get_MemberNotFound(){
+        //given
+        String errorUsername = "ERROR";
+        when(memberRepository.findByUsername(any())).thenReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> alarmService.get("test123"))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
     }
 }
