@@ -1,9 +1,9 @@
 package com.example.bolmalre.alarm.web;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,6 +15,10 @@ public class AlarmController {
     /**
      * 알림 구매하기
      * */
+    @Operation(summary = "알림권 구매 API")
+    @PatchMapping("/subscribes")
+    public void subscribe() {
+    }
 
 
     /**
@@ -28,12 +32,20 @@ public class AlarmController {
      알림 설정이 완료되면 알림 설정확인 메일을 전송합니다
      알림받을 공연정보, 티켓팅 정보 포함
      * */
+    @Operation(summary = "알림 등록 API")
+    @PostMapping("")
+    public void register() {
+    }
 
 
     /**
      * 알림 설정해둔 공연 조회
      *
      * */
+    @Operation(summary = "알림설정한 공연 조회 API")
+    @GetMapping("")
+    public void get() {
+    }
 
 
     /**
@@ -43,6 +55,10 @@ public class AlarmController {
      * 공연, 공지사항 제목, 작성일
      *
      * */
+    @Operation(summary = "공지사항 조회 API")
+    @GetMapping("/notions")
+    public void notions() {
+    }
 
     // 알림 전송하기
 }
