@@ -7,6 +7,7 @@ import com.example.bolmalre.artist.domain.Artist;
 import com.example.bolmalre.artist.domain.enums.Genre;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.AlarmHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.ConcertHandler;
+import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.concert.domain.Concert;
 import com.example.bolmalre.concert.domain.enums.ConcertRound;
@@ -18,6 +19,8 @@ import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
 import com.example.bolmalre.member.infrastructure.MemberRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +28,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
@@ -55,6 +59,12 @@ class AlarmServiceImplTest {
 
     @Mock
     ConcertRepository concertRepository;
+
+    @Mock
+    private JavaMailSender mailSender;
+
+    @Mock
+    private MimeMessage mimeMessage;
 
     Member testMember;
 
@@ -240,5 +250,46 @@ class AlarmServiceImplTest {
         assertThatThrownBy(() -> alarmService.get("test123"))
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
+    }
+
+
+    @Test
+    @DisplayName("alarm()을 이용하여 알림을 보낼 수 있다")
+    public void alarm_success() throws MessagingException {
+        //given
+        String toEmail = "user@example.com";
+        when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
+
+        //when
+        alarmService.alarm(toEmail);
+
+        //then
+        verify(mailSender, times(1)).send(any(MimeMessage.class));
+    }
+
+
+    @Test
+    @DisplayName("이메일 형식에 맞지 않으면 정해진 예외를 반환한다")
+    public void alarm_pattern(){
+        //given
+        String toEmail = "error";
+
+        //when & then
+        assertThatThrownBy(() -> alarmService.alarm(toEmail))
+                .isInstanceOf(MailHandler.class)
+                .hasFieldOrPropertyWithValue("code", MAIL_NOT_VALID);
+    }
+
+
+    @Test
+    @DisplayName("이메일이 입력되지 않으면 정해진 예외를 반환한다")
+    public void alarm_email_null(){
+        //given
+        String toEmail = "";
+
+        //when & then
+        assertThatThrownBy(() -> alarmService.alarm(toEmail))
+                .isInstanceOf(MailHandler.class)
+                .hasFieldOrPropertyWithValue("code", MAIL_NOT_VALID);
     }
 }
