@@ -311,7 +311,7 @@ class BookmarkServiceImplTest {
 
 
     @Test
-    @DisplayName("이메일 형식에 맞지 않으면 정해진 예외를 반환한다")
+    @DisplayName("이메일이 입력되지 않으면 정해진 예외를 반환한다")
     public void bookmarkAlarm_email_null(){
         //given
         String toEmail = "";
