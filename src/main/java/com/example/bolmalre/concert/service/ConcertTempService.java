@@ -9,7 +9,7 @@ import com.example.bolmalre.concert.domain.Concert;
 import com.example.bolmalre.concert.domain.ConcertArtist;
 import com.example.bolmalre.concert.infrastructure.ConcertArtistRepository;
 import com.example.bolmalre.concert.infrastructure.ConcertRepository;
-import com.example.bolmalre.concert.web.dto.SaveDTO;
+import com.example.bolmalre.concert.web.dto.SaveConcertDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class ConcertTempService {
     private final ConcertArtistRepository concertArtistRepository;
     private final ArtistRepository artistRepository;
 
-    public void save(SaveDTO.SaveRequestDTO request){
+    public void save(SaveConcertDTO.SaveRequestDTO request){
 
         List<Long> artistId = request.getArtistId();
 

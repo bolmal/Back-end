@@ -1,13 +1,13 @@
 package com.example.bolmalre.concert.converter;
 
 import com.example.bolmalre.concert.domain.Concert;
-import com.example.bolmalre.concert.web.dto.SaveDTO;
+import com.example.bolmalre.concert.web.dto.SaveConcertDTO;
 
 import java.util.ArrayList;
 
 public class ConcertTempConverter {
 
-    public static Concert toConcert(SaveDTO.SaveRequestDTO request){
+    public static Concert toConcert(SaveConcertDTO.SaveRequestDTO request){
 
         return Concert.builder()
                 .concertName(request.getConcertName())

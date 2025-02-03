@@ -1,8 +1,7 @@
 package com.example.bolmalre.concert.web.controller;
 
-import com.example.bolmalre.concert.domain.Concert;
 import com.example.bolmalre.concert.service.ConcertTempService;
-import com.example.bolmalre.concert.web.dto.SaveDTO;
+import com.example.bolmalre.concert.web.dto.SaveConcertDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Builder;
@@ -23,7 +22,7 @@ public class ConcertTempController {
 
     @Operation(summary = "콘서트 저장 임시 API")
     @PostMapping("")
-    public void save(@RequestBody SaveDTO.SaveRequestDTO requestDTO){
+    public void save(@RequestBody SaveConcertDTO.SaveRequestDTO requestDTO){
         concertTempService.save(requestDTO);
     }
 }
