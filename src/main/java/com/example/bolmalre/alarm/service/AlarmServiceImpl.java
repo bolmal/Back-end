@@ -2,6 +2,7 @@ package com.example.bolmalre.alarm.service;
 
 import com.example.bolmalre.alarm.domain.Alarm;
 import com.example.bolmalre.alarm.infrastructure.AlarmRepository;
+import com.example.bolmalre.alarm.web.dto.AlarmReadDTO;
 import com.example.bolmalre.alarm.web.port.AlarmService;
 import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.AlarmHandler;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -24,12 +27,15 @@ public class AlarmServiceImpl implements AlarmService {
     private final MemberRepository memberRepository;
     private final ConcertRepository concertRepository;
 
+
+
     @Override
     public void subscribe(String username){
         Member findMember = findMemberByUsername(username);
 
         Member.alarmAccountPlus(findMember);
     }
+
 
     @Override
     public void register(String username, Long concertId){
@@ -43,11 +49,33 @@ public class AlarmServiceImpl implements AlarmService {
                 .build();
 
         validAlarmAccount(findMember);
-        Member.bookmarkAccountMinus(findMember);
+        Member.alarmAccountMinus(findMember);
         validAlarmExist(findMember, findConcert);
 
         alarmRepository.save(newAlarm);
     }
+
+
+    @Override
+    public List<AlarmReadDTO.AlarmReadRequestDTO> get(String username){
+
+        Member memberByUsername = findMemberByUsername(username);
+        List<Alarm> byMember = alarmRepository.findByMember(memberByUsername);
+
+        return byMember.stream()
+                .map(Alarm::getConcert)
+                .map(concert -> AlarmReadDTO.AlarmReadRequestDTO.builder()
+                        .concertPosterPath(concert.getViewingRestrict())
+                        .concertRound(concert.getConcertRound())
+                        .ticketOpenDate(concert.getTicketOpenDate())
+                        .concertName(concert.getConcertName())
+                        .concertDate(concert.getConcertDate())
+                        .onlineStore(concert.getOnlineStore())
+                        .build())
+                .toList();
+    }
+
+
 
 
 

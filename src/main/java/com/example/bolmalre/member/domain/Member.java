@@ -118,6 +118,6 @@ public class Member extends BaseEntity {
     }
 
     public static void alarmAccountMinus(Member member) {
-        member.alarmAccount+=3;
+        member.alarmAccount-=1;
     }
 }
