@@ -22,9 +22,6 @@ public class AlarmController {
     private final AlarmService alarmService;
 
 
-    /**
-     * 알림 구매하기
-     * */
     @Operation(summary = "알림권 구매 API")
     @PatchMapping("/subscribes")
     public ApiResponse<String> subscribe(@AuthenticationPrincipal UserDetails userDetails) {
@@ -34,17 +31,7 @@ public class AlarmController {
     }
 
 
-    /**
-     알림 등록하기
 
-     공연알림을 등록하는 기능입니다
-     등록하면 회원의 알림 쿠폰이 하나 줄어들고
-
-     정해진 알림 날짜가 되면 알림을 전송합니다
-
-     알림 설정이 완료되면 알림 설정확인 메일을 전송합니다
-     알림받을 공연정보, 티켓팅 정보 포함
-     * */
     @Operation(summary = "알림 등록 API")
     @PostMapping("")
     public ApiResponse<String> register(@AuthenticationPrincipal UserDetails userDetails,
@@ -54,10 +41,6 @@ public class AlarmController {
     }
 
 
-    /**
-     * 알림 설정해둔 공연 조회
-     *
-     * */
     @Operation(summary = "알림 설정한 공연 조회 API")
     @GetMapping("")
     public ApiResponse<List<AlarmReadDTO.AlarmReadRequestDTO>> get(@AuthenticationPrincipal UserDetails userDetails) {
@@ -73,6 +56,7 @@ public class AlarmController {
      * 한 페이지당 다섯개 씩 노출
      * 공연, 공지사항 제목, 작성일
      *
+     * 아직 개발계획 불투명
      * */
     @Operation(summary = "공지사항 조회 API")
     @GetMapping("/notions")
