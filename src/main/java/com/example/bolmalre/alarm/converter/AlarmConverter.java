@@ -11,10 +11,7 @@ public class AlarmConverter {
         return byMember.stream()
                 .map(Alarm::getConcert)
                 .map(concert -> AlarmReadDTO.AlarmReadRequestDTO.builder()
-                        .ticketRound(concert.getConcertRound())
-                        .ticketOpenDate(concert.getTicketOpenDate())
                         .concertName(concert.getConcertName())
-                        .concertDate(concert.getConcertDate())
                         .onlineStore(concert.getOnlineStore())
                         .build())
                 .toList();

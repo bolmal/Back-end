@@ -11,12 +11,8 @@ public class ConcertTempConverter {
 
         return Concert.builder()
                 .concertName(request.getConcertName())
-                .concertRound(request.getTicketRound())
-                .concertDate(request.getConcertDate())
-                .ticketOpenDate(request.getTicketOpenDate())
                 .concertRuntime(request.getConcertRuntime())
                 .concertPlace(request.getConcertPlace())
-                .price(request.getPrice())
                 .concertAge(request.getConcertAge())
                 .onlineStore(request.getOnlineStore())
                 .advertisement(true)

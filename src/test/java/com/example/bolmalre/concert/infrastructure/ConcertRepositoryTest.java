@@ -42,12 +42,8 @@ class ConcertRepositoryTest {
 
         Concert testConcert1 = Concert.builder()
                 .concertName("test1")
-                .concertRound(TicketRound.FIRST)
-                .concertDate(LocalDate.of(1, 1, 1))
-                .ticketOpenDate(now.plusDays(3))
                 .concertRuntime("test1")
                 .concertPlace("test1")
-                .price(0)
                 .concertAge(0)
                 .onlineStore(OnlineStore.INTERPARK)
                 .advertisement(true)
@@ -57,12 +53,9 @@ class ConcertRepositoryTest {
 
         Concert testConcert2 = Concert.builder()
                 .concertName("test2")
-                .concertRound(TicketRound.FIRST)
-                .concertDate(LocalDate.of(1,1,1))
-                .ticketOpenDate(now.plusDays(7))
+
                 .concertRuntime("test2")
                 .concertPlace("test2")
-                .price(0)
                 .concertAge(0)
                 .onlineStore(OnlineStore.INTERPARK)
                 .advertisement(true)

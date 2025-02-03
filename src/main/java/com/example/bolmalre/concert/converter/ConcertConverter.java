@@ -21,10 +21,7 @@ public class ConcertConverter {
         return ConcertHomeDTO.RecommendConcertDTO.builder()
                 .id(concert.getId())
                 .posterUrl(imageLink)
-                .ticketRound(concert.getConcertRound())
-                .ticketOpenDate(concert.getTicketOpenDate())
                 .concertName(concert.getConcertName())
-                .concertDate(concert.getConcertDate())
                 .build();
     }
 
@@ -32,10 +29,7 @@ public class ConcertConverter {
         return ConcertHomeDTO.WeekHotConcertDTO.builder()
                 .id(concert.getId())
                 .posterUrl(imageLink)
-                .ticketRound(concert.getConcertRound())
-                .ticketOpenDate(concert.getTicketOpenDate())
                 .concertName(concert.getConcertName())
-                .concertDate(concert.getConcertDate())
                 .concertPlace(concert.getConcertPlace())
                 .build();
     }
@@ -44,10 +38,7 @@ public class ConcertConverter {
         return ConcertPageDTO.ConcertInfoDTO.builder()
                 .id(concert.getId())
                 .posterUrl(imageLink)
-                .ticketRound(concert.getConcertRound())
-                .ticketOpenDate(concert.getTicketOpenDate())
                 .concertName(concert.getConcertRuntime())
-                .concertDate(concert.getConcertDate())
                 .build();
     }
 

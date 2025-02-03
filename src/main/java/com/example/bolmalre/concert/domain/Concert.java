@@ -32,9 +32,6 @@ public class Concert extends BaseEntity {
     // 콘서트(공연) 장소
     private String concertPlace;
 
-    // 콘서트(공연) 날짜
-    private LocalDate concertDate;
-
     // 티켓 오픈 여부
     private Boolean ticketStatus;
 

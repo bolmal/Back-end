@@ -32,20 +32,20 @@ public class AlarmMailUtil {
         LocalDateTime now = localDateHolder.now();
         LocalDateTime oneWeekLater = now.plusDays(7);
 
-        List<String> emails = concertRepository.findConcertsWithTicketOpeningInAWeek(now, oneWeekLater).stream()
-                .flatMap(concert -> alarmRepository.findByConcert(concert).stream()) // Concert -> Alarm 리스트 변환
-                .map(Alarm::getMember) // Alarm -> Member 변환
-                .map(Member::getEmail) // Member -> Email 변환
-                .distinct() // 중복 이메일 제거
-                .toList();
-
-        emails.forEach(email -> {
-            try {
-                alarmService.alarmMail(email);
-            } catch (MessagingException e) {
-                throw new MailHandler(ErrorStatus.MAIL_NOT_SEND);
-            }
-        });
+//        List<String> emails = concertRepository.findConcertsWithTicketOpeningInAWeek(now, oneWeekLater).stream()
+//                .flatMap(concert -> alarmRepository.findByConcert(concert).stream()) // Concert -> Alarm 리스트 변환
+//                .map(Alarm::getMember) // Alarm -> Member 변환
+//                .map(Member::getEmail) // Member -> Email 변환
+//                .distinct() // 중복 이메일 제거
+//                .toList();
+//
+//        emails.forEach(email -> {
+//            try {
+//                alarmService.alarmMail(email);
+//            } catch (MessagingException e) {
+//                throw new MailHandler(ErrorStatus.MAIL_NOT_SEND);
+//            }
+//        });
     }
 
 }
