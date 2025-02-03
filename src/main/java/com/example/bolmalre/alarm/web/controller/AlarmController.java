@@ -1,8 +1,12 @@
-package com.example.bolmalre.alarm.web;
+package com.example.bolmalre.alarm.web.controller;
 
+import com.example.bolmalre.alarm.web.port.AlarmService;
+import com.example.bolmalre.common.apiPayLoad.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,13 +15,18 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "알림 기능 API")
 public class AlarmController {
 
+    private final AlarmService alarmService;
+
 
     /**
      * 알림 구매하기
      * */
     @Operation(summary = "알림권 구매 API")
     @PatchMapping("/subscribes")
-    public void subscribe() {
+    public ApiResponse<String> subscribe(@AuthenticationPrincipal UserDetails userDetails) {
+
+        alarmService.subscribe(userDetails.getUsername());
+        return ApiResponse.onSuccess("구매가 성공적으로 완료되었습니다");
     }
 
 
