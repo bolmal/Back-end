@@ -8,7 +8,7 @@ import com.example.bolmalre.common.apiPayLoad.exception.handler.ConcertHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.concert.domain.Concert;
-import com.example.bolmalre.concert.domain.enums.ConcertRound;
+import com.example.bolmalre.concert.domain.enums.TicketRound;
 import com.example.bolmalre.concert.domain.enums.OnlineStore;
 import com.example.bolmalre.concert.infrastructure.ConcertRepository;
 import com.example.bolmalre.member.domain.Member;
@@ -89,7 +89,7 @@ class AlarmServiceImplTest {
         testConcert = Concert.builder()
                 .id(1L)
                 .concertName("test")
-                .concertRound(ConcertRound.FIRST)
+                .concertRound(TicketRound.FIRST)
                 .concertDate(LocalDate.of(1,1,1))
                 .ticketOpenDate(LocalDateTime.of(1,1,1,1,1))
                 .concertRuntime("test")

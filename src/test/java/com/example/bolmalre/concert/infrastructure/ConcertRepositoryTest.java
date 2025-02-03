@@ -1,7 +1,7 @@
 package com.example.bolmalre.concert.infrastructure;
 
 import com.example.bolmalre.concert.domain.Concert;
-import com.example.bolmalre.concert.domain.enums.ConcertRound;
+import com.example.bolmalre.concert.domain.enums.TicketRound;
 import com.example.bolmalre.concert.domain.enums.OnlineStore;
 import com.example.bolmalre.member.infrastructure.LocalDateHolder;
 import org.junit.jupiter.api.DisplayName;
@@ -42,17 +42,10 @@ class ConcertRepositoryTest {
 
         Concert testConcert1 = Concert.builder()
                 .concertName("test1")
-                .concertRound(ConcertRound.FIRST)
-                .concertDate(LocalDate.of(1, 1, 1))
-                .ticketOpenDate(now.plusDays(3))
                 .concertRuntime("test1")
                 .concertPlace("test1")
-                .price(0)
                 .concertAge(0)
-                .viewingRestrict("test1")
                 .onlineStore(OnlineStore.INTERPARK)
-                .viewCount(0)
-                .recommendRate(0)
                 .advertisement(true)
                 .posterUrl("test1")
                 .concertArtists(new ArrayList<>())
@@ -60,17 +53,10 @@ class ConcertRepositoryTest {
 
         Concert testConcert2 = Concert.builder()
                 .concertName("test2")
-                .concertRound(ConcertRound.FIRST)
-                .concertDate(LocalDate.of(1,1,1))
-                .ticketOpenDate(now.plusDays(7))
                 .concertRuntime("test2")
                 .concertPlace("test2")
-                .price(0)
                 .concertAge(0)
-                .viewingRestrict("test2")
                 .onlineStore(OnlineStore.INTERPARK)
-                .viewCount(0)
-                .recommendRate(0)
                 .advertisement(true)
                 .posterUrl("test2")
                 .concertArtists(new ArrayList<>())
@@ -78,17 +64,13 @@ class ConcertRepositoryTest {
 
         Concert testConcert3 = Concert.builder()
                 .concertName("test3")
-                .concertRound(ConcertRound.FIRST)
                 .concertDate(LocalDate.of(1,1,1))
                 .ticketOpenDate(now.plusDays(8))
                 .concertRuntime("test3")
                 .concertPlace("test3")
                 .price(0)
                 .concertAge(0)
-                .viewingRestrict("test3")
                 .onlineStore(OnlineStore.INTERPARK)
-                .viewCount(0)
-                .recommendRate(0)
                 .advertisement(true)
                 .posterUrl("test3")
                 .concertArtists(new ArrayList<>())

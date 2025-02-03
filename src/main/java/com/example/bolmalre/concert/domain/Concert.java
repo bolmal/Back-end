@@ -2,13 +2,11 @@ package com.example.bolmalre.concert.domain;
 
 
 import com.example.bolmalre.common.domain.BaseEntity;
-import com.example.bolmalre.concert.domain.enums.ConcertRound;
 import com.example.bolmalre.concert.domain.enums.OnlineStore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,50 +22,60 @@ public class Concert extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 콘서트(공연) 제목(이름)
     @Column(nullable = false)
     private String concertName;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ConcertRound concertRound;
+    // 콘서트 포스터 URL
+    private String posterUrl;
 
-    @Column(nullable = false)
+    // 콘서트(공연) 장소
     private String concertPlace;
 
-    @Column(nullable = false)
-    private LocalDate concertDate;
+    // 티켓 오픈 여부
+    private Boolean ticketStatus;
 
-    @Column(nullable = false)
-    private LocalDateTime ticketOpenDate;
-
-    @Column(nullable = false)
+    // 러닝타임
     private String concertRuntime;
 
-    @Column(nullable = false)
-    private Integer price;
-
-    @Column(nullable = false)
+    // 관람 연령
     private Integer concertAge;
 
-    @Column(nullable = false)
-    private String viewingRestrict;
+    // 예매 제한
+    private String maxTicketsPerPerson;
 
-    @Column(nullable = false)
-    private Integer recommendRate;
-
-    @Column(nullable = false)
+    // 티켓 구매 사이트 종류
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private OnlineStore onlineStore;
 
+    // 티켓팅 링크
+    private String onlineStoreLink;
+
+    // 공연 소개
+    private String description;
+
+
     @Column(nullable = false)
-    private Integer viewCount;
+    private Integer dailyViewCount;
+
+    @Column(nullable = false)
+    private Integer weeklyViewCount;
 
     @Column(nullable = false)
     private boolean advertisement;
 
-    private String posterUrl;
 
-    @OneToMany(mappedBy = "concert",cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL)
     private List<ConcertArtist> concertArtists = new ArrayList<>();
 
+
+    public void increaseDailyViewCount() {
+        this.dailyViewCount++;
+    }
+
+    public void increaseWeeklyViewCount() {
+        this.weeklyViewCount++;
+    }
 }

@@ -1,6 +1,6 @@
 package com.example.bolmalre.alarm.web.dto;
 
-import com.example.bolmalre.concert.domain.enums.ConcertRound;
+import com.example.bolmalre.concert.domain.enums.TicketRound;
 import com.example.bolmalre.concert.domain.enums.OnlineStore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -23,7 +23,7 @@ public class AlarmReadDTO {
         String concertPosterPath;
 
         @Schema(description = "티켓 오픈 회차")
-        ConcertRound concertRound;
+        TicketRound ticketRound;
 
         @Schema(description = "티켓팅 날짜")
         LocalDateTime ticketOpenDate;

@@ -1,6 +1,5 @@
 package com.example.bolmalre.concert.web.dto;
 
-import com.example.bolmalre.concert.domain.enums.ConcertRound;
 import com.example.bolmalre.concert.domain.enums.OnlineStore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -24,13 +23,13 @@ public class SaveDTO {
         String concertName;
 
         @Schema(description = "공연 회차")
-        ConcertRound concertRound;
+        Integer concertRound;
 
         @Schema(description = "공연 장소")
         String concertPlace;
 
         @Schema(description = "공연 일시")
-        LocalDate concertDate;
+        List<LocalDate> concertDate;
 
         @Schema(description = "공연 티켓팅 오픈일")
         LocalDateTime ticketOpenDate;
