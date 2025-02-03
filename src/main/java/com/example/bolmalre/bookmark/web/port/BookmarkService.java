@@ -14,5 +14,5 @@ public interface BookmarkService {
 
     List<BookmarkGetArtistDTO.BookmarkGetArtistResponseDTO> getArtist(String username);
 
-    void bookmarkAlarm(String email) throws MessagingException;
+    void sendMail(String email) throws MessagingException;
 }

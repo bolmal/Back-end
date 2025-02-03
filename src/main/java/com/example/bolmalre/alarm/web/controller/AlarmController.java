@@ -84,7 +84,7 @@ public class AlarmController {
     @Operation(summary = "알림 전송 API")
     @PostMapping("/alarm")
     public ApiResponse<String> send(String email) throws MessagingException {
-        alarmService.alarm(email);
+        alarmService.alarmMail(email);
 
         return ApiResponse.onSuccess("알림이 성공적으로 전송되었습니다");
     }

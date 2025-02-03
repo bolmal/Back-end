@@ -20,4 +20,10 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
     // 주간 조회수
     @Query("select distinct c from Concert c left join fetch ConcertImage ci on c.id = ci.concert.id order by c.weeklyViewCount desc")
     Slice<Concert> findWeeklyTopViewedConcerts(Pageable pageable);
+
+    @Query("SELECT c FROM Concert c WHERE c.ticketOpenDate BETWEEN :startDate AND :endDate")
+    List<Concert> findConcertsWithTicketOpeningInAWeek(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
 }

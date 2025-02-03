@@ -290,7 +290,7 @@ class BookmarkServiceImplTest {
         when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
 
         //when
-        bookmarkService.bookmarkAlarm(toEmail);
+        bookmarkService.sendMail(toEmail);
 
         //then
         verify(mailSender, times(1)).send(any(MimeMessage.class));
@@ -304,7 +304,7 @@ class BookmarkServiceImplTest {
         String toEmail = "error";
 
         //when & then
-        assertThatThrownBy(() -> bookmarkService.bookmarkAlarm(toEmail))
+        assertThatThrownBy(() -> bookmarkService.sendMail(toEmail))
                 .isInstanceOf(MailHandler.class)
                 .hasFieldOrPropertyWithValue("code", MAIL_NOT_VALID);
     }
@@ -317,7 +317,7 @@ class BookmarkServiceImplTest {
         String toEmail = "";
 
         //when & then
-        assertThatThrownBy(() -> bookmarkService.bookmarkAlarm(toEmail))
+        assertThatThrownBy(() -> bookmarkService.sendMail(toEmail))
                 .isInstanceOf(MailHandler.class)
                 .hasFieldOrPropertyWithValue("code", MAIL_NOT_VALID);
     }

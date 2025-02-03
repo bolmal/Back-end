@@ -5,9 +5,7 @@ import com.example.bolmalre.artist.domain.enums.Genre;
 import com.example.bolmalre.bookmark.domain.Bookmark;
 import com.example.bolmalre.bookmark.infrastructure.BookmarkRepository;
 import com.example.bolmalre.bookmark.web.port.BookmarkService;
-import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
-import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.enums.Gender;
 import com.example.bolmalre.member.domain.enums.Role;
@@ -27,18 +25,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.MAIL_NOT_SEND;
-import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.MEMBER_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 class BookmarkAlarmUtilTest {
 
     @InjectMocks
-    BookmarkAlarmUtil bookmarkAlarmUtil;
+    BookmarkMailUtil bookmarkAlarmUtil;
 
     @Mock
     BookmarkService bookmarkService;
@@ -111,7 +106,7 @@ class BookmarkAlarmUtilTest {
         bookmarkAlarmUtil.sendMail(testArtists);
 
         //then
-        verify(bookmarkService, times(2)).bookmarkAlarm(any());
+        verify(bookmarkService, times(2)).sendMail(any());
     }
 
 
@@ -122,7 +117,7 @@ class BookmarkAlarmUtilTest {
         when(bookmarkRepository.findByArtistIn(anyList()))
                 .thenReturn(List.of(testBookmark1, testBookmark2));
 
-        doThrow(new MessagingException()).when(bookmarkService).bookmarkAlarm(anyString());
+        doThrow(new MessagingException()).when(bookmarkService).sendMail(anyString());
 
         // when & then
         assertThatThrownBy(() -> bookmarkAlarmUtil.sendMail(testArtists))

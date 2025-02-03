@@ -87,7 +87,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
 
     @Override
-    public void bookmarkAlarm(String email) throws MessagingException {
+    public void sendMail(String email) throws MessagingException {
 
         if (!isValidEmail(email)) {
             throw new MailHandler(ErrorStatus.MAIL_NOT_VALID);

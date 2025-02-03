@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class BookmarkAlarmUtil {
+public class BookmarkMailUtil {
 
     private final BookmarkService bookmarkService;
     private final BookmarkRepository bookmarkRepository;
@@ -31,7 +31,7 @@ public class BookmarkAlarmUtil {
 
         emails.forEach(email -> {
             try {
-                bookmarkService.bookmarkAlarm(email);
+                bookmarkService.sendMail(email);
             } catch (MessagingException e) {
                 throw new MailHandler(ErrorStatus.MAIL_NOT_SEND);
             }

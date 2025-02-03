@@ -12,4 +12,6 @@ public interface AlarmRepository extends JpaRepository<Alarm,Long> {
     boolean existsByMemberAndConcert(Member member, Concert concert);
 
     List<Alarm> findByMember(Member member);
+
+    List<Alarm> findByConcert(Concert concert);
 }
