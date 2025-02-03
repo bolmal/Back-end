@@ -25,52 +25,68 @@ public class Concert extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 콘서트(공연) 제목(이름)
     @Column(nullable = false)
     private String concertName;
 
-    @Column(nullable = false)
+    // 콘서트 포스터 URL
+    private String posterUrl;
+
+    // 1차,2차 티켓오픈 or 선예매
     @Enumerated(EnumType.STRING)
     private ConcertRound concertRound;
 
-    @Column(nullable = false)
+    // 콘서트(공연) 장소
     private String concertPlace;
 
-    @Column(nullable = false)
+    // 콘서트(공연) 날짜
     private LocalDate concertDate;
 
-    @Column(nullable = false)
+    // 티켓 오픈 여부
+    private Boolean ticketStatus;
+
+    // 티켓 오픈 날짜
     private LocalDateTime ticketOpenDate;
 
-    @Column(nullable = false)
+    // 러닝타임
     private String concertRuntime;
 
-    @Column(nullable = false)
+    // 티켓 가격
+
     private Integer price;
 
-    @Column(nullable = false)
+    // 관람 연령
+
     private Integer concertAge;
 
-    @Column(nullable = false)
-    private String viewingRestrict;
+    // 예매 제한
 
-    @Column(nullable = false)
-    private Integer recommendRate;
+    private String maxTicketsPerPerson;
 
-    @Column(nullable = false)
+    // 티켓 구매 사이트 종류
+
     @Enumerated(EnumType.STRING)
     private OnlineStore onlineStore;
 
-    @Column(nullable = false)
+    // 티켓팅 링크
+
+    private String onlineStoreLink;
+
+    // 공연 소개
+
+    private String description;
+
+
+    @Column(nullable = false, columnDefinition = "default 0")
     private Integer dailyViewCount;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "default 0")
     private Integer weeklyViewCount;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "default false")
     private boolean advertisement;
 
-    @Column(nullable = false)
-    private String description;
+
 
     @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL)
     private List<ConcertArtist> concertArtists = new ArrayList<>();
