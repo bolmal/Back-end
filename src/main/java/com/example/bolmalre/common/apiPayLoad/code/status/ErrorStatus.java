@@ -17,6 +17,11 @@ public enum ErrorStatus implements BaseErrorCode {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
+    ALARM_ACCOUNT_ZERO(HttpStatus.BAD_REQUEST,"ALARM4002","알림 가능 횟수가 0입니다"),
+    ALARM_EXISTS(HttpStatus.BAD_REQUEST,"ALARM4001","이미 등록된 알림입니다"),
+
+    CONCERT_NOT_FOUND(HttpStatus.NOT_FOUND,"CONCERT4001","콘서트를 찾을 수 없습니다"),
+
     MEMBER_IMAGE_COUNT_ERROR(HttpStatus.BAD_REQUEST,"IMAGE4003","프로필 이미지는 한 장만 등록 가능합니다"),
     MEMBER_IMAGE_EXIST(HttpStatus.BAD_REQUEST,"IMAGE4001","프로필 이미지가 이미 등록되어 있습니다"),
     IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND,"IMAGE4002","이미지를 찾을 수 없습니다"),
