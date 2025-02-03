@@ -51,7 +51,7 @@ public class MemberImageController {
 
     // 이미지 조회
     @Operation(summary = "단일 이미지 조회 API", description = "조회해야하는 이미지 filename을 넣어주세요")
-    @GetMapping("/")
+    @GetMapping("/one")
     public ApiResponse<String> getImageByFileName(
             @RequestParam String fileName) {
 

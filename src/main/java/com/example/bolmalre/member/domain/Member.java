@@ -105,7 +105,19 @@ public class Member extends BaseEntity {
         memberProfileImages.remove(memberProfileImage);
     }
 
-    public static void setMemberProfileImages(Member member,List<MemberProfileImage> memberProfileImages) {
-        member.memberProfileImages.addAll(memberProfileImages);
+    public static void bookmarkAccountMinus(Member member) {
+        member.bookmarkAccount-=1;
+    }
+
+    public static void bookmarkAccountPlus(Member member) {
+        member.bookmarkAccount+=3;
+    }
+
+    public static void alarmAccountPlus(Member member) {
+        member.alarmAccount+=3;
+    }
+
+    public static void alarmAccountMinus(Member member) {
+        member.alarmAccount-=1;
     }
 }

@@ -17,6 +17,11 @@ public enum ErrorStatus implements BaseErrorCode {
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
+    ALARM_ACCOUNT_ZERO(HttpStatus.BAD_REQUEST,"ALARM4002","알림 가능 횟수가 0입니다"),
+    ALARM_EXISTS(HttpStatus.BAD_REQUEST,"ALARM4001","이미 등록된 알림입니다"),
+
+    CONCERT_NOT_FOUND(HttpStatus.NOT_FOUND,"CONCERT4001","콘서트를 찾을 수 없습니다"),
+
     MEMBER_IMAGE_COUNT_ERROR(HttpStatus.BAD_REQUEST,"IMAGE4003","프로필 이미지는 한 장만 등록 가능합니다"),
     MEMBER_IMAGE_EXIST(HttpStatus.BAD_REQUEST,"IMAGE4001","프로필 이미지가 이미 등록되어 있습니다"),
     IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND,"IMAGE4002","이미지를 찾을 수 없습니다"),
@@ -25,12 +30,14 @@ public enum ErrorStatus implements BaseErrorCode {
     IMAGE_UPLOAD_ERROR(HttpStatus.BAD_GATEWAY,"IMAGE5004","이미지 등록 중 오류가 발생하였습니다"),
     IMAGE_DOWNLOAD_ERROR(HttpStatus.SERVICE_UNAVAILABLE,"IMAGE5003","이미지 다운로드 중 오류가 발생하였습니다"),
 
+    BOOKMARK_NOT_EXIST(HttpStatus.BAD_REQUEST,"BOOKMARK4003","찜한 아티스트가 존재하지 않습니다"),
     BOOKMARK_EXIST(HttpStatus.BAD_REQUEST,"BOOKMARK4002","이미 찜하고 있는 아티스트 입니다"),
     BOOKMARK_ACCOUNT_ZERO(HttpStatus.BAD_REQUEST,"BOOKMARK4001","찜 가능 횟수가 0입니다"),
 
     ARTIST_NOT_FOUND(HttpStatus.NOT_FOUND,"ARTIST4001","아티스트를 찾을 수 없습니다"),
 
-    MAIL_NOT_VALID(HttpStatus.BAD_REQUEST,"MAIL4002","인증번호가 일치하지 않습니다"),
+    MAIL_NOT_VALID(HttpStatus.BAD_REQUEST,"MAIL4003","메일의 형식이 유효하지 않습니다"),
+    CODE_NOT_VALID(HttpStatus.BAD_REQUEST,"MAIL4002","인증번호가 일치하지 않습니다"),
     MAIL_NOT_SEND(HttpStatus.NOT_FOUND,"MAIL4001","요청받지 못한 이메일 입니다"),
 
     MEMBER_PASSWORD_VALID(HttpStatus.BAD_REQUEST,"MEMBER4009","회원 비밀번호 검증에 실패하였습니다"),
