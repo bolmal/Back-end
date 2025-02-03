@@ -43,7 +43,9 @@ public class AlarmController {
      * */
     @Operation(summary = "알림 등록 API")
     @PostMapping("")
-    public void register() {
+    public void register(@AuthenticationPrincipal UserDetails userDetails,
+                         @RequestParam Long concertId) {
+
     }
 
 
