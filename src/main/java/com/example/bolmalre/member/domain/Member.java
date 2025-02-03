@@ -112,4 +112,12 @@ public class Member extends BaseEntity {
     public static void bookmarkAccountPlus(Member member) {
         member.bookmarkAccount+=3;
     }
+
+    public static void alarmAccountPlus(Member member) {
+        member.alarmAccount+=3;
+    }
+
+    public static void alarmAccountMinus(Member member) {
+        member.alarmAccount+=3;
+    }
 }
