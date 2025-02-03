@@ -69,7 +69,10 @@ public class Concert extends BaseEntity {
     @Column(nullable = false)
     private boolean advertisement;
 
-    @OneToMany(mappedBy = "concert",cascade = CascadeType.ALL)
+    @Column(nullable = false)
+    private String description;
+
+    @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL)
     private List<ConcertArtist> concertArtists = new ArrayList<>();
 
 

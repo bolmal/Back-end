@@ -45,7 +45,7 @@ public class ConcertServiceImpl implements ConcertService {
 
     }
 
-    // 홈 지금 볼래 말래? ( 로그인 여부 판별 필) FIXME (추천도 점수 테이블 분리?)
+    // 홈 지금 볼래 말래? ( 로그인 여부 판별 필  ) FIXME (추천도 점수 추후 추가 (1차 배포엔 해당 사항 없음))
     @Override
     public List<ConcertHomeDTO.RecommendConcertDTO> getRecommendConcertInfo() {
 
