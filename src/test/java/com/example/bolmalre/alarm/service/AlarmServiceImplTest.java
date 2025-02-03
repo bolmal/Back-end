@@ -3,8 +3,6 @@ package com.example.bolmalre.alarm.service;
 import com.example.bolmalre.alarm.domain.Alarm;
 import com.example.bolmalre.alarm.infrastructure.AlarmRepository;
 import com.example.bolmalre.alarm.web.dto.AlarmReadDTO;
-import com.example.bolmalre.artist.domain.Artist;
-import com.example.bolmalre.artist.domain.enums.Genre;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.AlarmHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.ConcertHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
@@ -40,7 +38,6 @@ import java.util.Optional;
 import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -244,10 +241,9 @@ class AlarmServiceImplTest {
     public void get_MemberNotFound(){
         //given
         String errorUsername = "ERROR";
-        when(memberRepository.findByUsername(any())).thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> alarmService.get("test123"))
+        assertThatThrownBy(() -> alarmService.get(errorUsername))
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
     }
@@ -261,7 +257,7 @@ class AlarmServiceImplTest {
         when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
 
         //when
-        alarmService.alarm(toEmail);
+        alarmService.alarmMail(toEmail);
 
         //then
         verify(mailSender, times(1)).send(any(MimeMessage.class));
@@ -275,7 +271,7 @@ class AlarmServiceImplTest {
         String toEmail = "error";
 
         //when & then
-        assertThatThrownBy(() -> alarmService.alarm(toEmail))
+        assertThatThrownBy(() -> alarmService.alarmMail(toEmail))
                 .isInstanceOf(MailHandler.class)
                 .hasFieldOrPropertyWithValue("code", MAIL_NOT_VALID);
     }
@@ -288,7 +284,7 @@ class AlarmServiceImplTest {
         String toEmail = "";
 
         //when & then
-        assertThatThrownBy(() -> alarmService.alarm(toEmail))
+        assertThatThrownBy(() -> alarmService.alarmMail(toEmail))
                 .isInstanceOf(MailHandler.class)
                 .hasFieldOrPropertyWithValue("code", MAIL_NOT_VALID);
     }

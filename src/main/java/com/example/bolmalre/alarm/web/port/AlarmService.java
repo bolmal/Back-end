@@ -12,5 +12,5 @@ public interface AlarmService {
 
     List<AlarmReadDTO.AlarmReadRequestDTO> get(String username);
 
-    void alarm(String email) throws MessagingException;
+    void alarmMail(String email) throws MessagingException;
 }

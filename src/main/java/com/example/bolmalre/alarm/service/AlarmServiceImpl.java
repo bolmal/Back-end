@@ -83,7 +83,7 @@ public class AlarmServiceImpl implements AlarmService {
 
 
     @Override
-    public void alarm(String email) throws MessagingException {
+    public void alarmMail(String email) throws MessagingException {
 
         if (!isValidEmail(email)) {
             throw new MailHandler(ErrorStatus.MAIL_NOT_VALID);
