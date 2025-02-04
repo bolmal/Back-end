@@ -1,5 +1,8 @@
-package com.example.bolmalre.member.oauth;
+package com.example.bolmalre.member.util;
 
+import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
+import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
+import com.example.bolmalre.member.web.dto.KakaoDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,7 +56,7 @@ public class KakaoUtil {
         try {
             oAuthToken = objectMapper.readValue(response.getBody(), KakaoDTO.OAuthToken.class);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Invalid access token");
+            throw new MemberHandler(ErrorStatus.MEMBER_OAUTH_FAIL);
         }
         return oAuthToken;
     }
@@ -81,7 +84,7 @@ public class KakaoUtil {
             kakaoProfile = objectMapper.readValue(response2.getBody(), KakaoDTO.KakaoProfile.class);
         } catch (JsonProcessingException e) {
             log.info(Arrays.toString(e.getStackTrace()));
-            throw new IllegalArgumentException("Invalid profile token");
+            throw new MemberHandler(ErrorStatus.MEMBER_OAUTH_FAIL);
         }
 
         return kakaoProfile;

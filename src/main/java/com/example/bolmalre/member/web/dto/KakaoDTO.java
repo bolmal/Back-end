@@ -1,4 +1,4 @@
-package com.example.bolmalre.member.oauth;
+package com.example.bolmalre.member.web.dto;
 
 import lombok.Getter;
 
