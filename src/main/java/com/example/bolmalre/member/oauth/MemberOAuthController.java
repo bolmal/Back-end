@@ -1,6 +1,7 @@
 package com.example.bolmalre.member.oauth;
 
 import com.example.bolmalre.common.apiPayLoad.ApiResponse;
+import com.example.bolmalre.member.converter.MemberConverter;
 import com.example.bolmalre.member.domain.Member;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +20,8 @@ public class MemberOAuthController {
 
     @GetMapping("/callback")
     public ApiResponse<?> kakaoLogin(@RequestParam("code") String accessCode, HttpServletResponse httpServletResponse) {
-        authService.oAuthLogin(accessCode, httpServletResponse);
+        Member member = authService.oAuthLogin(accessCode, httpServletResponse);
 
-        return ApiResponse.onSuccess("성공");
-        /*return BaseResponse.onSuccess(UserConverter.toJoinResultDTO(user));*/
+        return ApiResponse.onSuccess(member.getId());
     }
 }

@@ -77,7 +77,7 @@ public class SecurityConfig {
                         configuration.setMaxAge(3600L);
 
                         // exposedHeaders에 중복 설정 제거하고, 두 개의 헤더를 노출
-                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "access", "Authorization"));
+                        configuration.setExposedHeaders(Arrays.asList("Set-CookieUtil", "access", "Authorization"));
 
                         return configuration;
                     }
@@ -107,8 +107,8 @@ public class SecurityConfig {
         http
                 .addFilterBefore(new JWTFilter(jwtUtil,jwtConfig), LoginFilter.class);
 
-        http
-                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil,jwtConfig,refreshTokenService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, jwtConfig, refreshTokenService), UsernamePasswordAuthenticationFilter.class);
+
 
         http
                 .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
