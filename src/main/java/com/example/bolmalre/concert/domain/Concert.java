@@ -61,6 +61,7 @@ public class Concert extends BaseEntity {
 
 
 
+
     @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL)
     private List<ConcertArtist> concertArtists = new ArrayList<>();
 
