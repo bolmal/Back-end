@@ -64,6 +64,9 @@ public class Concert extends BaseEntity {
     @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL)
     private List<ConcertArtist> concertArtists = new ArrayList<>();
 
+    @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ConcertTicketRound> concertTicketRounds = new ArrayList<>();
+
 
     public void increaseDailyViewCount() {
         this.dailyViewCount++;
