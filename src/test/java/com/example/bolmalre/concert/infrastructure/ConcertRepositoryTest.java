@@ -1,8 +1,7 @@
 package com.example.bolmalre.concert.infrastructure;
 
 import com.example.bolmalre.concert.domain.Concert;
-import com.example.bolmalre.concert.domain.enums.TicketRound;
-import com.example.bolmalre.concert.domain.enums.OnlineStore;
+import com.example.bolmalre.concert.domain.ConcertTicketRound;
 import com.example.bolmalre.member.infrastructure.LocalDateHolder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,9 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,6 +24,9 @@ class ConcertRepositoryTest {
 
     @Autowired
     private ConcertRepository concertRepository;
+
+    @Autowired
+    private ConcertTicketRoundRepository concertTicketRoundRepository;
 
     @Mock
     LocalDateHolder localDateHolder;
@@ -42,46 +42,71 @@ class ConcertRepositoryTest {
 
         Concert testConcert1 = Concert.builder()
                 .concertName("test1")
-                .concertRuntime("test1")
-                .concertPlace("test1")
-                .concertAge(0)
-                .onlineStore(OnlineStore.INTERPARK)
-                .advertisement(true)
-                .posterUrl("test1")
-                .concertArtists(new ArrayList<>())
+                .concertPlace("서울 공연장")
+                .posterUrl("https://example.com/poster.jpg")
+                .concertRuntime("test")
+                .concertAge("12세 이상")
+                .maxTicketsPerPerson("test")
+                .onlineStore("예매 사이트")
+                .onlineStoreLink("https://example.com/booking")
+                .description("테스트 콘서트 설명")
+                .ticketStatus(true)
                 .build();
 
         Concert testConcert2 = Concert.builder()
                 .concertName("test2")
-                .concertRuntime("test2")
-                .concertPlace("test2")
-                .concertAge(0)
-                .onlineStore(OnlineStore.INTERPARK)
-                .advertisement(true)
-                .posterUrl("test2")
-                .concertArtists(new ArrayList<>())
+                .concertPlace("서울 공연장")
+                .posterUrl("https://example.com/poster.jpg")
+                .concertRuntime("test")
+                .concertAge("12세 이상")
+                .maxTicketsPerPerson("test")
+                .onlineStore("예매 사이트")
+                .onlineStoreLink("https://example.com/booking")
+                .description("테스트 콘서트 설명")
+                .ticketStatus(true)
                 .build();
 
         Concert testConcert3 = Concert.builder()
                 .concertName("test3")
-                .concertDate(LocalDate.of(1,1,1))
-                .ticketOpenDate(now.plusDays(8))
-                .concertRuntime("test3")
-                .concertPlace("test3")
-                .price(0)
-                .concertAge(0)
-                .onlineStore(OnlineStore.INTERPARK)
-                .advertisement(true)
-                .posterUrl("test3")
-                .concertArtists(new ArrayList<>())
+                .concertPlace("서울 공연장")
+                .posterUrl("https://example.com/poster.jpg")
+                .concertRuntime("test")
+                .concertAge("12세 이상")
+                .maxTicketsPerPerson("test")
+                .onlineStore("예매 사이트")
+                .onlineStoreLink("https://example.com/booking")
+                .description("테스트 콘서트 설명")
+                .ticketStatus(true)
+                .build();
+
+        ConcertTicketRound round1 = ConcertTicketRound.builder()
+                .concert(testConcert1)
+                .ticketRound("1차 예매")
+                .ticketOpenDate(now.plusDays(3))
+                .build();
+
+        ConcertTicketRound round2 = ConcertTicketRound.builder()
+                .concert(testConcert2)
+                .ticketRound("1차 예매")
+                .ticketOpenDate(now.plusDays(5))
+                .build();
+
+        ConcertTicketRound round3 = ConcertTicketRound.builder()
+                .concert(testConcert3)
+                .ticketRound("1차 예매")
+                .ticketOpenDate(now.plusDays(10)) // 7일 이후라서 제외
                 .build();
 
         concertRepository.save(testConcert1);
         concertRepository.save(testConcert2);
         concertRepository.save(testConcert3);
 
+        concertTicketRoundRepository.save(round1);
+        concertTicketRoundRepository.save(round2);
+        concertTicketRoundRepository.save(round3);
+
         // When
-        List<Concert> result = concertRepository.findConcertsWithTicketOpeningInAWeek(now, sevenDaysLater);
+        List<Concert> result = concertRepository.findConcertsWithTicketsOpeningInOneWeek(now, sevenDaysLater);
 
         // Then
         assertThat(result).hasSize(2);

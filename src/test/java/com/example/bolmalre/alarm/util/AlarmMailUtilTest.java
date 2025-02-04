@@ -5,6 +5,7 @@ import com.example.bolmalre.alarm.infrastructure.AlarmRepository;
 import com.example.bolmalre.alarm.web.port.AlarmService;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
 import com.example.bolmalre.concert.domain.Concert;
+import com.example.bolmalre.concert.domain.ConcertTicketRound;
 import com.example.bolmalre.concert.infrastructure.ConcertRepository;
 import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.infrastructure.LocalDateHolder;
@@ -15,10 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
-
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,26 +31,25 @@ import static org.mockito.Mockito.*;
 class AlarmMailUtilTest {
 
     @InjectMocks
-    AlarmMailUtil alarmMailUtil;
+    private AlarmMailUtil alarmMailUtil;
 
     @Mock
-    ConcertRepository concertRepository;
+    private ConcertRepository concertRepository;
 
     @Mock
-    AlarmRepository alarmRepository;
+    private AlarmRepository alarmRepository;
 
     @Mock
-    AlarmService alarmService;
+    private AlarmService alarmService;
 
     @Mock
-    LocalDateHolder localDateHolder;
+    private LocalDateHolder localDateHolder;
 
     Concert testConcert1;
-
     Concert testConcert2;
-
+    ConcertTicketRound ticketRound1;
+    ConcertTicketRound ticketRound2;
     Member testMember1;
-
     Member testMember2;
 
     @BeforeEach
@@ -61,12 +59,20 @@ class AlarmMailUtilTest {
 
         testConcert1 = Concert.builder()
                 .concertName("test1")
-                .ticketOpenDate(now.plusDays(3)) // 3일 뒤 티켓 오픈
                 .build();
 
         testConcert2 = Concert.builder()
                 .concertName("test2")
-                .ticketOpenDate(now.plusDays(7)) // 7일 뒤 티켓 오픈
+                .build();
+
+        ticketRound1 = ConcertTicketRound.builder()
+                .concert(testConcert1)
+                .ticketOpenDate(now.plusDays(3))
+                .build();
+
+        ticketRound2 = ConcertTicketRound.builder()
+                .concert(testConcert2)
+                .ticketOpenDate(now.plusDays(7))
                 .build();
 
         testMember1 = Member.builder()
@@ -78,12 +84,9 @@ class AlarmMailUtilTest {
                 .build();
     }
 
-
-
-
     @Test
     @DisplayName("sendAlarmMail() 을 통해 alarmService를 호출할 수 있다")
-    public void sendAlarmMail_success() throws MessagingException {
+    void sendAlarmMail_success() throws MessagingException {
         // given
         LocalDateTime now = localDateHolder.now();
         LocalDateTime oneWeekLater = now.plusDays(7);
@@ -98,10 +101,12 @@ class AlarmMailUtilTest {
                 .concert(testConcert2)
                 .build();
 
-        when(concertRepository.findConcertsWithTicketOpeningInAWeek(now, oneWeekLater)).thenReturn(List.of(testConcert1, testConcert2));
-
-        when(alarmRepository.findByConcert(testConcert1)).thenReturn(List.of(testAlarm1));
-        when(alarmRepository.findByConcert(testConcert2)).thenReturn(List.of(testAlarm2));
+        when(concertRepository.findConcertsWithTicketsOpeningInOneWeek(now, oneWeekLater))
+                .thenReturn(List.of(testConcert1, testConcert2));
+        when(alarmRepository.findByConcert(testConcert1))
+                .thenReturn(List.of(testAlarm1));
+        when(alarmRepository.findByConcert(testConcert2))
+                .thenReturn(List.of(testAlarm2));
 
         // when
         alarmMailUtil.sendAlarmMail();
@@ -111,19 +116,15 @@ class AlarmMailUtilTest {
         verify(alarmService, times(1)).alarmMail("user2@example.com");
     }
 
-
     @Test
     @DisplayName("메일 발송에 실패하면 정해진 예외를 반환한다")
-    public void sendAlarmMail_fail() throws MessagingException {
+    void sendAlarmMail_fail() throws MessagingException {
         // given
         doThrow(new MessagingException()).when(alarmService).alarmMail(anyString());
-
-        when(concertRepository.findConcertsWithTicketOpeningInAWeek(any(), any()))
+        when(concertRepository.findConcertsWithTicketsOpeningInOneWeek(any(), any()))
                 .thenReturn(List.of(testConcert1));
         when(alarmRepository.findByConcert(testConcert1))
                 .thenReturn(List.of(Alarm.builder().member(testMember1).concert(testConcert1).build()));
-
-
 
         // when & then
         assertThatThrownBy(() -> alarmMailUtil.sendAlarmMail())
@@ -132,6 +133,4 @@ class AlarmMailUtilTest {
 
         verify(alarmService, atLeastOnce()).alarmMail(anyString());
     }
-
-
 }

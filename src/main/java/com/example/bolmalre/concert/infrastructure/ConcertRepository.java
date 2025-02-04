@@ -5,6 +5,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public interface ConcertRepository extends JpaRepository<Concert, Long> {
 
@@ -21,9 +25,10 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
     @Query("select distinct c from Concert c left join fetch ConcertImage ci on c.id = ci.concert.id order by c.weeklyViewCount desc")
     Slice<Concert> findWeeklyTopViewedConcerts(Pageable pageable);
 
-//    @Query("SELECT c FROM Concert c WHERE c.ticketOpenDate BETWEEN :startDate AND :endDate")
-//    List<Concert> findConcertsWithTicketOpeningInAWeek(
-//            @Param("startDate") LocalDateTime startDate,
-//            @Param("endDate") LocalDateTime endDate
-//    );
+    @Query("SELECT DISTINCT c FROM Concert c " +
+            "JOIN c.concertTicketRounds ctr " +
+            "WHERE ctr.ticketOpenDate BETWEEN :now AND :oneWeekLater")
+    List<Concert> findConcertsWithTicketsOpeningInOneWeek(@Param("now") LocalDateTime now,
+                                                          @Param("oneWeekLater") LocalDateTime oneWeekLater);
+
 }
