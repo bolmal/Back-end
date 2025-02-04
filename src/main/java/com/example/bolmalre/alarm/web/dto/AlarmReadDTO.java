@@ -35,6 +35,6 @@ public class AlarmReadDTO {
         LocalDate concertDate;
 
         @Schema(description = "티켓팅 주소")
-        OnlineStore onlineStore;
+        String onlineStore;
     }
 }

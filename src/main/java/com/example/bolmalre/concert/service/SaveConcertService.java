@@ -1,0 +1,57 @@
+package com.example.bolmalre.concert.service;
+
+import com.example.bolmalre.concert.converter.SaveConcertConverter;
+import com.example.bolmalre.concert.domain.*;
+import com.example.bolmalre.concert.infrastructure.*;
+import com.example.bolmalre.concert.web.dto.SaveConcertDTO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+@Slf4j
+public class SaveConcertService {
+
+    private final ConcertRepository concertRepository;
+    private final ConcertPriceRepository concertPriceRepository;
+    private final ConcertPerformanceRoundRepository concertPerformanceRoundRepository;
+    private final ConcertTicketRoundRepository concertTicketRoundRepository;
+
+    public void saveConcerts(List<SaveConcertDTO.SaveRequestDTO> concertRequestList) {
+        for (SaveConcertDTO.SaveRequestDTO dto : concertRequestList) {
+            saveConcert(dto);
+        }
+    }
+
+    public void saveConcert(SaveConcertDTO.SaveRequestDTO dto) {
+        // 1. Concert 엔티티 저장
+        Concert concert = SaveConcertConverter.toConcert(dto);
+        concertRepository.save(concert);
+
+        // 2. ConcertPrice 엔티티 저장 (Map 데이터 처리)
+        if (dto.getPrice() != null && !dto.getPrice().isEmpty()) {
+            List<ConcertPrice> prices = SaveConcertConverter.toConcertPrices(dto.getPrice(), concert);
+            concertPriceRepository.saveAll(prices);
+        }
+
+        // 3. ConcertPerformanceRound 엔티티 저장
+        if (dto.getPerformanceRounds() != null && !dto.getPerformanceRounds().isEmpty()) {
+            List<ConcertPerformanceRound> rounds = dto.getPerformanceRounds().stream()
+                    .map(roundDTO -> SaveConcertConverter.toConcertPerformanceRound(roundDTO, concert))
+                    .collect(Collectors.toList());
+            concertPerformanceRoundRepository.saveAll(rounds);
+        }
+
+        // 4. ConcertTicketRound 엔티티 저장 (Map 데이터 처리)
+        if (dto.getTicketOpenDates() != null && !dto.getTicketOpenDates().isEmpty()) {
+            List<ConcertTicketRound> ticketRounds = SaveConcertConverter.toConcertTicketRounds(dto.getTicketOpenDates(), concert);
+            concertTicketRoundRepository.saveAll(ticketRounds);
+        }
+    }
+}

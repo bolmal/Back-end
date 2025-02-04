@@ -18,7 +18,7 @@ public class ConcertTicketRound extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private TicketRound ticketRound;
+    private String ticketRound;
 
     private LocalDateTime ticketOpenDate;
 

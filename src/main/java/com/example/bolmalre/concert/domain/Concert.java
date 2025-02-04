@@ -23,7 +23,6 @@ public class Concert extends BaseEntity {
     private Long id;
 
     // 콘서트(공연) 제목(이름)
-    @Column(nullable = false)
     private String concertName;
 
     // 콘서트 포스터 URL
@@ -39,15 +38,13 @@ public class Concert extends BaseEntity {
     private String concertRuntime;
 
     // 관람 연령
-    private Integer concertAge;
+    private String concertAge;
 
     // 예매 제한
     private String maxTicketsPerPerson;
 
     // 티켓 구매 사이트 종류
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private OnlineStore onlineStore;
+    private String onlineStore;
 
     // 티켓팅 링크
     private String onlineStoreLink;
@@ -56,13 +53,10 @@ public class Concert extends BaseEntity {
     private String description;
 
 
-    @Column(nullable = false)
     private Integer dailyViewCount;
 
-    @Column(nullable = false)
     private Integer weeklyViewCount;
 
-    @Column(nullable = false)
     private boolean advertisement;
 
 
