@@ -4,16 +4,21 @@ import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.MemberProfileImage;
+import com.example.bolmalre.member.domain.enums.Gender;
 import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
+import com.example.bolmalre.member.infrastructure.UuidHolder;
 import com.example.bolmalre.member.web.dto.MemberFindPasswordDTO;
 import com.example.bolmalre.member.web.dto.MemberFindUsernameDTO;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
 import com.example.bolmalre.member.web.dto.MemberProfileDTO;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class MemberConverter {
 
@@ -63,6 +68,24 @@ public class MemberConverter {
         return MemberFindPasswordDTO.MemberFindPasswordResponseDTO.builder()
                 .memberId(member.getId())
                 .newPassword(password)
+                .build();
+    }
+
+    public static Member toKakaoMember(String email, String name, String password, BCryptPasswordEncoder passwordEncoder, UuidHolder uuid){
+
+        return Member.builder()
+                .username("kakao_" + UUID.randomUUID())
+                .password(passwordEncoder.encode(password))
+                .name(name)
+                .role(Role.ROLE_USER)
+                .phoneNumber("kakao_phone_" + uuid.toString())
+                .birthday(LocalDate.of(1,1,1))
+                .email(email)
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
                 .build();
     }
 }
