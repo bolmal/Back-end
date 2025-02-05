@@ -101,6 +101,7 @@ public class MemberController {
         return ApiResponse.onSuccess(result);
     }
 
+
     @Operation(summary = "비밀번호 찾기(재설정) API")
     @PatchMapping("/passwords")
     public ApiResponse<MemberFindPasswordDTO.MemberFindPasswordResponseDTO> getUsername(
@@ -108,6 +109,13 @@ public class MemberController {
     ){
 
         MemberFindPasswordDTO.MemberFindPasswordResponseDTO result = memberService.getPassword(request);
+        return ApiResponse.onSuccess(result);
+    }
+
+    @PostMapping("/join/social")
+    public ApiResponse<MemberJoinDTO.MemberSocialResponseDTO> social(@RequestBody MemberJoinDTO.MemberSocialRequestDTO request){
+        MemberJoinDTO.MemberSocialResponseDTO result = memberService.social(request);
+
         return ApiResponse.onSuccess(result);
     }
 }

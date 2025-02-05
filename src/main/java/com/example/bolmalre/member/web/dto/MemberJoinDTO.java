@@ -71,6 +71,39 @@ public class MemberJoinDTO {
 
     }
 
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    @Getter
+    public static class MemberSocialRequestDTO{
+
+        String email;
+
+        String name;
+
+    }
+
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    @Getter
+    public static class MemberSocialResponseDTO{
+
+        Long memberId;
+
+        String name;
+
+        String upComming;
+
+        Integer alarmCount;
+
+        Integer bookmarkCount;
+
+        boolean isSubscribe;
+
+        String imagePath;
+    }
+
 
 }
 

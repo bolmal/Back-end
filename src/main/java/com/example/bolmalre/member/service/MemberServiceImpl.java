@@ -3,7 +3,10 @@ package com.example.bolmalre.member.service;
 import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.converter.MemberConverter;
+import com.example.bolmalre.member.domain.enums.Gender;
+import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
+import com.example.bolmalre.member.domain.enums.SubStatus;
 import com.example.bolmalre.member.infrastructure.LocalDateHolder;
 import com.example.bolmalre.member.web.dto.*;
 import com.example.bolmalre.member.web.port.MemberService;
@@ -19,8 +22,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -140,6 +145,41 @@ public class MemberServiceImpl implements MemberService {
         Member.resetPassword(result, newPassword);
 
         return MemberConverter.toMemberFindPasswordResponseDTO(result,request.getNewPassword());
+    }
+
+    @Override
+    public MemberJoinDTO.MemberSocialResponseDTO social(MemberJoinDTO.MemberSocialRequestDTO requestDTO){
+        Member byEmail = memberRepository.findByEmail(requestDTO.getEmail())
+                .orElseThrow(()->new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        if (byEmail == null){
+            Member newMember = Member.builder()
+                    .username("front_" + UUID.randomUUID())
+                    .password(bCryptPasswordEncoder.encode("front"))
+                    .name(requestDTO.getName())
+                    .role(Role.ROLE_USER)
+                    .phoneNumber("kakao_phone_" + UUID.randomUUID())
+                    .birthday(LocalDate.of(1, 1, 1))
+                    .email(requestDTO.getEmail())
+                    .status(Status.ACTIVE)
+                    .gender(Gender.MALE)
+                    .alarmAccount(0)
+                    .bookmarkAccount(0)
+                    .subStatus(SubStatus.UNSUBSCRIBE)
+                    .build();
+            memberRepository.save(newMember);
+        }
+
+        assert byEmail != null;
+        return MemberJoinDTO.MemberSocialResponseDTO.builder()
+                .memberId(byEmail.getId())
+                .name(byEmail.getName())
+                .upComming("test")
+                .alarmCount(0)
+                .bookmarkCount(0)
+                .isSubscribe(false)
+                .imagePath(null)
+                .build();
     }
 
 
