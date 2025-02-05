@@ -69,7 +69,8 @@ public class SecurityConfig {
 
                         configuration.setAllowedOrigins(Arrays.asList(
                                 "http://localhost:3000",
-                                "https://dev.bolmal.shop"
+                                "https://dev.bolmal.shop",
+                                "https://bolmal.vercel.app"
                         ));
                         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                         configuration.setAllowCredentials(true);
