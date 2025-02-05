@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>소셜 로그인</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-md w-96">
+            <h1 class="text-2xl font-bold mb-6 text-center">소셜 로그인</h1>
+
+            <!-- 카카오 로그인 버튼 -->
+            <div class="mb-4">
+                <a th:href="@{'https://kauth.kakao.com/oauth/authorize'
+                            + '?response_type=code'
+                            + '&client_id=6aaded393450e8445837684bfd30969d'
+                            + '&redirect_uri=http://localhost:8080/oauth/kakao/callback'}"
+                   class="w-full bg-yellow-400 text-gray-900 py-2 px-4 rounded-md font-bold flex items-center justify-center hover:bg-yellow-500 transition duration-200">
+                    카카오로 시작하기
+                </a>
+            </div>
+
+            <!-- 네이버 로그인 버튼 -->
+            <div>
+                <a th:href="${naverLoginUrl}"
+                   class="w-full bg-green-500 text-white py-2 px-4 rounded-md font-bold flex items-center justify-center hover:bg-green-600 transition duration-200">
+                    네이버로 시작하기
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
