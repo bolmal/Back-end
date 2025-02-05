@@ -57,14 +57,11 @@ public class OAuthServiceImpl implements OAuthService {
     @Override
     public Member naverLogin(String accessCode, HttpServletResponse httpServletResponse) {
 
-        log.info("토큰이 전달되었습니다: "+accessCode);
-
         NaverDTO.OAuthToken oAuthToken = naverUtil.requestToken(accessCode);
         NaverDTO.NaverProfile naverProfile = naverUtil.requestProfile(oAuthToken);
 
         System.out.println(naverProfile);
         String requestEmail = naverProfile.getResponse().getEmail();
-        log.info("이메일 입니다: "+naverProfile.getResponse().getEmail());
 
         Member byEmail = memberRepository.findByEmail(requestEmail)
                 .orElseGet(() -> createNaverNewUser(naverProfile));
@@ -73,21 +70,6 @@ public class OAuthServiceImpl implements OAuthService {
 
         return byEmail;
     }
-
-    private Member createNaverNewUser(NaverDTO.NaverProfile naverProfile) {
-
-        log.info("이메일 입니다: "+naverProfile.getResponse().getEmail());
-        Member newMember = MemberConverter.toOAuthMember(
-                naverProfile.getResponse().getEmail(),
-                naverProfile.getResponse().getName(),
-                "naver",
-                passwordEncoder,
-                uuid
-        );
-        return memberRepository.save(newMember);
-    }
-
-
 
     @Override
     public MemberJoinDTO.MemberSocialResponseDTO social(MemberJoinDTO.MemberSocialRequestDTO requestDTO, HttpServletResponse httpServletResponse) {
@@ -106,6 +88,18 @@ public class OAuthServiceImpl implements OAuthService {
 
         loginProcess(httpServletResponse, byEmail);
         return MemberConverter.toMemberSocialResponseDTO(byEmail);
+    }
+
+    private Member createNaverNewUser(NaverDTO.NaverProfile naverProfile) {
+
+        Member newMember = MemberConverter.toOAuthMember(
+                naverProfile.getResponse().getEmail(),
+                naverProfile.getResponse().getName(),
+                "naver",
+                passwordEncoder,
+                uuid
+        );
+        return memberRepository.save(newMember);
     }
 
 
