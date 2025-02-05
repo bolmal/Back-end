@@ -8,12 +8,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/oauth")
 @Tag(name = "소셜로그인 API")
+@Slf4j
 public class MemberOAuthController {
 
     private final OAuthServiceImpl authService;
@@ -24,6 +26,15 @@ public class MemberOAuthController {
     @GetMapping("/kakao/callback")
     public ApiResponse<?> kakaoLogin(@RequestParam("code") String accessCode, HttpServletResponse httpServletResponse) {
         Member member = authService.oAuthLogin(accessCode, httpServletResponse);
+
+        return ApiResponse.onSuccess(member.getId());
+    }
+
+    @GetMapping("/naver/callback")
+    public ApiResponse<?> naverLogin(@RequestParam("code") String accessCode, HttpServletResponse httpServletResponse) {
+
+        log.info("토큰이 전달되었습니다: "+accessCode);
+        Member member = authService.naverLogin(accessCode, httpServletResponse);
 
         return ApiResponse.onSuccess(member.getId());
     }

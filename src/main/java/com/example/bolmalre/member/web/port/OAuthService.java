@@ -7,5 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface OAuthService {
     Member oAuthLogin(String accessCode, HttpServletResponse httpServletResponse);
 
+    Member naverLogin(String accessCode, HttpServletResponse httpServletResponse);
+
     MemberJoinDTO.MemberSocialResponseDTO social(MemberJoinDTO.MemberSocialRequestDTO requestDTO, HttpServletResponse httpServletResponse);
 }

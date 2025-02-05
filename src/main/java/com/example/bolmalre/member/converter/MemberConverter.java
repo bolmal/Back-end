@@ -17,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class MemberConverter {
@@ -71,14 +70,14 @@ public class MemberConverter {
                 .build();
     }
 
-    public static Member toKakaoMember(String email, String name, String password, BCryptPasswordEncoder passwordEncoder, UuidHolder uuid){
+    public static Member toOAuthMember(String email, String name, String password, BCryptPasswordEncoder passwordEncoder, UuidHolder uuid){
 
         return Member.builder()
-                .username("kakao_" + UUID.randomUUID())
+                .username("oauth_" + UUID.randomUUID())
                 .password(passwordEncoder.encode(password))
                 .name(name)
                 .role(Role.ROLE_USER)
-                .phoneNumber("kakao_phone_" + uuid.toString())
+                .phoneNumber("oauth_phone_" + uuid.toString())
                 .birthday(LocalDate.of(1,1,1))
                 .email(email)
                 .status(Status.ACTIVE)

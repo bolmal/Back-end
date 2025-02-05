@@ -11,9 +11,11 @@ import com.example.bolmalre.member.infrastructure.UuidHolder;
 import com.example.bolmalre.member.util.KakaoUtil;
 import com.example.bolmalre.member.web.dto.KakaoDTO;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
+import com.example.bolmalre.member.web.dto.NaverDTO;
 import com.example.bolmalre.member.web.port.OAuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +23,13 @@ import static com.example.bolmalre.member.util.CookieUtil.createCookie;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OAuthServiceImpl implements OAuthService {
 
     private final KakaoUtil kakaoUtil;
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final JWTUtilImpl jwtUtil;
     private final JWTConfig jwtConfig;
@@ -36,7 +38,7 @@ public class OAuthServiceImpl implements OAuthService {
 
     // 추후 추가 정보 기입을 위한 로직 필요
     @Override
-    public Member oAuthLogin(String accessCode, HttpServletResponse httpServletResponse) {
+    public Member kakaoLogin(String accessCode, HttpServletResponse httpServletResponse) {
 
         KakaoDTO.OAuthToken oAuthToken = kakaoUtil.requestToken(accessCode);
         KakaoDTO.KakaoProfile kakaoProfile = kakaoUtil.requestProfile(oAuthToken);
@@ -49,6 +51,36 @@ public class OAuthServiceImpl implements OAuthService {
 
         return byEmail;
     }
+
+    @Override
+    public Member naverLogin(String accessCode, HttpServletResponse httpServletResponse) {
+
+        log.info("토큰이 전달되었습니다: "+accessCode);
+
+        NaverDTO.OAuthToken oAuthToken = naverUtil.requestToken(accessCode);
+        NaverDTO.NaverProfile naverProfile = naverUtil.requestProfile(oAuthToken);
+        String requestEmail = naverProfile.getNaver_account().getEmail();
+
+        Member byEmail = memberRepository.findByEmail(requestEmail)
+                .orElseGet(() -> createNaverNewUser(naverProfile));
+
+        loginProcess(httpServletResponse, byEmail);
+
+        return byEmail;
+    }
+
+    private Member createNaverNewUser(NaverDTO.NaverProfile naverProfile) {
+        Member newMember = MemberConverter.toOAuthMember(
+                naverProfile.getNaver_account().getEmail(),
+                naverProfile.getNaver_account().getProfile().getNickname(),
+                "naver",
+                passwordEncoder,
+                uuid
+        );
+        return memberRepository.save(newMember);
+    }
+
+
 
     @Override
     public MemberJoinDTO.MemberSocialResponseDTO social(MemberJoinDTO.MemberSocialRequestDTO requestDTO, HttpServletResponse httpServletResponse) {

@@ -120,4 +120,9 @@ public class Member extends BaseEntity {
     public static void alarmAccountMinus(Member member) {
         member.alarmAccount-=1;
     }
+
+    public static void setNameAndEmail(Member member, String name, String email) {
+        member.name = name;
+        member.email = email;
+    }
 }
