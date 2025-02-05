@@ -9,6 +9,7 @@ import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.infrastructure.MemberRepository;
 import com.example.bolmalre.member.infrastructure.UuidHolder;
 import com.example.bolmalre.member.util.KakaoUtil;
+import com.example.bolmalre.member.util.NaverUtil;
 import com.example.bolmalre.member.web.dto.KakaoDTO;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
 import com.example.bolmalre.member.web.dto.NaverDTO;
@@ -27,6 +28,7 @@ import static com.example.bolmalre.member.util.CookieUtil.createCookie;
 public class OAuthServiceImpl implements OAuthService {
 
     private final KakaoUtil kakaoUtil;
+    private final NaverUtil naverUtil;
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
@@ -90,7 +92,7 @@ public class OAuthServiceImpl implements OAuthService {
 
         if (byEmail == null) {
             byEmail = MemberConverter.toFrontKakaoMember(
-                    requestDTO.getName(), requestDTO.getEmail(), "front_social",bCryptPasswordEncoder,uuid);
+                    requestDTO.getName(), requestDTO.getEmail(), "front_social",passwordEncoder,uuid);
 
             Member newMember = memberRepository.save(byEmail);
             loginProcess(httpServletResponse, newMember);
@@ -103,7 +105,7 @@ public class OAuthServiceImpl implements OAuthService {
 
 
     private Member createNewUser(KakaoDTO.KakaoProfile kakaoProfile) {
-        Member newMember = MemberConverter.toKakaoMember(
+        Member newMember = MemberConverter.toOAuthMember(
                 kakaoProfile.getKakao_account().getEmail(),
                 kakaoProfile.getKakao_account().getProfile().getNickname(),
                 "kakao",

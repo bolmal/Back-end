@@ -25,7 +25,7 @@ public class MemberOAuthController {
             "해당 엔드포인트로 리다이렉트 되어 로직이 작동합니다")
     @GetMapping("/kakao/callback")
     public ApiResponse<?> kakaoLogin(@RequestParam("code") String accessCode, HttpServletResponse httpServletResponse) {
-        Member member = authService.oAuthLogin(accessCode, httpServletResponse);
+        Member member = authService.kakaoLogin(accessCode, httpServletResponse);
 
         return ApiResponse.onSuccess(member.getId());
     }
