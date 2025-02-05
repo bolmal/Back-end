@@ -29,8 +29,6 @@ public interface MemberService {
 
     MemberFindPasswordDTO.MemberFindPasswordResponseDTO getPassword(MemberFindPasswordDTO.MemberFindPasswordRequestDTO request);
 
-    MemberJoinDTO.MemberSocialResponseDTO social(MemberJoinDTO.MemberSocialRequestDTO requestDTO);
-
     // 매일 자정에 실행
     @Scheduled(cron = "0 0 0 * * ?")
     void deleteOldInactiveMembers();

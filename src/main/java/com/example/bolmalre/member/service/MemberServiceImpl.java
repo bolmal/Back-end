@@ -148,42 +148,6 @@ public class MemberServiceImpl implements MemberService {
         return MemberConverter.toMemberFindPasswordResponseDTO(result,request.getNewPassword());
     }
 
-    @Override
-    public MemberJoinDTO.MemberSocialResponseDTO social(MemberJoinDTO.MemberSocialRequestDTO requestDTO) {
-
-        Member byEmail = memberRepository.findByEmail(requestDTO.getEmail())
-                .orElse(null);
-
-        if (byEmail == null) {
-            byEmail = Member.builder()
-                    .username("front_" + UUID.randomUUID())
-                    .password(bCryptPasswordEncoder.encode("front"))
-                    .name(requestDTO.getName())
-                    .role(Role.ROLE_USER)
-                    .phoneNumber("kakao_phone_" + UUID.randomUUID())
-                    .birthday(LocalDate.of(1, 1, 1))
-                    .email(requestDTO.getEmail())
-                    .status(Status.ACTIVE)
-                    .gender(Gender.MALE)
-                    .alarmAccount(0)
-                    .bookmarkAccount(0)
-                    .subStatus(SubStatus.UNSUBSCRIBE)
-                    .build();
-            memberRepository.save(byEmail);
-        }
-
-        return MemberJoinDTO.MemberSocialResponseDTO.builder()
-                .memberId(byEmail.getId())
-                .name(byEmail.getName())
-                .upComming("test")
-                .alarmCount(0)
-                .bookmarkCount(0)
-                .isSubscribe(false)
-                .imagePath(null)
-                .build();
-    }
-
-
 
 
 

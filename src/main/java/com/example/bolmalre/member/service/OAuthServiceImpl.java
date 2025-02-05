@@ -10,6 +10,7 @@ import com.example.bolmalre.member.infrastructure.MemberRepository;
 import com.example.bolmalre.member.infrastructure.UuidHolder;
 import com.example.bolmalre.member.util.KakaoUtil;
 import com.example.bolmalre.member.web.dto.KakaoDTO;
+import com.example.bolmalre.member.web.dto.MemberJoinDTO;
 import com.example.bolmalre.member.web.port.OAuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class OAuthServiceImpl implements OAuthService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final JWTUtilImpl jwtUtil;
     private final JWTConfig jwtConfig;
@@ -47,6 +49,26 @@ public class OAuthServiceImpl implements OAuthService {
 
         return byEmail;
     }
+
+    @Override
+    public MemberJoinDTO.MemberSocialResponseDTO social(MemberJoinDTO.MemberSocialRequestDTO requestDTO, HttpServletResponse httpServletResponse) {
+
+        Member byEmail = memberRepository.findByEmail(requestDTO.getEmail())
+                .orElse(null);
+
+        if (byEmail == null) {
+            byEmail = MemberConverter.toFrontKakaoMember(
+                    requestDTO.getName(), requestDTO.getEmail(), "front_social",bCryptPasswordEncoder,uuid);
+
+            Member newMember = memberRepository.save(byEmail);
+            loginProcess(httpServletResponse, newMember);
+            return MemberConverter.toMemberSocialResponseDTO(newMember);
+        }
+
+        loginProcess(httpServletResponse, byEmail);
+        return MemberConverter.toMemberSocialResponseDTO(byEmail);
+    }
+
 
     private Member createNewUser(KakaoDTO.KakaoProfile kakaoProfile) {
         Member newMember = MemberConverter.toKakaoMember(
