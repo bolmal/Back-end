@@ -148,12 +148,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberJoinDTO.MemberSocialResponseDTO social(MemberJoinDTO.MemberSocialRequestDTO requestDTO){
-        Member byEmail = memberRepository.findByEmail(requestDTO.getEmail())
-                .orElseThrow(()->new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+    public MemberJoinDTO.MemberSocialResponseDTO social(MemberJoinDTO.MemberSocialRequestDTO requestDTO) {
 
-        if (byEmail == null){
-            Member newMember = Member.builder()
+        Member byEmail = memberRepository.findByEmail(requestDTO.getEmail());
+
+        if (byEmail == null) {
+            byEmail = Member.builder()
                     .username("front_" + UUID.randomUUID())
                     .password(bCryptPasswordEncoder.encode("front"))
                     .name(requestDTO.getName())
@@ -167,10 +167,9 @@ public class MemberServiceImpl implements MemberService {
                     .bookmarkAccount(0)
                     .subStatus(SubStatus.UNSUBSCRIBE)
                     .build();
-            memberRepository.save(newMember);
+            memberRepository.save(byEmail);
         }
 
-        assert byEmail != null;
         return MemberJoinDTO.MemberSocialResponseDTO.builder()
                 .memberId(byEmail.getId())
                 .name(byEmail.getName())

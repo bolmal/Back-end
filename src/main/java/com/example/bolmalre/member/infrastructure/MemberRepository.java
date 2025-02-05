@@ -13,7 +13,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUsername(String username);
     boolean existsByUsername(String username);
 
-    Optional<Member> findByEmail(String email);
+    Member findByEmail(String email);
 
     @Query("SELECT m FROM Member m WHERE m.status = :status AND m.inactiveDate <= :cutoffDate")
     List<Member> findInactiveMembersForDeletion(Status status, LocalDateTime cutoffDate);
