@@ -9,11 +9,14 @@ import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.infrastructure.MemberRepository;
 import com.example.bolmalre.member.infrastructure.UuidHolder;
 import com.example.bolmalre.member.util.KakaoUtil;
+import com.example.bolmalre.member.util.NaverUtil;
 import com.example.bolmalre.member.web.dto.KakaoDTO;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
+import com.example.bolmalre.member.web.dto.NaverDTO;
 import com.example.bolmalre.member.web.port.OAuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +24,14 @@ import static com.example.bolmalre.member.util.CookieUtil.createCookie;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OAuthServiceImpl implements OAuthService {
 
     private final KakaoUtil kakaoUtil;
+    private final NaverUtil naverUtil;
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final JWTUtilImpl jwtUtil;
     private final JWTConfig jwtConfig;
@@ -36,7 +40,7 @@ public class OAuthServiceImpl implements OAuthService {
 
     // 추후 추가 정보 기입을 위한 로직 필요
     @Override
-    public Member oAuthLogin(String accessCode, HttpServletResponse httpServletResponse) {
+    public Member kakaoLogin(String accessCode, HttpServletResponse httpServletResponse) {
 
         KakaoDTO.OAuthToken oAuthToken = kakaoUtil.requestToken(accessCode);
         KakaoDTO.KakaoProfile kakaoProfile = kakaoUtil.requestProfile(oAuthToken);
@@ -51,6 +55,23 @@ public class OAuthServiceImpl implements OAuthService {
     }
 
     @Override
+    public Member naverLogin(String accessCode, HttpServletResponse httpServletResponse) {
+
+        NaverDTO.OAuthToken oAuthToken = naverUtil.requestToken(accessCode);
+        NaverDTO.NaverProfile naverProfile = naverUtil.requestProfile(oAuthToken);
+
+        System.out.println(naverProfile);
+        String requestEmail = naverProfile.getResponse().getEmail();
+
+        Member byEmail = memberRepository.findByEmail(requestEmail)
+                .orElseGet(() -> createNaverNewUser(naverProfile));
+
+        loginProcess(httpServletResponse, byEmail);
+
+        return byEmail;
+    }
+
+    @Override
     public MemberJoinDTO.MemberSocialResponseDTO social(MemberJoinDTO.MemberSocialRequestDTO requestDTO, HttpServletResponse httpServletResponse) {
 
         Member byEmail = memberRepository.findByEmail(requestDTO.getEmail())
@@ -58,7 +79,7 @@ public class OAuthServiceImpl implements OAuthService {
 
         if (byEmail == null) {
             byEmail = MemberConverter.toFrontKakaoMember(
-                    requestDTO.getName(), requestDTO.getEmail(), "front_social",bCryptPasswordEncoder,uuid);
+                    requestDTO.getName(), requestDTO.getEmail(), "front_social",passwordEncoder,uuid);
 
             Member newMember = memberRepository.save(byEmail);
             loginProcess(httpServletResponse, newMember);
@@ -69,9 +90,21 @@ public class OAuthServiceImpl implements OAuthService {
         return MemberConverter.toMemberSocialResponseDTO(byEmail);
     }
 
+    private Member createNaverNewUser(NaverDTO.NaverProfile naverProfile) {
+
+        Member newMember = MemberConverter.toOAuthMember(
+                naverProfile.getResponse().getEmail(),
+                naverProfile.getResponse().getName(),
+                "naver",
+                passwordEncoder,
+                uuid
+        );
+        return memberRepository.save(newMember);
+    }
+
 
     private Member createNewUser(KakaoDTO.KakaoProfile kakaoProfile) {
-        Member newMember = MemberConverter.toKakaoMember(
+        Member newMember = MemberConverter.toOAuthMember(
                 kakaoProfile.getKakao_account().getEmail(),
                 kakaoProfile.getKakao_account().getProfile().getNickname(),
                 "kakao",

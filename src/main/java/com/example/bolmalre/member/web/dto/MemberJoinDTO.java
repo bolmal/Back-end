@@ -1,6 +1,7 @@
 package com.example.bolmalre.member.web.dto;
 
 import com.example.bolmalre.member.domain.enums.Gender;
+import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.validation.annotation.PasswordPatternValid;
 import com.example.bolmalre.member.validation.annotation.PhoneNumberValid;
 import com.example.bolmalre.member.validation.annotation.UsernameDuplicate;
@@ -75,6 +76,20 @@ public class MemberJoinDTO {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     @Getter
+    public static class MemberOAuthDTO{
+
+        String username;
+
+        String name;
+
+        Role role;
+
+    }
+
+    @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
+    @Getter
     public static class MemberSocialRequestDTO{
 
         String email;
@@ -103,7 +118,6 @@ public class MemberJoinDTO {
 
         String imagePath;
     }
-
 
 }
 
