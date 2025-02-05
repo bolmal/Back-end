@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -150,7 +151,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberJoinDTO.MemberSocialResponseDTO social(MemberJoinDTO.MemberSocialRequestDTO requestDTO) {
 
-        Member byEmail = memberRepository.findByEmail(requestDTO.getEmail());
+        Member byEmail = memberRepository.findByEmail(requestDTO.getEmail())
+                .orElse(null);
 
         if (byEmail == null) {
             byEmail = Member.builder()
