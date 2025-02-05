@@ -111,11 +111,4 @@ public class MemberController {
         MemberFindPasswordDTO.MemberFindPasswordResponseDTO result = memberService.getPassword(request);
         return ApiResponse.onSuccess(result);
     }
-
-    @PostMapping("/join/social")
-    public ApiResponse<MemberJoinDTO.MemberSocialResponseDTO> social(@RequestBody MemberJoinDTO.MemberSocialRequestDTO request){
-        MemberJoinDTO.MemberSocialResponseDTO result = memberService.social(request);
-
-        return ApiResponse.onSuccess(result);
-    }
 }
