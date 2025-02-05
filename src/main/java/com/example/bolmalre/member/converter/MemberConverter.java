@@ -88,4 +88,34 @@ public class MemberConverter {
                 .subStatus(SubStatus.UNSUBSCRIBE)
                 .build();
     }
+
+    public static Member toFrontKakaoMember(String email, String name, String password, BCryptPasswordEncoder passwordEncoder, UuidHolder uuid){
+
+        return Member.builder()
+                .username("front_" + uuid.randomUUID())
+                .password(passwordEncoder.encode(password))
+                .name(name)
+                .role(Role.ROLE_USER)
+                .phoneNumber("kakao_phone_" + uuid.randomUUID())
+                .birthday(LocalDate.of(1, 1, 1))
+                .email(email)
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
+    }
+
+    public static MemberJoinDTO.MemberSocialResponseDTO toMemberSocialResponseDTO(Member member) {
+        return MemberJoinDTO.MemberSocialResponseDTO.builder()
+                .memberId(member.getId())
+                .name(member.getName())
+                .upComming("test")
+                .alarmCount(0)
+                .bookmarkCount(0)
+                .isSubscribe(false)
+                .imagePath(null)
+                .build();
+    }
 }
