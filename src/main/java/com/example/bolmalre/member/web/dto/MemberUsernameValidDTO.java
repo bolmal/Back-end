@@ -13,7 +13,6 @@ public class MemberUsernameValidDTO {
     @Getter
     public static class MemberUsernameValidRequestDTO{
 
-        @UsernameDuplicate
         @UsernamePatternValid
         String username;
     }

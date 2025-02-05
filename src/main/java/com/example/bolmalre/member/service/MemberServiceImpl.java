@@ -147,11 +147,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean usernameValid(MemberUsernameValidDTO.MemberUsernameValidRequestDTO requestDTO){
         Optional<Member> result = memberRepository.findByUsername(requestDTO.getUsername());
-        if(result.isPresent()){
-            throw new MemberHandler(ErrorStatus.MEMBER_USERNAME_DUPLICATE);
-        }
-
-        return true;
+        return result.isEmpty();
     }
 
 

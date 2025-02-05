@@ -953,9 +953,10 @@ class MemberServiceImplTest {
 
         when(memberRepository.findByUsername("test123")).thenReturn(Optional.of(member));
 
-        //when & then
-        assertThatThrownBy(() -> memberService.usernameValid(requestDTO))
-                .isInstanceOf(MemberHandler.class)
-                .hasFieldOrPropertyWithValue("code", MEMBER_USERNAME_DUPLICATE);
+        //when
+        boolean result = memberService.usernameValid(requestDTO);
+
+        //then
+        assertThat(result).isFalse();
     }
 }

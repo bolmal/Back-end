@@ -40,6 +40,8 @@ public enum ErrorStatus implements BaseErrorCode {
     CODE_NOT_VALID(HttpStatus.BAD_REQUEST,"MAIL4002","인증번호가 일치하지 않습니다"),
     MAIL_NOT_SEND(HttpStatus.NOT_FOUND,"MAIL4001","요청받지 못한 이메일 입니다"),
 
+    ACCESS_EXPIRED(HttpStatus.BAD_REQUEST,"ACCESS4001","액세스 토큰이 만료되었습니다"),
+
     MEMBER_OAUTH_FAIL(HttpStatus.INTERNAL_SERVER_ERROR,"MEMBER5001","OAuth 로직 작동중 오류가 발생하였습니다"),
     MEMBER_PASSWORD_VALID(HttpStatus.BAD_REQUEST,"MEMBER4009","회원 비밀번호 검증에 실패하였습니다"),
     MEMBER_ALREADY_ACTIVE(HttpStatus.BAD_REQUEST,"MEMBER4008","회원이 이미 활성 상태입니다"),

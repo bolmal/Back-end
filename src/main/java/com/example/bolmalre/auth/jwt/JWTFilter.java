@@ -2,6 +2,9 @@ package com.example.bolmalre.auth.jwt;
 
 
 import com.example.bolmalre.auth.web.dto.CustomUserDetails;
+import com.example.bolmalre.common.apiPayLoad.ApiResponse;
+import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
+import com.example.bolmalre.common.apiPayLoad.exception.handler.TokenHandler;
 import com.example.bolmalre.config.JWTConfig;
 import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.enums.Role;
@@ -46,9 +49,7 @@ public class JWTFilter extends OncePerRequestFilter{
             log.info("토큰 있어서 검증 시작");
             jwtUtil.isExpired(accessToken);
         } catch (ExpiredJwtException e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().print("access token expired");
-            return;
+            throw new TokenHandler(ErrorStatus.ACCESS_EXPIRED);
         }
 
         // 토큰이 access인지 확인
