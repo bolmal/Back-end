@@ -3,10 +3,7 @@ package com.example.bolmalre.member.service;
 import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.converter.MemberConverter;
-import com.example.bolmalre.member.domain.enums.Gender;
-import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
-import com.example.bolmalre.member.domain.enums.SubStatus;
 import com.example.bolmalre.member.infrastructure.LocalDateHolder;
 import com.example.bolmalre.member.web.dto.*;
 import com.example.bolmalre.member.web.port.MemberService;
@@ -22,11 +19,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 
 @Service
@@ -146,6 +141,17 @@ public class MemberServiceImpl implements MemberService {
         Member.resetPassword(result, newPassword);
 
         return MemberConverter.toMemberFindPasswordResponseDTO(result,request.getNewPassword());
+    }
+
+
+    @Override
+    public boolean usernameValid(MemberUsernameValidDTO.MemberUsernameValidRequestDTO requestDTO){
+        Optional<Member> result = memberRepository.findByUsername(requestDTO.getUsername());
+        if(result.isPresent()){
+            throw new MemberHandler(ErrorStatus.MEMBER_USERNAME_DUPLICATE);
+        }
+
+        return true;
     }
 
 

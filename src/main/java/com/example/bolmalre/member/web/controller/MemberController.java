@@ -111,4 +111,13 @@ public class MemberController {
         MemberFindPasswordDTO.MemberFindPasswordResponseDTO result = memberService.getPassword(request);
         return ApiResponse.onSuccess(result);
     }
+
+
+    @Operation(summary = "username 중복검사 API")
+    @PostMapping("/valid/usernames")
+    public ApiResponse<Boolean> validUsernames(@Valid @RequestBody MemberUsernameValidDTO.MemberUsernameValidRequestDTO request) {
+        boolean result = memberService.usernameValid(request);
+
+        return ApiResponse.onSuccess(result);
+    }
 }
