@@ -1,54 +1,42 @@
 package com.example.bolmalre.member.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-@JsonIgnoreProperties(ignoreUnknown = true)  // 정의되지 않은 필드는 무시
+@JsonIgnoreProperties(ignoreUnknown = true) // 클래스에 없는 필드는 무시
 public class NaverDTO {
 
     @Getter
+    @Setter
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class OAuthToken {
         private String access_token;
-        private String token_type;
         private String refresh_token;
-        private int expires_in;
-        private String scope;
-        private int refresh_token_expires_in;
+        private String expires_in;
     }
 
     @Getter
+    @Setter
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class NaverProfile {
-        private String id;
-        private String connected_at;
-        private Properties properties;
-        private NaverAccount naver_account;
-    }
+        private String resultcode; // Naver API 응답 코드
+        private String message;    // Naver API 응답 메시지
 
-    @Getter
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Properties {
-        private String nickname;
-    }
+        // Naver API의 response 필드를 매핑
+        @JsonProperty("response")
+        private Response response;
 
-    @Getter
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class NaverAccount {
-        private String email;
-        private Boolean is_email_verified;
-        private Boolean has_email;
-        private Boolean profile_nickname_needs_agreement;
-        private Boolean email_needs_agreement;
-        private Boolean is_email_valid;
-        private Profile profile;
-    }
-
-    @Getter
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Profile {
-        private String nickname;
-        private Boolean is_default_nickname;
+        @Getter
+        @Setter
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public static class Response {
+            private String id;
+            private String email;
+            private String name;
+        }
     }
 }

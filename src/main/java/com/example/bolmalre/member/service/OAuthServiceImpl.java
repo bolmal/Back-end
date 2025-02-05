@@ -61,7 +61,10 @@ public class OAuthServiceImpl implements OAuthService {
 
         NaverDTO.OAuthToken oAuthToken = naverUtil.requestToken(accessCode);
         NaverDTO.NaverProfile naverProfile = naverUtil.requestProfile(oAuthToken);
-        String requestEmail = naverProfile.getNaver_account().getEmail();
+
+        System.out.println(naverProfile);
+        String requestEmail = naverProfile.getResponse().getEmail();
+        log.info("이메일 입니다: "+naverProfile.getResponse().getEmail());
 
         Member byEmail = memberRepository.findByEmail(requestEmail)
                 .orElseGet(() -> createNaverNewUser(naverProfile));
@@ -72,9 +75,11 @@ public class OAuthServiceImpl implements OAuthService {
     }
 
     private Member createNaverNewUser(NaverDTO.NaverProfile naverProfile) {
+
+        log.info("이메일 입니다: "+naverProfile.getResponse().getEmail());
         Member newMember = MemberConverter.toOAuthMember(
-                naverProfile.getNaver_account().getEmail(),
-                naverProfile.getNaver_account().getProfile().getNickname(),
+                naverProfile.getResponse().getEmail(),
+                naverProfile.getResponse().getName(),
                 "naver",
                 passwordEncoder,
                 uuid

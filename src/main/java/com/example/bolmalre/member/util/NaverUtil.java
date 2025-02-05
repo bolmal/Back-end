@@ -32,12 +32,10 @@ public class NaverUtil {
     private String redirect;
 
 
-    public NaverDTO.OAuthToken requestToken(String accessToken){
-
+    public NaverDTO.OAuthToken requestToken(String authorizationCode) {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -45,8 +43,7 @@ public class NaverUtil {
         params.add("client_id", client);
         params.add("client_secret", clientSecret); // client_secret 추가
         params.add("redirect_uri", redirect);
-        params.add("code", accessToken);
-
+        params.add("code", authorizationCode);  // 인증 코드 사용
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
 
@@ -56,7 +53,7 @@ public class NaverUtil {
                 kakaoTokenRequest,
                 String.class);
 
-        System.out.println("Naver API Response: " + response.getBody());
+        System.out.println("requestToken에서 받은 Naver 사용자 정보입니다: " + response.getBody());
 
         ObjectMapper objectMapper = new ObjectMapper();
         NaverDTO.OAuthToken oAuthToken = null;
@@ -67,8 +64,8 @@ public class NaverUtil {
             throw new MemberHandler(ErrorStatus.MEMBER_OAUTH_FAIL);
         }
         return oAuthToken;
-
     }
+
 
 
     public NaverDTO.NaverProfile requestProfile(NaverDTO.OAuthToken oAuthToken){
@@ -88,15 +85,22 @@ public class NaverUtil {
                 kakaoProfileRequest,
                 String.class);
 
+        // 응답 로그 추가
+        log.info("requestProfile에서 받은 Naver 사용자 정보입니다: " + response2.getBody());
+
         NaverDTO.NaverProfile naverProfile = null;
 
         try {
+            // 수정된 NaverProfile DTO 구조에 맞게 응답을 매핑
             naverProfile = objectMapper.readValue(response2.getBody(), NaverDTO.NaverProfile.class);
         } catch (JsonProcessingException e) {
-            log.info(Arrays.toString(e.getStackTrace()));
+            log.error("Profile Parsing Error: " + Arrays.toString(e.getStackTrace()));
+            log.info("파싱 중 오류 발생");
             throw new MemberHandler(ErrorStatus.MEMBER_OAUTH_FAIL);
         }
 
+        log.info("최종 네이버 프로필입니다: "+ naverProfile);
         return naverProfile;
     }
+
 }
