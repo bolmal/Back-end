@@ -906,4 +906,56 @@ class MemberServiceImplTest {
                 .isInstanceOf(MemberHandler.class)
                 .hasFieldOrPropertyWithValue("code", MEMBER_NOT_FOUND);
     }
+
+
+    @Test
+    @DisplayName("usernameValid() 를 통해 username이 중복인지 확인 할 수 있다")
+    public void usernameValid_success(){
+        //given
+        MemberUsernameValidDTO.MemberUsernameValidRequestDTO requestDTO = MemberUsernameValidDTO.MemberUsernameValidRequestDTO.builder()
+                .username("test1234")
+                .build();
+
+        when(memberRepository.findByUsername("test1234")).thenReturn(Optional.empty());
+
+        //when
+        boolean result = memberService.usernameValid(requestDTO);
+
+        //then
+        assertThat(result).isTrue();
+    }
+
+
+    @Test
+    @DisplayName("username 검증에 실패하면 정해진 예외를 반환한다")
+    public void usernameValid_fail(){
+        //given
+
+        Member member = Member.builder()
+                .id(1L)
+                .username("test123")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
+
+        MemberUsernameValidDTO.MemberUsernameValidRequestDTO requestDTO = MemberUsernameValidDTO.MemberUsernameValidRequestDTO.builder()
+                .username("test123")
+                .build();
+
+        when(memberRepository.findByUsername("test123")).thenReturn(Optional.of(member));
+
+        //when & then
+        assertThatThrownBy(() -> memberService.usernameValid(requestDTO))
+                .isInstanceOf(MemberHandler.class)
+                .hasFieldOrPropertyWithValue("code", MEMBER_USERNAME_DUPLICATE);
+    }
 }
