@@ -28,9 +28,10 @@ public class MemberOAuthController {
         return ApiResponse.onSuccess(member.getId());
     }
 
+    @Operation(summary = "프론트 전임 카카오 소셜로그인 API")
     @PostMapping("/kakao/front")
     public ApiResponse<MemberJoinDTO.MemberSocialResponseDTO> social(@RequestBody MemberJoinDTO.MemberSocialRequestDTO request){
-        MemberJoinDTO.MemberSocialResponseDTO result = memberService.social(request);
+        MemberJoinDTO.MemberSocialResponseDTO result = authService.social(request);
 
         return ApiResponse.onSuccess(result);
     }
