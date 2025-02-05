@@ -3,8 +3,13 @@ package com.example.bolmalre.auth.filter;
 
 import com.example.bolmalre.auth.jwt.JWTUtilImpl;
 import com.example.bolmalre.auth.service.RefreshTokenService;
+import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
+import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.config.JWTConfig;
+import com.example.bolmalre.member.domain.Member;
+import com.example.bolmalre.member.service.port.MemberRepository;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
@@ -23,7 +28,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -35,6 +42,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final JWTConfig jwtConfig;
     private final ObjectMapper objectMapper = new ObjectMapper(); // Jackson ObjectMapper 추가
     private final RefreshTokenService refreshTokenService;
+
+    private final MemberRepository memberRepository;
 
 
 
@@ -62,7 +71,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     //Authentication authentication에서 유저정보를 ㅏㄱ져옴
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
 
         log.info("로그인 성공");
 
@@ -84,6 +93,28 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         refreshTokenService.addRefreshEntity(username,refresh, jwtConfig.getRefreshTokenValidityInSeconds());
 
+        response.setStatus(HttpStatus.OK.value());
+
+
+
+
+        Member byUsername = memberRepository.findByUsername(username)
+                .orElseThrow(()-> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        var responseBody = new HashMap<String, Object>();
+        responseBody.put("memberId", byUsername.getId());
+        responseBody.put("name", byUsername.getName());
+        responseBody.put("upComming", "test");
+        responseBody.put("alarmCount", byUsername.getAlarmAccount());
+        responseBody.put("bookmarkCount", byUsername.getBookmarkAccount());
+        responseBody.put("isSubscribe", false);
+        responseBody.put("imagePath","test_image");
+
+        // JSON 응답 반환
+        response.getWriter().write(objectMapper.writeValueAsString(responseBody));
         response.setStatus(HttpStatus.OK.value());
 
     }
