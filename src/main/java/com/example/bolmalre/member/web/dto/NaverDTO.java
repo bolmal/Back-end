@@ -1,11 +1,14 @@
 package com.example.bolmalre.member.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 
 @Getter
+@JsonIgnoreProperties(ignoreUnknown = true)  // 정의되지 않은 필드는 무시
 public class NaverDTO {
 
     @Getter
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class OAuthToken {
         private String access_token;
         private String token_type;
@@ -16,19 +19,22 @@ public class NaverDTO {
     }
 
     @Getter
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class NaverProfile {
-        private String id; // String 타입으로 변경
+        private String id;
         private String connected_at;
         private Properties properties;
         private NaverAccount naver_account;
     }
 
     @Getter
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Properties {
         private String nickname;
     }
 
     @Getter
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class NaverAccount {
         private String email;
         private Boolean is_email_verified;
@@ -40,6 +46,7 @@ public class NaverDTO {
     }
 
     @Getter
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Profile {
         private String nickname;
         private Boolean is_default_nickname;
