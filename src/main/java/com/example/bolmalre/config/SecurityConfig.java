@@ -100,7 +100,7 @@ public class SecurityConfig {
                 .requestMatchers("phone-numbers/**").permitAll()
                 .requestMatchers("/emails/**").permitAll()
                 .requestMatchers("/concerts/save/**").permitAll()
-                .requestMatchers("/oauth/kakao/callback").permitAll() // OAuth 콜백 주소
+                .requestMatchers("/oauth/kakao/callback","members/join/social").permitAll() // OAuth 콜백 주소
 
                 .anyRequest().authenticated());
 
