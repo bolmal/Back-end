@@ -17,24 +17,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/oauth/ssr")
 @Tag(name = "소셜로그인 API")
-@Slf4j
 public class MemberOAuthSSRController {
 
     private final OAuthServiceImpl authService;
 
     @GetMapping("/login")
     public String loginPage() {
-        return "oauth/login";  // templates/oauth/login.html.html을 찾음
+        return "oauth/login";
     }
 
     @GetMapping("/kakao/callback")
     public String kakaoLogin(@RequestParam("code") String accessCode,
                              HttpServletResponse httpServletResponse,
                              Model model) {
-        log.info("access code: {}", accessCode);
+
         Member member = authService.kakaoLogin(accessCode, httpServletResponse);
         model.addAttribute("member", member);
-        return "oauth/success";  // templates/oauth/success.html.html을 찾음
+        return "oauth/success";
     }
 
     @GetMapping("/naver/callback")

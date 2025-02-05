@@ -26,10 +26,14 @@ public class NaverUtil {
 
     @Value("${spring.security.oauth2.client.registration.naver.client-id}")
     private String client;
+    @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
+    private String clientSecret;
     @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}")
     private String redirect;
 
+
     public NaverDTO.OAuthToken requestToken(String accessToken){
+
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -39,8 +43,10 @@ public class NaverUtil {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", client);
-        params.add("redirect_url", redirect);
+        params.add("client_secret", clientSecret); // client_secret 추가
+        params.add("redirect_uri", redirect);
         params.add("code", accessToken);
+
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
 
@@ -49,6 +55,8 @@ public class NaverUtil {
                 HttpMethod.POST,
                 kakaoTokenRequest,
                 String.class);
+
+        System.out.println("Naver API Response: " + response.getBody());
 
         ObjectMapper objectMapper = new ObjectMapper();
         NaverDTO.OAuthToken oAuthToken = null;
