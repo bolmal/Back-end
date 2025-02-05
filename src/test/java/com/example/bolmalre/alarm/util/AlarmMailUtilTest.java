@@ -8,7 +8,7 @@ import com.example.bolmalre.concert.domain.Concert;
 import com.example.bolmalre.concert.domain.ConcertTicketRound;
 import com.example.bolmalre.concert.infrastructure.ConcertRepository;
 import com.example.bolmalre.member.domain.Member;
-import com.example.bolmalre.member.infrastructure.LocalDateHolder;
+import com.example.bolmalre.member.service.port.LocalDateHolder;
 import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

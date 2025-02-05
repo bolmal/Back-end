@@ -14,7 +14,7 @@ import com.example.bolmalre.common.apiPayLoad.exception.handler.BookmarkHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.domain.Member;
-import com.example.bolmalre.member.infrastructure.MemberRepository;
+import com.example.bolmalre.member.service.port.MemberRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

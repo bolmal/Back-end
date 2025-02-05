@@ -4,7 +4,7 @@ package com.example.bolmalre.auth.service;
 
 import com.example.bolmalre.auth.web.dto.CustomUserDetails;
 import com.example.bolmalre.member.domain.Member;
-import com.example.bolmalre.member.infrastructure.MemberRepository;
+import com.example.bolmalre.member.service.port.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

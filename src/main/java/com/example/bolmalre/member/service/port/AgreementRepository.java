@@ -1,4 +1,4 @@
-package com.example.bolmalre.member.infrastructure;
+package com.example.bolmalre.member.service.port;
 
 import com.example.bolmalre.member.domain.Agreement;
 import com.example.bolmalre.member.domain.Member;

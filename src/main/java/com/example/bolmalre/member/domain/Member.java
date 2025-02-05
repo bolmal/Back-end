@@ -5,7 +5,7 @@ import com.example.bolmalre.member.domain.enums.Gender;
 import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
-import com.example.bolmalre.member.infrastructure.LocalDateHolder;
+import com.example.bolmalre.member.service.port.LocalDateHolder;
 import com.example.bolmalre.member.web.dto.MemberUpdateDTO;
 import jakarta.persistence.*;
 import lombok.*;

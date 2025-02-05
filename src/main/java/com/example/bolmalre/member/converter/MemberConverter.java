@@ -8,7 +8,7 @@ import com.example.bolmalre.member.domain.enums.Gender;
 import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
-import com.example.bolmalre.member.infrastructure.UuidHolder;
+import com.example.bolmalre.member.service.port.UuidHolder;
 import com.example.bolmalre.member.web.dto.MemberFindPasswordDTO;
 import com.example.bolmalre.member.web.dto.MemberFindUsernameDTO;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;

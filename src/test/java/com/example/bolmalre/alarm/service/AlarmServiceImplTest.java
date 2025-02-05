@@ -8,15 +8,13 @@ import com.example.bolmalre.common.apiPayLoad.exception.handler.ConcertHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.concert.domain.Concert;
-import com.example.bolmalre.concert.domain.enums.TicketRound;
-import com.example.bolmalre.concert.domain.enums.OnlineStore;
 import com.example.bolmalre.concert.infrastructure.ConcertRepository;
 import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.enums.Gender;
 import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
-import com.example.bolmalre.member.infrastructure.MemberRepository;
+import com.example.bolmalre.member.service.port.MemberRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,8 +28,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

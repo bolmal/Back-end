@@ -2,7 +2,7 @@ package com.example.bolmalre.member.validation.validator;
 
 
 import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
-import com.example.bolmalre.member.infrastructure.MemberRepository;
+import com.example.bolmalre.member.service.port.MemberRepository;
 import com.example.bolmalre.member.validation.annotation.UsernameDuplicate;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

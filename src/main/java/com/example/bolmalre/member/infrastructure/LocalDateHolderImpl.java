@@ -1,5 +1,6 @@
 package com.example.bolmalre.member.infrastructure;
 
+import com.example.bolmalre.member.service.port.LocalDateHolder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
