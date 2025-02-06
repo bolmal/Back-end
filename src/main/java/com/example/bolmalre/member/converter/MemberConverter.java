@@ -35,6 +35,7 @@ public class MemberConverter {
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
+                .isLogin(false)
                 .build();
     }
 
