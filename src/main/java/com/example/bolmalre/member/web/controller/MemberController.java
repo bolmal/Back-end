@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")
-@Tag(name = "개인 정보 관리 API")
+@Tag(name = "개인 정보 관리 API",
+description = "로그아웃의 경우 [POST] /logout의 경로로 쿠키에 리프레시 토큰을 담아 요청해주시면 됩니다")
 @Builder
 public class MemberController {
 

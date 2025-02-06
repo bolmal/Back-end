@@ -3,8 +3,12 @@ package com.example.bolmalre.auth.filter;
 
 
 
+import com.example.bolmalre.auth.infrastructure.redis.RefreshRepository;
 import com.example.bolmalre.auth.jwt.JWTUtilImpl;
-import com.example.bolmalre.auth.service.port.RefreshRepository;
+import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
+import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
+import com.example.bolmalre.member.domain.Member;
+import com.example.bolmalre.member.service.port.MemberRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,16 +18,18 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
 
 @RequiredArgsConstructor
+@Slf4j
 public class CustomLogoutFilter extends GenericFilterBean {
 
     private final JWTUtilImpl jwtUtil;
     private final RefreshRepository refreshRepository;
-
+    private final MemberRepository memberRepository;
 
 
     @Override
@@ -48,6 +54,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
             return;
         }
 
+        log.info("요청 형식 일치");
+
         //get refresh token 삭제
         String refresh = null;
         Cookie[] cookies = request.getCookies();
@@ -59,12 +67,23 @@ public class CustomLogoutFilter extends GenericFilterBean {
             }
         }
 
+        log.info("토큰 찾음");
+
+        String username = jwtUtil.getUsername(refresh);
+        Member byUsername = memberRepository.findByUsername(username)
+                .orElseThrow(()-> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Member.setLogout(byUsername);
+
+        memberRepository.save(byUsername);
+
         //refresh null check
         if (refresh == null) {
 
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
+
+        log.info("리프레시 만료체크");
 
         //expired check
         try {
@@ -76,6 +95,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
             return;
         }
 
+        log.info("리프레시가 맞는지 체크");
+
         // 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
         String category = jwtUtil.getCategory(refresh);
         if (!category.equals("refresh")) {
@@ -85,7 +106,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
             return;
         }
 
-        //DB에 저장되어 있는지 확인
+        log.info("DB 체크");
         Boolean isExist = refreshRepository.existsByRefresh(refresh);
         if (!isExist) {
 
@@ -102,6 +123,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
         Cookie cookie = new Cookie("refresh", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");
+
+
 
         response.addCookie(cookie);
         response.setStatus(HttpServletResponse.SC_OK);
