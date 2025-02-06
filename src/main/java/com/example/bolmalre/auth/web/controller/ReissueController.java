@@ -2,8 +2,10 @@ package com.example.bolmalre.auth.web.controller;
 
 
 import com.example.bolmalre.auth.domain.Refresh;
+import com.example.bolmalre.auth.infrastructure.port.RefreshRedisEntity;
+import com.example.bolmalre.auth.infrastructure.redis.RefreshRepository;
 import com.example.bolmalre.auth.jwt.JWTUtilImpl;
-import com.example.bolmalre.auth.service.port.RefreshRepository;
+import com.example.bolmalre.common.util.RedisIdGenerator;
 import com.example.bolmalre.config.JWTConfig;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +31,7 @@ public class ReissueController {
     private final JWTUtilImpl jwtUtil;
     private final JWTConfig jwtConfig;
     private final RefreshRepository refreshRepository;
+    private final RedisIdGenerator redisIdGenerator;
 
 
 
@@ -117,9 +120,10 @@ public class ReissueController {
     private void addRefreshEntity(String username, String refresh, Long expiredMs) {
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
+        Long id = redisIdGenerator.generateId(username);
 
-
-        Refresh refreshToken = Refresh.builder()
+        RefreshRedisEntity refreshToken = RefreshRedisEntity.builder()
+                .id(id.toString())
                 .username(username)
                 .refresh(refresh)
                 .expiration(date.toString())

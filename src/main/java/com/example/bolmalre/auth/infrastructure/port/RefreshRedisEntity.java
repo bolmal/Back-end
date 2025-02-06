@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 // 30일로 설정 - 하드코딩으로 되어있어서 수정이 필요함 FIXME
-@RedisHash(value = "Refresh", timeToLive = 30L * 24 * 60 * 60 * 1000)
+@RedisHash(value = "Refresh", timeToLive = 30L * 24 * 60 * 60)
 @Getter
 @Setter
 @Builder
@@ -16,9 +16,9 @@ import org.springframework.data.redis.core.RedisHash;
 public class RefreshRedisEntity {
 
     private String id;  // Redis에서 id는 보통 String 타입입니다.
+    private String username;
 
     @Id
-    private String username;
     private String refresh;
     private String expiration;
 

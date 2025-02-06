@@ -70,6 +70,9 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private SubStatus subStatus;
 
+    @Column(nullable = false)
+    private boolean isLogin;
+
     @Setter
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<MemberProfileImage> memberProfileImages;
@@ -124,5 +127,13 @@ public class Member extends BaseEntity {
     public static void setNameAndEmail(Member member, String name, String email) {
         member.name = name;
         member.email = email;
+    }
+
+    public static void setLogin(Member member) {
+        member.isLogin = true;
+    }
+
+    public static void setLogout(Member member) {
+        member.isLogin = false;
     }
 }

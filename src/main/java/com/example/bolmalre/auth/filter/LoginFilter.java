@@ -101,17 +101,22 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         Member byUsername = memberRepository.findByUsername(username)
                 .orElseThrow(()-> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
+        Member.setLogin(byUsername);
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         var responseBody = new HashMap<String, Object>();
         responseBody.put("memberId", byUsername.getId());
         responseBody.put("name", byUsername.getName());
+        responseBody.put("isLogin", byUsername.isLogin());
         responseBody.put("upComming", "test");
         responseBody.put("alarmCount", byUsername.getAlarmAccount());
         responseBody.put("bookmarkCount", byUsername.getBookmarkAccount());
-        responseBody.put("isSubscribe", false);
+        responseBody.put("isSubscribe", byUsername.getStatus());
         responseBody.put("imagePath","test_image");
+
+        memberRepository.save(byUsername);
 
         // JSON 응답 반환
         response.getWriter().write(objectMapper.writeValueAsString(responseBody));

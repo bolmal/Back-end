@@ -2,7 +2,8 @@ package com.example.bolmalre.auth.service;
 
 
 import com.example.bolmalre.auth.domain.Refresh;
-import com.example.bolmalre.auth.service.port.RefreshRepository;
+import com.example.bolmalre.auth.infrastructure.port.RefreshRedisEntity;
+import com.example.bolmalre.auth.infrastructure.redis.RefreshRepository;
 import com.example.bolmalre.common.util.RedisIdGenerator;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +26,15 @@ public class RefreshTokenService {
         expiredMs = expiredMs * 1000L;
 
         Date date = new Date(System.currentTimeMillis() + expiredMs);
-
         Long id = redisIdGenerator.generateId(username);
-        Refresh refreshToken = Refresh.builder()
-                .id(id)
+
+        RefreshRedisEntity refreshToken = RefreshRedisEntity.builder()
+                .id(id.toString())
                 .username(username)
                 .refresh(refresh)
                 .expiration(date.toString())
                 .build();
+
 
         refreshRepository.save(refreshToken);
 

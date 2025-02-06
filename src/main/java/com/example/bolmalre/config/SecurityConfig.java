@@ -4,10 +4,10 @@ package com.example.bolmalre.config;
 
 import com.example.bolmalre.auth.filter.CustomLogoutFilter;
 import com.example.bolmalre.auth.filter.LoginFilter;
+import com.example.bolmalre.auth.infrastructure.redis.RefreshRepository;
 import com.example.bolmalre.auth.jwt.JWTFilter;
 import com.example.bolmalre.auth.jwt.JWTUtilImpl;
 import com.example.bolmalre.auth.service.RefreshTokenService;
-import com.example.bolmalre.auth.service.port.RefreshRepository;
 import com.example.bolmalre.member.service.port.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +39,7 @@ public class SecurityConfig {
     private final JWTUtilImpl jwtUtil;
     private final JWTConfig jwtConfig;
     private final RefreshRepository refreshRepository;
+    private final RefreshRepository refreshRedisRepository;
     private final RefreshTokenService refreshTokenService;
 
     private final MemberRepository memberRepository;
@@ -116,7 +117,7 @@ public class SecurityConfig {
 
 
         http
-                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRepository), LogoutFilter.class);
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, refreshRedisRepository,memberRepository), LogoutFilter.class);
 
 
         http
