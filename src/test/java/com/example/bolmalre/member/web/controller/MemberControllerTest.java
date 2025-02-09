@@ -1,22 +1,22 @@
 package com.example.bolmalre.member.web.controller;
 
 import com.example.bolmalre.member.domain.Member;
+import com.example.bolmalre.member.domain.MemberProfileImage;
 import com.example.bolmalre.member.domain.enums.Gender;
 import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
 import com.example.bolmalre.member.service.MemberServiceImpl;
+import com.example.bolmalre.member.service.port.MemberProfileImageRepository;
 import com.example.bolmalre.member.service.port.MemberRepository;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
 import com.example.bolmalre.member.web.dto.MemberUpdateDTO;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -27,12 +27,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,11 +50,14 @@ class MemberControllerTest {
     @Autowired
     protected ObjectMapper objectMapper;
 
-    @Mock
-    MemberServiceImpl memberService;
-
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    MemberProfileImageRepository memberProfileImageRepository;
+
+    @Mock
+    MemberServiceImpl memberService;
 
     @BeforeEach
     void setUp() {
@@ -71,9 +74,20 @@ class MemberControllerTest {
                 .alarmAccount(0)
                 .bookmarkAccount(0)
                 .subStatus(SubStatus.UNSUBSCRIBE)
+                .memberProfileImages(new ArrayList<>())
                 .build();
 
+        MemberProfileImage testMemberProfileImage = MemberProfileImage.builder()
+                .imageLink("testImageLink")
+                .fileName("testFileName")
+                .imageName("testImageName")
+                .member(member)
+                .build();
+
+        member.getMemberProfileImages().add(testMemberProfileImage);
+
         memberRepository.save(member);
+        memberProfileImageRepository.save(testMemberProfileImage);
     }
 
 
@@ -514,5 +528,48 @@ class MemberControllerTest {
               .andExpect(jsonPath("$.code").value("COMMON400"))
               .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
               .andExpect(jsonPath("$.result.phoneNumber").value("유효하지 않은 전화번호 형식입니다"));
+  }
+
+
+  @Test
+  @DisplayName("get()을 이용하여 자신의 회원정보를 조회 할 수 있다")
+  @WithMockUser(username = "test12", roles = "USER")
+  public void get_success() throws Exception {
+      // given
+
+      // when & then
+      mockMvc.perform(get("/members/")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(objectMapper.writeValueAsString("test12")))
+              .andDo(print())
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("$.isSuccess").value(true))
+              .andExpect(jsonPath("$.code").value("COMMON200"))
+              .andExpect(jsonPath("$.message").value("성공입니다."))
+              .andExpect(jsonPath("$.result.username").value("test12"))
+              .andExpect(jsonPath("$.result.name").value("test"))
+              .andExpect(jsonPath("$.result.gender").value("MALE"))
+              .andExpect(jsonPath("$.result.birthDate").value("1995-05-20"))
+              .andExpect(jsonPath("$.result.email").value("test@example.com"))
+              .andExpect(jsonPath("$.result.phoneNumber").value("010-1234-5678"))
+              .andExpect(jsonPath("$.result.imagePath").value("testImageLink"));
+  }
+
+
+  @Test
+  @DisplayName("존재하지 않는 회원을 조회하면 정해진 예외를 반환한다")
+  @WithMockUser(username = "err", roles = "USER")
+  public void get_fail_username() throws Exception {
+      // given
+
+      // when & then
+      mockMvc.perform(get("/members/")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(objectMapper.writeValueAsString("test12")))
+              .andDo(print())
+              .andExpect(status().isNotFound())
+              .andExpect(jsonPath("$.isSuccess").value(false))
+              .andExpect(jsonPath("$.code").value("MEMBER4004"))
+              .andExpect(jsonPath("$.message").value("회원을 찾을 수 없습니다"));
   }
 }
