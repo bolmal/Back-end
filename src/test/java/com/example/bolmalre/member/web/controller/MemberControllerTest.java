@@ -59,7 +59,6 @@ class MemberControllerTest {
     @BeforeEach
     void setUp() {
         Member member = Member.builder()
-                .id(1L)
                 .username("test12")
                 .password("Test123!")
                 .name("test")
@@ -333,4 +332,187 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.message").value("성공입니다."));
     }
 
+
+    @Test
+    @DisplayName("존재하지 않는 회원의 업데이트를 시도하면 정해진 예외를 반환한다")
+    @WithMockUser(username = "test123", roles = "USER")
+    public void update_fail_MemberNotFound() throws Exception {
+        //given
+        MemberUpdateDTO.MemberUpdateRequestDTO request = MemberUpdateDTO.MemberUpdateRequestDTO.builder()
+                .username("update123")
+                .name("update")
+                .gender(Gender.MALE)
+                .birthDate(LocalDate.of(1995, 5, 20))
+                .email("update@example.com")
+                .phoneNumber("010-9999-9999")
+                .build();
+
+        MemberUpdateDTO.MemberUpdateResponseDTO response = MemberUpdateDTO.MemberUpdateResponseDTO.builder()
+                .memberId(1L)
+                .build();
+
+        given(memberService.update(any(MemberUpdateDTO.MemberUpdateRequestDTO.class), anyString()))
+                .willReturn(response);
+
+        // when & then
+        mockMvc.perform(patch("/members/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("MEMBER4004"))
+                .andExpect(jsonPath("$.message").value("회원을 찾을 수 없습니다"));
+    }
+
+
+    @Test
+    @DisplayName("updateDTO의 username 패턴이 일치하지 않으면 정해진 예외를 반환한다")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void update_fail_username() throws Exception {
+        //given
+        MemberUpdateDTO.MemberUpdateRequestDTO request = MemberUpdateDTO.MemberUpdateRequestDTO.builder()
+                .username("err")
+                .name("update")
+                .gender(Gender.MALE)
+                .birthDate(LocalDate.of(1995, 5, 20))
+                .email("update@example.com")
+                .phoneNumber("010-9999-9999")
+                .build();
+
+        MemberUpdateDTO.MemberUpdateResponseDTO response = MemberUpdateDTO.MemberUpdateResponseDTO.builder()
+                .memberId(1L)
+                .build();
+
+        given(memberService.update(any(MemberUpdateDTO.MemberUpdateRequestDTO.class), anyString()))
+                .willReturn(response);
+
+        // when & then
+        mockMvc.perform(patch("/members/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("COMMON400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.result.username").value("Username이 패턴과 일치하지 않습니다"));
+    }
+
+
+    @Test
+    @DisplayName("이미 존재하는 username으로 업데이트를 시도하면 정해진 예외를 반환한다")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void update_fail_username_duplicate() throws Exception {
+        //given
+        Member member = Member.builder()
+                .username("existmember")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
+
+        memberRepository.save(member);
+
+        MemberUpdateDTO.MemberUpdateRequestDTO request = MemberUpdateDTO.MemberUpdateRequestDTO.builder()
+                .username("existmember")
+                .name("update")
+                .gender(Gender.MALE)
+                .birthDate(LocalDate.of(1995, 5, 20))
+                .email("update@example.com")
+                .phoneNumber("010-9999-9999")
+                .build();
+
+        MemberUpdateDTO.MemberUpdateResponseDTO response = MemberUpdateDTO.MemberUpdateResponseDTO.builder()
+                .memberId(1L)
+                .build();
+
+        given(memberService.update(any(MemberUpdateDTO.MemberUpdateRequestDTO.class), anyString()))
+                .willReturn(response);
+
+        // when & then
+        mockMvc.perform(patch("/members/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("MEMBER4001"))
+                .andExpect(jsonPath("$.message").value("중복된 username입니다"));
+    }
+
+
+  @Test
+  @DisplayName("email 패턴과 일치하지 않으면 정해진 예외를 반환한다")
+  @WithMockUser(username = "test12", roles = "USER")
+  public void update_fail_email() throws Exception {
+      //given
+      MemberUpdateDTO.MemberUpdateRequestDTO request = MemberUpdateDTO.MemberUpdateRequestDTO.builder()
+              .username("test123")
+              .name("update")
+              .gender(Gender.MALE)
+              .birthDate(LocalDate.of(1995, 5, 20))
+              .email("err")
+              .phoneNumber("010-9999-9999")
+              .build();
+
+      MemberUpdateDTO.MemberUpdateResponseDTO response = MemberUpdateDTO.MemberUpdateResponseDTO.builder()
+              .memberId(1L)
+              .build();
+
+      given(memberService.update(any(MemberUpdateDTO.MemberUpdateRequestDTO.class), anyString()))
+              .willReturn(response);
+
+      // when & then
+      mockMvc.perform(patch("/members/")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(objectMapper.writeValueAsString(request)))
+              .andDo(print())
+              .andExpect(status().isBadRequest())
+              .andExpect(jsonPath("$.isSuccess").value(false))
+              .andExpect(jsonPath("$.code").value("COMMON400"))
+              .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+              .andExpect(jsonPath("$.result.email").value("must be a well-formed email address"));
+  }
+
+
+  @Test
+  @DisplayName("전화번호 패턴과 일치하지 않으면 정해진 예외를 반환한다")
+  public void update_fail_phoneNumber() throws Exception {
+      //given
+      MemberUpdateDTO.MemberUpdateRequestDTO request = MemberUpdateDTO.MemberUpdateRequestDTO.builder()
+              .username("test123")
+              .name("update")
+              .gender(Gender.MALE)
+              .birthDate(LocalDate.of(1995, 5, 20))
+              .email("err")
+              .phoneNumber("err")
+              .build();
+
+      MemberUpdateDTO.MemberUpdateResponseDTO response = MemberUpdateDTO.MemberUpdateResponseDTO.builder()
+              .memberId(1L)
+              .build();
+
+      given(memberService.update(any(MemberUpdateDTO.MemberUpdateRequestDTO.class), anyString()))
+              .willReturn(response);
+
+      // when & then
+      mockMvc.perform(patch("/members/")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(objectMapper.writeValueAsString(request)))
+              .andDo(print())
+              .andExpect(status().isBadRequest())
+              .andExpect(jsonPath("$.isSuccess").value(false))
+              .andExpect(jsonPath("$.code").value("COMMON400"))
+              .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+              .andExpect(jsonPath("$.result.phoneNumber").value("유효하지 않은 전화번호 형식입니다"));
+  }
 }
