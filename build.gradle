@@ -33,7 +33,8 @@ jacocoTestReport {
         classDirectories.setFrom(
                 files(classDirectories.files.collect {
                     fileTree(dir: it, excludes: [
-                            // 측정 안하고 싶은 패턴
+                            '**/dto/**',
+                            '**/domain/**'
                     ])
                 })
         )
@@ -68,6 +69,8 @@ jacocoTestCoverageVerification {
             }
 
             excludes = [
+                    '**/dto/**',
+                    '**/domain/**'
             ]
         }
     }
