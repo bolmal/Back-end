@@ -1,20 +1,37 @@
 package com.example.bolmalre.member.web.controller;
 
+import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.enums.Gender;
+import com.example.bolmalre.member.domain.enums.Role;
+import com.example.bolmalre.member.domain.enums.Status;
+import com.example.bolmalre.member.domain.enums.SubStatus;
+import com.example.bolmalre.member.service.MemberServiceImpl;
+import com.example.bolmalre.member.service.port.MemberRepository;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
+import com.example.bolmalre.member.web.dto.MemberUpdateDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -24,14 +41,41 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
+@Transactional
 class MemberControllerTest {
-
 
     @Autowired
     protected MockMvc mockMvc;
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @Mock
+    MemberServiceImpl memberService;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @BeforeEach
+    void setUp() {
+        Member member = Member.builder()
+                .id(1L)
+                .username("test12")
+                .password("Test123!")
+                .name("test")
+                .role(Role.ROLE_USER)
+                .phoneNumber("010-1234-5678")
+                .birthday(LocalDate.of(1995, 5, 20))
+                .email("test@example.com")
+                .status(Status.ACTIVE)
+                .gender(Gender.MALE)
+                .alarmAccount(0)
+                .bookmarkAccount(0)
+                .subStatus(SubStatus.UNSUBSCRIBE)
+                .build();
+
+        memberRepository.save(member);
+    }
 
 
     @Test
@@ -66,6 +110,36 @@ class MemberControllerTest {
 
 
     @Test
+    @DisplayName("username이 중복되면 정해진 예외를 반환한다")
+    public void join_fail_username_duplicate() throws Exception {
+        MemberJoinDTO.MemberJoinRequestDTO request = MemberJoinDTO.MemberJoinRequestDTO.builder()
+                .username("test12")
+                .password("Test123!")
+                .name("test")
+                .gender(Gender.FEMALE)
+                .birthDate(LocalDate.of(1, 1, 1))
+                .email("test@naver.com")
+                .phoneNumber("010-1111-1111")
+                .serviceAgreement(true)
+                .privacyAgreement(true)
+                .financialAgreement(true)
+                .advAgreement(true)
+                .build();
+
+        // when & then
+        mockMvc.perform(post("/members/join")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("COMMON400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.result.username").value("중복된 username입니다"));
+    }
+
+
+    @Test
     @DisplayName("비밀번호 패턴에 불일치 할 시, 정해진 예외를 반환한다")
     void join_fail_password() throws Exception {
         // given
@@ -90,7 +164,11 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("COMMON400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.result.password").value("비밀번호는 8~12자의 영문, 숫자, 특수문자를 포함해야 합니다"));
     }
 
 
@@ -119,7 +197,11 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("COMMON400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.result.username").value("Username이 패턴과 일치하지 않습니다"));
     }
 
 
@@ -148,7 +230,11 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("COMMON400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.result.email").value("must be a well-formed email address"));
     }
 
 
@@ -175,7 +261,10 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("MEMBER4002"))
+                .andExpect(jsonPath("$.message").value("필수 약관에는 모두 동의를 해주셔야 합니다."));
     }
 
 
@@ -204,6 +293,44 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("COMMON400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.result.phoneNumber").value("유효하지 않은 전화번호 형식입니다"));
     }
+
+
+    @Test
+    @DisplayName("update()를 이용하여 회원정보를 업데이트 할 수 있다")
+    @WithMockUser(username = "test12", roles = "USER")
+    void update_success() throws Exception {
+        // given
+        MemberUpdateDTO.MemberUpdateRequestDTO request = MemberUpdateDTO.MemberUpdateRequestDTO.builder()
+                .username("update123")
+                .name("update")
+                .gender(Gender.MALE)
+                .birthDate(LocalDate.of(1995, 5, 20))
+                .email("update@example.com")
+                .phoneNumber("010-9999-9999")
+                .build();
+
+        MemberUpdateDTO.MemberUpdateResponseDTO response = MemberUpdateDTO.MemberUpdateResponseDTO.builder()
+                .memberId(1L)
+                        .build();
+
+        given(memberService.update(any(MemberUpdateDTO.MemberUpdateRequestDTO.class), anyString()))
+                .willReturn(response);
+
+        // when & then
+        mockMvc.perform(patch("/members/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isSuccess").value(true))
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("성공입니다."));
+    }
+
 }
