@@ -11,6 +11,7 @@ import com.example.bolmalre.member.service.port.LocalDateHolder;
 import com.example.bolmalre.member.service.port.MemberProfileImageRepository;
 import com.example.bolmalre.member.service.port.MemberRepository;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
+import com.example.bolmalre.member.web.dto.MemberPasswordValidDTO;
 import com.example.bolmalre.member.web.dto.MemberUpdateDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -772,5 +773,71 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.isSuccess").value(false))
                 .andExpect(jsonPath("$.code").value("MEMBER4004"))
                 .andExpect(jsonPath("$.message").value("회원을 찾을 수 없습니다"));
+    }
+
+
+   /* // BCrypt의 경우 숨어 있는 의존성으로서 추후 인터페이스화 해야합니다. 일단은 호출횟수로서 검증하고 따로 브랜치를 생성하여 수정하겠습니다 FIXME
+    @Test
+    @DisplayName("validPassoword를 이용해서 회원의 비밀번호를 검증 할 수 있다")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void validPassword_success() throws Exception {
+        //given
+        MemberPasswordValidDTO.MemberPasswordValidRequestDTO request = MemberPasswordValidDTO.MemberPasswordValidRequestDTO.builder()
+                .validPassword("Test123!")
+                .build();
+
+        // when & then
+        mockMvc.perform(patch("/members/profiles/passwords/valid")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(jsonPath("$.isSuccess").value(true))
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("성공입니다."));
+
+        verify(bCryptPasswordEncoder, Mockito.times(1)).matches(anyString(),anyString());
+    }*/
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원의 비밀번호를 검증하면 정해진 예외를 반환한다")
+    @WithMockUser(username = "err", roles = "USER")
+    public void validPassword_fail_memberNotFound() throws Exception {
+        //given
+        MemberPasswordValidDTO.MemberPasswordValidRequestDTO request = MemberPasswordValidDTO.MemberPasswordValidRequestDTO.builder()
+                .validPassword("Test123!")
+                .build();
+
+        // when & then
+        mockMvc.perform(patch("/members/profiles/passwords/valid")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("MEMBER4004"))
+                .andExpect(jsonPath("$.message").value("회원을 찾을 수 없습니다"));
+    }
+
+
+    @Test
+    @DisplayName("")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void validPassword_fail_password() throws Exception {
+        //given
+        MemberPasswordValidDTO.MemberPasswordValidRequestDTO request = MemberPasswordValidDTO.MemberPasswordValidRequestDTO.builder()
+                .validPassword("err")
+                .build();
+
+        // when & then
+        mockMvc.perform(patch("/members/profiles/passwords/valid")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("COMMON400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.result.validPassword").value("비밀번호는 8~12자의 영문, 숫자, 특수문자를 포함해야 합니다"));
     }
 }
