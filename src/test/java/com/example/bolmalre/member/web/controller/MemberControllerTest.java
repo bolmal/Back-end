@@ -39,6 +39,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -595,6 +597,8 @@ class MemberControllerTest {
               .andExpect(jsonPath("$.isSuccess").value(true))
               .andExpect(jsonPath("$.code").value("COMMON200"))
               .andExpect(jsonPath("$.message").value("성공입니다."));
+
+      assertThat(member.getStatus()).isEqualTo(Status.INACTIVE);
   }
 
 
@@ -632,5 +636,65 @@ class MemberControllerTest {
               .andExpect(jsonPath("$.isSuccess").value(false))
               .andExpect(jsonPath("$.code").value("MEMBER4007"))
               .andExpect(jsonPath("$.message").value("회원이 이미 비활성 상태입니다"));
+
+      assertThat(member.getStatus()).isEqualTo(Status.INACTIVE);
   }
+
+
+    @Test
+    @DisplayName("rollback()을 이용하여 회원을 활성상태로 전환 할 수 있다")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void rollback_success() throws Exception {
+        //given
+        Member.delete(member, localDateHolder);
+
+        // when & then
+        mockMvc.perform(patch("/members/rollback")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString("test12")))
+                .andDo(print())
+                .andExpect(jsonPath("$.isSuccess").value(true))
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("성공입니다."));
+
+        assertThat(member.getStatus()).isEqualTo(Status.ACTIVE);
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원을 rollback 하면 정해진 예외를 반환한다")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void rollback_fail_already_ACTIVE() throws Exception {
+        //given
+
+        // when & then
+        mockMvc.perform(patch("/members/rollback")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString("test12")))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("MEMBER4008"))
+                .andExpect(jsonPath("$.message").value("회원이 이미 활성 상태입니다"));
+
+        assertThat(member.getStatus()).isEqualTo(Status.ACTIVE);
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원을 rollback하면 정해진 예외를 반환한다")
+    @WithMockUser(username = "err", roles = "USER")
+    public void rollback_fail_memberNotFound() throws Exception {
+        //given
+
+        // when & then
+        mockMvc.perform(patch("/members/rollback")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString("err")))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("MEMBER4004"))
+                .andExpect(jsonPath("$.message").value("회원을 찾을 수 없습니다"));
+    }
 }
