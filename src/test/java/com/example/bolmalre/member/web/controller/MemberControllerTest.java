@@ -18,10 +18,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +37,8 @@ import java.util.ArrayList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -64,7 +69,10 @@ class MemberControllerTest {
     MemberServiceImpl memberService;
 
     @Mock
-            LocalDateHolder localDateHolder;
+    LocalDateHolder localDateHolder;
+
+    @SpyBean
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     Member member;
 
@@ -691,6 +699,74 @@ class MemberControllerTest {
         mockMvc.perform(patch("/members/rollback")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString("err")))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("MEMBER4004"))
+                .andExpect(jsonPath("$.message").value("회원을 찾을 수 없습니다"));
+    }
+
+
+    @Test
+    @DisplayName("changePassword()를 이용해서 회원의 비밀번호를 재설정 할 수 있다")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void changePassword_success() throws Exception {
+        //given
+        MemberUpdateDTO.MemberPasswordUpdateRequestDTO request = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
+                .newPassword("NewPass12!")
+                .build();
+
+        // when & then
+        mockMvc.perform(patch("/members/profiles/passwords")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(jsonPath("$.isSuccess").value(true))
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("성공입니다."));
+
+        // BCrypt의 경우 숨어 있는 의존성으로서 추후 인터페이스화 해야합니다. 일단은 호출횟수로서 검증하고 따로 브랜치를 생성하여 수정하겠습니다 FIXME
+        verify(bCryptPasswordEncoder, Mockito.times(1)).encode(anyString());
+    }
+
+
+    @Test
+    @DisplayName("패턴에 맞지 않는 비밀번호로 교체를 시도할 시, 정해진 예외를 반환한다")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void changePassword_fail_password() throws Exception {
+        //given
+        MemberUpdateDTO.MemberPasswordUpdateRequestDTO request = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
+                .newPassword("err")
+                .build();
+
+        // when & then
+        mockMvc.perform(patch("/members/profiles/passwords")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("COMMON400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.result.newPassword").value("비밀번호는 8~12자의 영문, 숫자, 특수문자를 포함해야 합니다"));
+
+        verify(bCryptPasswordEncoder, Mockito.times(0)).encode(anyString());
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원이 비밀번호 변경을 요청 할 시 정해진 예외를 반환한다")
+    @WithMockUser(username = "err", roles = "USER")
+    public void changePassword_fail_memberNotFound() throws Exception {
+        //given
+        MemberUpdateDTO.MemberPasswordUpdateRequestDTO request = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
+                .newPassword("newPass12!")
+                .build();
+
+        // when & then
+        mockMvc.perform(patch("/members/profiles/passwords")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.isSuccess").value(false))
