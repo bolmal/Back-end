@@ -10,6 +10,7 @@ import com.example.bolmalre.member.service.MemberServiceImpl;
 import com.example.bolmalre.member.service.port.LocalDateHolder;
 import com.example.bolmalre.member.service.port.MemberProfileImageRepository;
 import com.example.bolmalre.member.service.port.MemberRepository;
+import com.example.bolmalre.member.web.dto.MemberFindUsernameDTO;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
 import com.example.bolmalre.member.web.dto.MemberPasswordValidDTO;
 import com.example.bolmalre.member.web.dto.MemberUpdateDTO;
@@ -821,7 +822,7 @@ class MemberControllerTest {
 
 
     @Test
-    @DisplayName("")
+    @DisplayName("비밀번호 패턴에 맞지 않는 비밀번호로 업데이트를 시도하면 정해진 예외를 반환한다")
     @WithMockUser(username = "test12", roles = "USER")
     public void validPassword_fail_password() throws Exception {
         //given
@@ -839,5 +840,56 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.code").value("COMMON400"))
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
                 .andExpect(jsonPath("$.result.validPassword").value("비밀번호는 8~12자의 영문, 숫자, 특수문자를 포함해야 합니다"));
+    }
+
+
+    @Test
+    @DisplayName("getUsername을 이용해서 아이디를 조회 할 수 있다")
+    public void getUsername_success() throws Exception {
+        //given
+
+        // when & then
+        // GET 메서드는 바디로 요청을 받는게 안된다는걸 깜빡하고 삽질을 ....
+        mockMvc.perform(get("/members/usernames")
+                        .param("name", "test")
+                        .param("phoneNumber", "010-1234-5678"))
+                .andDo(print())
+                .andExpect(jsonPath("$.isSuccess").value(true))
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("성공입니다."))
+                .andExpect(jsonPath("$.result.username").value("test12"));
+    }
+
+
+    @Test
+    @DisplayName("회원을 찾지 못하면 정해진 예외를 반환한다")
+    public void getUsername_fail() throws Exception {
+        //given
+
+        // when & then
+        mockMvc.perform(get("/members/usernames")
+                        .param("name", "err")
+                        .param("phoneNumber", "010-1234-5678"))
+                .andDo(print())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("MEMBER4004"))
+                .andExpect(jsonPath("$.message").value("회원을 찾을 수 없습니다"));
+    }
+
+
+    @Test
+    @DisplayName("핸드폰 번호가 정해진 패턴과 일치하지 않으면 정해진 예외를 반환한다")
+    public void getUsername_fail_phoneNumber() throws Exception {
+        //given
+
+        // when & then
+        mockMvc.perform(get("/members/usernames")
+                        .param("name", "test")
+                        .param("phoneNumber", "err"))
+                .andDo(print())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("COMMON400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.result.phoneNumber").value("유효하지 않은 전화번호 형식입니다"));
     }
 }
