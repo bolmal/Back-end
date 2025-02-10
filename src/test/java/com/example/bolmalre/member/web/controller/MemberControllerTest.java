@@ -7,10 +7,12 @@ import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
 import com.example.bolmalre.member.service.MemberServiceImpl;
+import com.example.bolmalre.member.service.port.LocalDateHolder;
 import com.example.bolmalre.member.service.port.MemberProfileImageRepository;
 import com.example.bolmalre.member.service.port.MemberRepository;
 import com.example.bolmalre.member.web.dto.MemberJoinDTO;
 import com.example.bolmalre.member.web.dto.MemberUpdateDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -59,9 +61,14 @@ class MemberControllerTest {
     @Mock
     MemberServiceImpl memberService;
 
+    @Mock
+            LocalDateHolder localDateHolder;
+
+    Member member;
+
     @BeforeEach
     void setUp() {
-        Member member = Member.builder()
+        member = Member.builder()
                 .username("test12")
                 .password("Test123!")
                 .name("test")
@@ -571,5 +578,59 @@ class MemberControllerTest {
               .andExpect(jsonPath("$.isSuccess").value(false))
               .andExpect(jsonPath("$.code").value("MEMBER4004"))
               .andExpect(jsonPath("$.message").value("회원을 찾을 수 없습니다"));
+  }
+
+
+  @Test
+  @DisplayName("delete()를 이용해서 회원을 비활성화 상태로 전환 할 수 있다")
+  @WithMockUser(username = "test12", roles = "USER")
+  public void delete_success() throws Exception {
+      //given
+
+      // when & then
+      mockMvc.perform(patch("/members/delete")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(objectMapper.writeValueAsString("test12")))
+              .andDo(print())
+              .andExpect(jsonPath("$.isSuccess").value(true))
+              .andExpect(jsonPath("$.code").value("COMMON200"))
+              .andExpect(jsonPath("$.message").value("성공입니다."));
+  }
+
+
+  @Test
+  @DisplayName("존재하지 않는 회원을 삭제하면 정해진 예외를 반환한다")
+  @WithMockUser(username = "err", roles = "USER")
+  public void delete_memberNotFound() throws Exception {
+      //given
+
+      // when & then
+      mockMvc.perform(patch("/members/delete")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(objectMapper.writeValueAsString("err")))
+              .andDo(print())
+              .andExpect(status().isNotFound())
+              .andExpect(jsonPath("$.isSuccess").value(false))
+              .andExpect(jsonPath("$.code").value("MEMBER4004"))
+              .andExpect(jsonPath("$.message").value("회원을 찾을 수 없습니다"));
+  }
+
+
+  @Test
+  @DisplayName("이미 비활성 상태인 회원을 삭제하면 정해진 예외를 반환한다")
+  @WithMockUser(username = "test12", roles = "USER")
+  public void delete_already_deleted() throws Exception {
+      //given
+      Member.delete(member, localDateHolder);
+
+      // when & then
+      mockMvc.perform(patch("/members/delete")
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(objectMapper.writeValueAsString("test12")))
+              .andDo(print())
+              .andExpect(status().isBadRequest())
+              .andExpect(jsonPath("$.isSuccess").value(false))
+              .andExpect(jsonPath("$.code").value("MEMBER4007"))
+              .andExpect(jsonPath("$.message").value("회원이 이미 비활성 상태입니다"));
   }
 }
