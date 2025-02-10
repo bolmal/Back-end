@@ -10,10 +10,7 @@ import com.example.bolmalre.member.service.MemberServiceImpl;
 import com.example.bolmalre.member.service.port.LocalDateHolder;
 import com.example.bolmalre.member.service.port.MemberProfileImageRepository;
 import com.example.bolmalre.member.service.port.MemberRepository;
-import com.example.bolmalre.member.web.dto.MemberFindUsernameDTO;
-import com.example.bolmalre.member.web.dto.MemberJoinDTO;
-import com.example.bolmalre.member.web.dto.MemberPasswordValidDTO;
-import com.example.bolmalre.member.web.dto.MemberUpdateDTO;
+import com.example.bolmalre.member.web.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -891,5 +888,48 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.code").value("COMMON400"))
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
                 .andExpect(jsonPath("$.result.phoneNumber").value("유효하지 않은 전화번호 형식입니다"));
+    }
+
+
+    // 비밀번호 재설정 API에 대한 테스트 코드 역시 리팩터링 후 구현하겠습니다 FIXME
+
+    @Test
+    @DisplayName("validUsernames를 이용하여 Username의 중복검사를 진행 할 수 있다" +
+            "중복이 아니면 true를 반환한다")
+    public void validUsernames_success() throws Exception {
+        //given
+        MemberUsernameValidDTO.MemberUsernameValidRequestDTO request = MemberUsernameValidDTO.MemberUsernameValidRequestDTO.builder()
+                .username("newusername")
+                .build();
+
+        // when & then
+        mockMvc.perform(post("/members/valid/usernames")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(jsonPath("$.isSuccess").value(true))
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("성공입니다."))
+                .andExpect(jsonPath("$.result").value(true));
+    }
+
+
+    @Test
+    @DisplayName("username이 중복되면 false를 반환한다")
+    public void validUsernames_false() throws Exception {
+        //given
+        MemberUsernameValidDTO.MemberUsernameValidRequestDTO request = MemberUsernameValidDTO.MemberUsernameValidRequestDTO.builder()
+                .username("test12")
+                .build();
+
+        // when & then
+        mockMvc.perform(post("/members/valid/usernames")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(jsonPath("$.isSuccess").value(true))
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("성공입니다."))
+                .andExpect(jsonPath("$.result").value(false));
     }
 }
