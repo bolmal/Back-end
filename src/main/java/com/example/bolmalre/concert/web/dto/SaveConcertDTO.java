@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ public class SaveConcertDTO {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     @Getter
+    @Slf4j
     public static class SaveRequestDTO {
 
         @Schema(description = "공연 명")
@@ -27,6 +30,10 @@ public class SaveConcertDTO {
         @Schema(description = "공연 포스터 이미지")
         @JsonProperty("concert_poster")
         private String posterUrl;
+
+        @Schema(description = "캐스팅 아티스트")
+        @JsonProperty("casting")
+        private List<ConcertArtistDTO> casting;
 
         @Schema(description = "공연 일차 및 날짜 정보")
         @JsonProperty("performance_rounds")
@@ -38,7 +45,7 @@ public class SaveConcertDTO {
 
         @Schema(description = "공연 시간")
         @JsonProperty("running_time")
-        private String concertRuntime;
+        private Integer concertRuntime;
 
         @Schema(description = "가격 정보 (좌석에 따라 달라질 수 있음)")
         @JsonProperty("price")
@@ -62,7 +69,7 @@ public class SaveConcertDTO {
 
         @Schema(description = "티켓팅 오픈 날짜 (선예매 등)")
         @JsonProperty("ticket_open_dates")
-        private Map<String, String> ticketOpenDates;
+        private Map<String, LocalDateTime> ticketOpenDates;
 
         @Schema(description = "티켓팅할 사이트 링크")
         @JsonProperty("booking_link")
@@ -71,6 +78,7 @@ public class SaveConcertDTO {
         @Schema(description = "잡다한 설명들")
         @JsonProperty("additional_info")
         private String additionalInfo;
+
     }
 
     @NoArgsConstructor
@@ -110,6 +118,16 @@ public class SaveConcertDTO {
 
         @Schema(description = "티켓 오픈 날짜")
         private LocalDateTime ticket_open_date;
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class ConcertArtistDTO {
+
+        @Schema(description = "아티스트")
+        private String name;
     }
 }
 

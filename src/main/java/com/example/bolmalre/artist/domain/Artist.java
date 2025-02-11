@@ -21,10 +21,8 @@ public class Artist extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Genre genre;
 

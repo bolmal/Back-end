@@ -23,7 +23,6 @@ public class SaveConcertController {
     private final SaveConcertService saveConcertService;
 
     @PostMapping("")
-    @ResponseStatus(HttpStatus.CREATED)
     public void saveConcerts(@RequestBody List<SaveConcertDTO.SaveRequestDTO> concertRequestList) {
 
         log.info("Request received: {}", concertRequestList);

@@ -86,7 +86,7 @@ class AlarmServiceImplTest {
                 .concertName("test1")
                 .concertPlace("서울 공연장")
                 .posterUrl("https://example.com/poster.jpg")
-                .concertRuntime("test") // 120분
+                .concertRuntime(100) // 120분
                 .concertAge("12세 이상")
                 .maxTicketsPerPerson("test")
                 .onlineStore("예매 사이트")

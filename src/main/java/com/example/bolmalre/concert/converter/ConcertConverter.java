@@ -38,7 +38,7 @@ public class ConcertConverter {
         return ConcertPageDTO.ConcertInfoDTO.builder()
                 .id(concert.getId())
                 .posterUrl(imageLink)
-                .concertName(concert.getConcertRuntime())
+                .concertName(concert.getConcertName())
                 .build();
     }
 
