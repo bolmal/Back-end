@@ -9,6 +9,7 @@ import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
 import com.example.bolmalre.member.service.port.AgreementRepository;
+import com.example.bolmalre.member.service.port.BCryptHolder;
 import com.example.bolmalre.member.service.port.LocalDateHolder;
 import com.example.bolmalre.member.service.port.MemberRepository;
 import com.example.bolmalre.member.web.dto.*;
@@ -46,7 +47,7 @@ class MemberServiceImplTest {
     AgreementRepository agreementRepository;
 
     @Mock
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    BCryptHolder bCryptHolder;
 
     @Mock
     LocalDateHolder localDateHolder;
@@ -117,7 +118,7 @@ class MemberServiceImplTest {
                 .serviceAgreement(true)
                 .build();
 
-        when(bCryptPasswordEncoder.encode(anyString())).thenReturn("encodedPassword");
+        when(bCryptHolder.encode(anyString())).thenReturn("encodedPassword");
         when(memberRepository.save(Mockito.any(Member.class))).thenReturn(mockMember);
         when(agreementRepository.save(Mockito.any(Agreement.class))).thenReturn(mockAgreement);
 
@@ -165,7 +166,7 @@ class MemberServiceImplTest {
                 .build();
 
         String encodedPassword = "encodedPassword";  // 해싱된 비밀번호
-        when(bCryptPasswordEncoder.encode(anyString())).thenReturn(encodedPassword);
+        when(bCryptHolder.encode(anyString())).thenReturn(encodedPassword);
         when(memberRepository.save(Mockito.any(Member.class))).thenReturn(mockMember);
         when(agreementRepository.save(Mockito.any(Agreement.class))).thenReturn(mockAgreement);
 
@@ -178,7 +179,7 @@ class MemberServiceImplTest {
 
         assertThat(mockMember.getPassword()).isEqualTo(encodedPassword);
 
-        verify(bCryptPasswordEncoder, Mockito.times(1)).encode(anyString());
+        verify(bCryptHolder, Mockito.times(1)).encode(anyString());
         verify(memberRepository, Mockito.times(1)).save(Mockito.any(Member.class));
     }
 
@@ -610,7 +611,7 @@ class MemberServiceImplTest {
                 .subStatus(SubStatus.UNSUBSCRIBE)
                 .build();
 
-        when(bCryptPasswordEncoder.encode(anyString())).thenReturn("updatedPassword");
+        when(bCryptHolder.encode(anyString())).thenReturn("updatedPassword");
         when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
 
         MemberUpdateDTO.MemberPasswordUpdateRequestDTO updateRequestDTO = MemberUpdateDTO.MemberPasswordUpdateRequestDTO.builder()
@@ -670,7 +671,7 @@ class MemberServiceImplTest {
                 .build();
 
         when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
-        when(bCryptPasswordEncoder.matches(anyString(), anyString())).thenReturn(true);
+        when(bCryptHolder.matches(anyString(), anyString())).thenReturn(true);
 
         //when
         memberService.validPassword("test123", updateRequestDTO);
@@ -724,7 +725,7 @@ class MemberServiceImplTest {
                 .build();
 
         when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
-        when(bCryptPasswordEncoder.matches(anyString(), anyString())).thenReturn(false);
+        when(bCryptHolder.matches(anyString(), anyString())).thenReturn(false);
 
         //when & then
         assertThatThrownBy(() -> memberService.validPassword("test123", updateRequestDTO))
@@ -836,7 +837,7 @@ class MemberServiceImplTest {
 
         when(memberRepository.findByUsername("test123")).thenReturn(Optional.ofNullable(member));
         when(memberRepository.findByNameAndPhoneNumber("test","010-1234-5678")).thenReturn(member);
-        when(bCryptPasswordEncoder.encode(anyString())).thenReturn("encoded_password");
+        when(bCryptHolder.encode(anyString())).thenReturn("encoded_password");
 
         //when
         MemberFindPasswordDTO.MemberFindPasswordResponseDTO response = memberService.getPassword(dto);

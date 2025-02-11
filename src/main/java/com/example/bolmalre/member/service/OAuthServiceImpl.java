@@ -6,6 +6,7 @@ import com.example.bolmalre.config.JWTConfig;
 import com.example.bolmalre.member.converter.MemberConverter;
 import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.enums.Role;
+import com.example.bolmalre.member.service.port.BCryptHolder;
 import com.example.bolmalre.member.service.port.MemberRepository;
 import com.example.bolmalre.member.service.port.UuidHolder;
 import com.example.bolmalre.member.util.KakaoUtil;
@@ -30,13 +31,13 @@ public class OAuthServiceImpl implements OAuthService {
     private final KakaoUtil kakaoUtil;
     private final NaverUtil naverUtil;
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
     private final RefreshTokenService refreshTokenService;
 
     private final JWTUtilImpl jwtUtil;
     private final JWTConfig jwtConfig;
 
     private final UuidHolder uuid;
+    private final BCryptHolder bCryptHolder;
 
     // 추후 추가 정보 기입을 위한 로직 필요
     @Override
@@ -79,7 +80,7 @@ public class OAuthServiceImpl implements OAuthService {
 
         if (byEmail == null) {
             byEmail = MemberConverter.toFrontKakaoMember(
-                    requestDTO.getName(), requestDTO.getEmail(), "front_social",passwordEncoder,uuid);
+                    requestDTO.getName(), requestDTO.getEmail(), "front_social",bCryptHolder,uuid);
 
             Member newMember = memberRepository.save(byEmail);
             loginProcess(httpServletResponse, newMember);
@@ -96,7 +97,7 @@ public class OAuthServiceImpl implements OAuthService {
                 naverProfile.getResponse().getEmail(),
                 naverProfile.getResponse().getName(),
                 "naver",
-                passwordEncoder,
+                bCryptHolder,
                 uuid
         );
         return memberRepository.save(newMember);
@@ -108,7 +109,7 @@ public class OAuthServiceImpl implements OAuthService {
                 kakaoProfile.getKakao_account().getEmail(),
                 kakaoProfile.getKakao_account().getProfile().getNickname(),
                 "kakao",
-                passwordEncoder,
+                bCryptHolder,
                 uuid
         );
         return memberRepository.save(newMember);

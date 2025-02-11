@@ -8,6 +8,7 @@ import com.example.bolmalre.member.domain.enums.Gender;
 import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
+import com.example.bolmalre.member.service.port.BCryptHolder;
 import com.example.bolmalre.member.service.port.UuidHolder;
 import com.example.bolmalre.member.web.dto.MemberFindPasswordDTO;
 import com.example.bolmalre.member.web.dto.MemberFindUsernameDTO;
@@ -71,7 +72,7 @@ public class MemberConverter {
                 .build();
     }
 
-    public static Member toOAuthMember(String email, String name, String password, BCryptPasswordEncoder passwordEncoder, UuidHolder uuid){
+    public static Member toOAuthMember(String email, String name, String password, BCryptHolder passwordEncoder, UuidHolder uuid){
 
         return Member.builder()
                 .username("oauth_" + UUID.randomUUID())
@@ -89,11 +90,11 @@ public class MemberConverter {
                 .build();
     }
 
-    public static Member toFrontKakaoMember(String email, String name, String password, BCryptPasswordEncoder passwordEncoder, UuidHolder uuid){
+    public static Member toFrontKakaoMember(String email, String name, String password, BCryptHolder bCryptHolder, UuidHolder uuid){
 
         return Member.builder()
                 .username("front_" + uuid.randomUUID())
-                .password(passwordEncoder.encode(password))
+                .password(bCryptHolder.encode(password))
                 .name(name)
                 .role(Role.ROLE_USER)
                 .phoneNumber("kakao_phone_" + uuid.randomUUID())
