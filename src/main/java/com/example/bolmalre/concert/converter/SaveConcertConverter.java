@@ -1,9 +1,7 @@
 package com.example.bolmalre.concert.converter;
 
-import com.example.bolmalre.concert.domain.Concert;
-import com.example.bolmalre.concert.domain.ConcertPerformanceRound;
-import com.example.bolmalre.concert.domain.ConcertPrice;
-import com.example.bolmalre.concert.domain.ConcertTicketRound;
+import com.example.bolmalre.artist.domain.Artist;
+import com.example.bolmalre.concert.domain.*;
 import com.example.bolmalre.concert.web.dto.SaveConcertDTO;
 
 import java.time.LocalDateTime;
@@ -23,7 +21,6 @@ public class SaveConcertConverter {
                 .maxTicketsPerPerson(dto.getMaxTicketsPerPerson())
                 .onlineStore(dto.getOnlineStore())
                 .onlineStoreLink(dto.getBookingLink())
-                .description(dto.getAdditionalInfo())
                 .ticketStatus(dto.getTicketStatus())
                 .build();
     }
@@ -38,11 +35,11 @@ public class SaveConcertConverter {
                 ).collect(Collectors.toList());
     }
 
-    public static List<ConcertTicketRound> toConcertTicketRounds(Map<String, String> ticketOpenDatesMap, Concert concert) {
+    public static List<ConcertTicketRound> toConcertTicketRounds(Map<String, LocalDateTime> ticketOpenDatesMap, Concert concert) {
         return ticketOpenDatesMap.entrySet().stream()
                 .map(entry -> ConcertTicketRound.builder()
                         .ticketRound(entry.getKey())          // 티켓 구분 (선예매, 일반 예매 등)
-                        .ticketOpenDate(LocalDateTime.parse(entry.getValue()))  // 티켓 오픈 날짜
+                        .ticketOpenDate(entry.getValue())// 티켓 오픈 날짜
                         .concert(concert)
                         .build()
                 ).collect(Collectors.toList());
@@ -55,4 +52,14 @@ public class SaveConcertConverter {
                 .concert(concert)
                 .build();
     }
+
+    public static ConcertArtist toConcertArtist(Artist artist, Concert concert) {
+        return ConcertArtist.builder()
+                .artist(artist)
+                .concert(concert)
+                .build();
+    }
+
+
+
 }

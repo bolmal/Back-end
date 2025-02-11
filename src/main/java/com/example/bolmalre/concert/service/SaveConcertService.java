@@ -1,5 +1,7 @@
 package com.example.bolmalre.concert.service;
 
+import com.example.bolmalre.artist.domain.Artist;
+import com.example.bolmalre.artist.infrastructure.ArtistRepository;
 import com.example.bolmalre.concert.converter.SaveConcertConverter;
 import com.example.bolmalre.concert.domain.*;
 import com.example.bolmalre.concert.infrastructure.*;
@@ -22,6 +24,8 @@ public class SaveConcertService {
     private final ConcertPriceRepository concertPriceRepository;
     private final ConcertPerformanceRoundRepository concertPerformanceRoundRepository;
     private final ConcertTicketRoundRepository concertTicketRoundRepository;
+    private final ConcertArtistRepository concertArtistRepository;
+    private final ArtistRepository artistRepository;
 
     public void saveConcerts(List<SaveConcertDTO.SaveRequestDTO> concertRequestList) {
         for (SaveConcertDTO.SaveRequestDTO dto : concertRequestList) {
@@ -52,6 +56,29 @@ public class SaveConcertService {
         if (dto.getTicketOpenDates() != null && !dto.getTicketOpenDates().isEmpty()) {
             List<ConcertTicketRound> ticketRounds = SaveConcertConverter.toConcertTicketRounds(dto.getTicketOpenDates(), concert);
             concertTicketRoundRepository.saveAll(ticketRounds);
+        }
+
+        // 5. 아티스트 정보 저장 (다대다 관계)
+        if (dto.getCasting() != null && !dto.getCasting().isEmpty()) {
+            List<ConcertArtist> concertArtists = dto.getCasting().stream()
+                    .map(artistDTO -> {
+                        // Artist 조회 또는 생성
+                        Artist artist = artistRepository.findByName(artistDTO.getName())
+                                .orElseGet(() -> {
+                                    Artist newArtist = Artist.builder()
+                                            .name(artistDTO.getName())
+                                            .build();
+                                    return artistRepository.save(newArtist);  // 새로운 Artist 저장
+                                });
+
+                        // ConcertArtist 생성
+                        return ConcertArtist.builder()
+                                .artist(artist)
+                                .concert(concert)
+                                .build();
+                    })
+                    .collect(Collectors.toList());
+            concertArtistRepository.saveAll(concertArtists);
         }
     }
 }
