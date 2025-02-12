@@ -26,7 +26,7 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
     Slice<Concert> findWeeklyTopViewedConcerts(Pageable pageable);
 
     @Query("SELECT DISTINCT c FROM Concert c " +
-            "JOIN c.concertTicketRounds ctr " +
+            "LEFT JOIN fetch ConcertTicketRound ctr on c.id = ctr.concert.id " +
             "WHERE ctr.ticketOpenDate BETWEEN :now AND :oneWeekLater")
     List<Concert> findConcertsWithTicketsOpeningInOneWeek(@Param("now") LocalDateTime now,
                                                           @Param("oneWeekLater") LocalDateTime oneWeekLater);

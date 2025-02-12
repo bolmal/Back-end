@@ -66,7 +66,6 @@ public class Concert extends BaseEntity {
     @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL)
     private List<ConcertArtist> concertArtists = new ArrayList<>();
 
-    // (ticket_open_dates)₩
     @OneToMany(mappedBy = "concert", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ConcertTicketRound> concertTicketRounds = new ArrayList<>();
 
