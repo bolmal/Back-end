@@ -7,11 +7,11 @@ import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
 import com.example.bolmalre.member.domain.enums.SubStatus;
 import com.example.bolmalre.member.service.MemberServiceImpl;
+import com.example.bolmalre.member.service.port.BCryptHolder;
 import com.example.bolmalre.member.service.port.LocalDateHolder;
 import com.example.bolmalre.member.service.port.MemberProfileImageRepository;
 import com.example.bolmalre.member.service.port.MemberRepository;
 import com.example.bolmalre.member.web.dto.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,14 +23,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -71,7 +69,7 @@ class MemberControllerTest {
     LocalDateHolder localDateHolder;
 
     @SpyBean
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    BCryptHolder bCryptHolder;
 
     Member member;
 
@@ -715,6 +713,8 @@ class MemberControllerTest {
                 .newPassword("NewPass12!")
                 .build();
 
+        when(bCryptHolder.encode(anyString())).thenReturn("encodedPassword");
+
         // when & then
         mockMvc.perform(patch("/members/profiles/passwords")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -724,8 +724,8 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("성공입니다."));
 
-        // BCrypt의 경우 숨어 있는 의존성으로서 추후 인터페이스화 해야합니다. 일단은 호출횟수로서 검증하고 따로 브랜치를 생성하여 수정하겠습니다 FIXME
-        verify(bCryptPasswordEncoder, Mockito.times(1)).encode(anyString());
+        assertThat(member.getPassword()).isEqualTo("encodedPassword");
+        verify(bCryptHolder, Mockito.times(1)).encode(anyString());
     }
 
 
@@ -749,7 +749,7 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
                 .andExpect(jsonPath("$.result.newPassword").value("비밀번호는 8~12자의 영문, 숫자, 특수문자를 포함해야 합니다"));
 
-        verify(bCryptPasswordEncoder, Mockito.times(0)).encode(anyString());
+        verify(bCryptHolder, Mockito.times(0)).encode(anyString());
     }
 
 
@@ -774,7 +774,7 @@ class MemberControllerTest {
     }
 
 
-   /* // BCrypt의 경우 숨어 있는 의존성으로서 추후 인터페이스화 해야합니다. 일단은 호출횟수로서 검증하고 따로 브랜치를 생성하여 수정하겠습니다 FIXME
+    // BCrypt의 경우 숨어 있는 의존성으로서 추후 인터페이스화 해야합니다. 일단은 호출횟수로서 검증하고 따로 브랜치를 생성하여 수정하겠습니다 FIXME
     @Test
     @DisplayName("validPassoword를 이용해서 회원의 비밀번호를 검증 할 수 있다")
     @WithMockUser(username = "test12", roles = "USER")
@@ -783,6 +783,8 @@ class MemberControllerTest {
         MemberPasswordValidDTO.MemberPasswordValidRequestDTO request = MemberPasswordValidDTO.MemberPasswordValidRequestDTO.builder()
                 .validPassword("Test123!")
                 .build();
+
+        when(bCryptHolder.matches(anyString(),anyString())).thenReturn(true);
 
         // when & then
         mockMvc.perform(patch("/members/profiles/passwords/valid")
@@ -793,8 +795,8 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.code").value("COMMON200"))
                 .andExpect(jsonPath("$.message").value("성공입니다."));
 
-        verify(bCryptPasswordEncoder, Mockito.times(1)).matches(anyString(),anyString());
-    }*/
+        verify(bCryptHolder, Mockito.times(1)).matches(anyString(),anyString());
+    }
 
 
     @Test

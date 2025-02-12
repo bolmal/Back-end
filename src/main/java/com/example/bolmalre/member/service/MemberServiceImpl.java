@@ -4,6 +4,7 @@ import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.converter.MemberConverter;
 import com.example.bolmalre.member.domain.enums.Status;
+import com.example.bolmalre.member.service.port.BCryptHolder;
 import com.example.bolmalre.member.service.port.LocalDateHolder;
 import com.example.bolmalre.member.web.dto.*;
 import com.example.bolmalre.member.web.port.MemberService;
@@ -31,9 +32,9 @@ import java.util.Optional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AgreementRepository agreementRepository;
 
+    private final BCryptHolder bCryptHolder;
     private final LocalDateHolder localDateHolder;
 
     @Override
@@ -42,7 +43,7 @@ public class MemberServiceImpl implements MemberService {
         authenticateAgreement(request);
         authenticateUsernameValid(request.getUsername());
 
-        String encodedPassword = bCryptPasswordEncoder.encode(request.getPassword());
+        String encodedPassword = bCryptHolder.encode(request.getPassword());
         Member newMember= MemberConverter.toMember(request,encodedPassword);
         Member savedMember = memberRepository.save(newMember);
 
@@ -106,7 +107,7 @@ public class MemberServiceImpl implements MemberService {
     public String resetPassword(String username, MemberUpdateDTO.MemberPasswordUpdateRequestDTO request) {
 
         Member memberByUsername = findMemberByUsername(username);
-        String newPassword = bCryptPasswordEncoder.encode(request.getNewPassword());
+        String newPassword = bCryptHolder.encode(request.getNewPassword());
 
         Member.resetPassword(memberByUsername,newPassword);
 
@@ -118,7 +119,7 @@ public class MemberServiceImpl implements MemberService {
 
         Member memberByUsername = findMemberByUsername(username);
 
-        if(!bCryptPasswordEncoder.matches(request.getValidPassword(), memberByUsername.getPassword())){
+        if(!bCryptHolder.matches(request.getValidPassword(), memberByUsername.getPassword())){
             throw new MemberHandler(ErrorStatus.MEMBER_PASSWORD_VALID);
         }
     }
@@ -136,7 +137,7 @@ public class MemberServiceImpl implements MemberService {
 
         authenticateUsername(request);
 
-        String newPassword = bCryptPasswordEncoder.encode(request.getNewPassword());
+        String newPassword = bCryptHolder.encode(request.getNewPassword());
         Member result = authenticateNameAndPhoneNumber(request.getName(), request.getPhoneNumber());
         Member.resetPassword(result, newPassword);
 
