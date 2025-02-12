@@ -17,8 +17,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/concert")
-@Tag(name = "콘서트 관련 API")
+@RequestMapping("/home")
+@Tag(name = "메인 페이지 조회 API")
 @Builder
 public class ConcertController {
 
@@ -35,15 +35,25 @@ public class ConcertController {
 
     }
 
+    // FIXME (로그인 전후)
     @Operation(summary = "지금 볼래 말래? 조회 API",
             description = "로그인을 안했을 경우에는 ")
-    @GetMapping("/")
-    public ApiResponse<List<ConcertHomeDTO.RecommendConcertDTO>> getRecommendConcert(
-            @RequestParam Long memberId
-    ) {
+    @GetMapping("/recommend")
+    public ApiResponse<List<ConcertHomeDTO.RecommendConcertDTO>> getRecommendConcert()
+    {
 
+        List<ConcertHomeDTO.RecommendConcertDTO> response = concertService.getRecommendConcertInfoBeforeLogin();
 
-        return null;
+        return ApiResponse.onSuccess(response);
 
+    }
+
+    @Operation(summary = "이번주 가장 인기 있는 콘서트")
+    @GetMapping("/hot")
+    public ApiResponse<List<ConcertHomeDTO.WeekHotConcertDTO>> getWeekHotConcert(){
+
+        List<ConcertHomeDTO.WeekHotConcertDTO> response = concertService.getWeekHotConcertInfo();
+
+        return ApiResponse.onSuccess(response);
     }
 }
