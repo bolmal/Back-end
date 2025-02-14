@@ -1,5 +1,8 @@
 package com.example.bolmalre.member.web.controller;
 
+import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
+import com.example.bolmalre.common.apiPayLoad.exception.handler.ImageHandler;
+import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.MemberProfileImage;
 import com.example.bolmalre.member.domain.enums.Gender;
@@ -34,6 +37,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -137,12 +141,122 @@ class MemberImageControllerTest {
 
     @Test
     @DisplayName("프로필 이미지를 두 장 이상 입력하면 정해진 예외를 반환한다")
-    public void title(){
-        //given
+    @WithMockUser(username = "test12", roles = "USER")
+    public void addImage_fail_image_count() throws Exception {
+        // Given
+        MockMultipartFile file1 = new MockMultipartFile(
+                "files",
+                "test1.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                "test image content 1".getBytes()
+        );
 
-        //when
+        MockMultipartFile file2 = new MockMultipartFile(
+                "files",
+                "test2.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                "test image content 2".getBytes()
+        );
+
+        // When
+        when(memberProfileImageService.uploadImages(
+                any(),
+                eq("member_profile_images"),
+                eq("test12")
+        )).thenThrow(new MemberHandler(ErrorStatus.MEMBER_IMAGE_COUNT_ERROR));
 
         //then
+        mockMvc.perform(multipart("/members/images")
+                        .file(file1)
+                        .file(file2))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("IMAGE4003"))
+                .andExpect(jsonPath("$.message").value("프로필 이미지는 한 장만 등록 가능합니다"));
     }
 
+
+    @Test
+    @DisplayName("이미 프로필 이미지가 등록되어있는데 프로필 이미지를 등록하면 정해진 예외를 반환한다")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void addImage_fail_exist() throws Exception {
+        //given
+        MockMultipartFile file1 = new MockMultipartFile(
+                "files",
+                "test1.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                "test image content 1".getBytes()
+        );
+
+        //when
+        when(memberProfileImageService.uploadImages(
+                any(),
+                eq("member_profile_images"),
+                eq("test12")
+        )).thenThrow(new MemberHandler(ErrorStatus.MEMBER_IMAGE_EXIST));
+
+        //then
+        mockMvc.perform(multipart("/members/images")
+                        .file(file1))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("IMAGE4001"))
+                .andExpect(jsonPath("$.message").value("프로필 이미지가 이미 등록되어 있습니다"));
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원의 프로필 사진을 등록하면 정해진 예외를 반환한다")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void addImage_fail_memberNotFound() throws Exception {
+        //given
+        MockMultipartFile file1 = new MockMultipartFile(
+                "files",
+                "test1.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                "test image content 1".getBytes());
+
+        //when
+        when(memberProfileImageService.uploadImages(
+                any(),
+                eq("member_profile_images"),
+                eq("test12")
+        )).thenThrow(new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        //then
+        mockMvc.perform(multipart("/members/images")
+                        .file(file1))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("MEMBER4004"))
+                .andExpect(jsonPath("$.message").value("회원을 찾을 수 없습니다"));
+    }
+
+
+    @Test
+    @DisplayName("이미지 업로드 중 오류가 발생하면 정해진 예외를 반환한다")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void addImage_fail_ImageUploadError() throws Exception {
+        //given
+        MockMultipartFile file1 = new MockMultipartFile(
+                "files",
+                "test1.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                "test image content 1".getBytes());
+
+        //when
+        when(memberProfileImageService.uploadImages(
+                any(),
+                eq("member_profile_images"),
+                eq("test12")
+        )).thenThrow(new ImageHandler(ErrorStatus.IMAGE_UPLOAD_ERROR));
+
+        //then
+        mockMvc.perform(multipart("/members/images")
+                        .file(file1))
+                .andExpect(status().isBadGateway())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("IMAGE5004"))
+                .andExpect(jsonPath("$.message").value("이미지 등록 중 오류가 발생하였습니다"));
+    }
 }
