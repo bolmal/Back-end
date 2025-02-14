@@ -45,8 +45,8 @@ public class MemberImageController {
     @DeleteMapping("")
     public ApiResponse<String> deleteImage(@AuthenticationPrincipal UserDetails userDetails) throws FileNotFoundException {
 
-        memberProfileImageService.deleteImage(userDetails.getUsername());
-        return ApiResponse.onSuccess("Image deleted successfully");
+        String result = memberProfileImageService.deleteImage(userDetails.getUsername());
+        return ApiResponse.onSuccess(result);
     }
 
     // 이미지 조회

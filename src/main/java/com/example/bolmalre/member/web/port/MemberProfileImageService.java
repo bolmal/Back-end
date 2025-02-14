@@ -13,7 +13,7 @@ public interface MemberProfileImageService {
     List<String> uploadImages(List<MultipartFile> files, String dirName, String username);
 
     @Transactional
-    void deleteImage(String username) throws FileNotFoundException;
+    String deleteImage(String username) throws FileNotFoundException;
 
     String findImageByFileName(String fileName);
 

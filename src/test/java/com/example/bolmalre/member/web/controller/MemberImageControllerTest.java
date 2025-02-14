@@ -4,7 +4,6 @@ import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.ImageHandler;
 import com.example.bolmalre.common.apiPayLoad.exception.handler.MemberHandler;
 import com.example.bolmalre.member.domain.Member;
-import com.example.bolmalre.member.domain.MemberProfileImage;
 import com.example.bolmalre.member.domain.enums.Gender;
 import com.example.bolmalre.member.domain.enums.Role;
 import com.example.bolmalre.member.domain.enums.Status;
@@ -29,17 +28,16 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -121,14 +119,13 @@ class MemberImageControllerTest {
                 "https://test-bucket.com/test1.jpg"
         );
 
-        //when
         when(memberProfileImageService.uploadImages(
                 any(),
                 eq("member_profile_images"),
                 eq("test12")
         )).thenReturn(expectedUrls);
 
-        //then
+        // when & then
         mockMvc.perform(multipart("/members/images")
                         .file(file1))
                 .andExpect(status().isOk())
@@ -158,14 +155,13 @@ class MemberImageControllerTest {
                 "test image content 2".getBytes()
         );
 
-        // When
         when(memberProfileImageService.uploadImages(
                 any(),
                 eq("member_profile_images"),
                 eq("test12")
         )).thenThrow(new MemberHandler(ErrorStatus.MEMBER_IMAGE_COUNT_ERROR));
 
-        //then
+        // when & then
         mockMvc.perform(multipart("/members/images")
                         .file(file1)
                         .file(file2))
@@ -188,14 +184,13 @@ class MemberImageControllerTest {
                 "test image content 1".getBytes()
         );
 
-        //when
         when(memberProfileImageService.uploadImages(
                 any(),
                 eq("member_profile_images"),
                 eq("test12")
         )).thenThrow(new MemberHandler(ErrorStatus.MEMBER_IMAGE_EXIST));
 
-        //then
+        // when & then
         mockMvc.perform(multipart("/members/images")
                         .file(file1))
                 .andExpect(status().isBadRequest())
@@ -216,14 +211,13 @@ class MemberImageControllerTest {
                 MediaType.IMAGE_JPEG_VALUE,
                 "test image content 1".getBytes());
 
-        //when
         when(memberProfileImageService.uploadImages(
                 any(),
                 eq("member_profile_images"),
                 eq("test12")
         )).thenThrow(new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        //then
+        // when & then
         mockMvc.perform(multipart("/members/images")
                         .file(file1))
                 .andExpect(status().isNotFound())
@@ -244,19 +238,87 @@ class MemberImageControllerTest {
                 MediaType.IMAGE_JPEG_VALUE,
                 "test image content 1".getBytes());
 
-        //when
         when(memberProfileImageService.uploadImages(
                 any(),
                 eq("member_profile_images"),
                 eq("test12")
         )).thenThrow(new ImageHandler(ErrorStatus.IMAGE_UPLOAD_ERROR));
 
-        //then
+        //when & then
         mockMvc.perform(multipart("/members/images")
                         .file(file1))
                 .andExpect(status().isBadGateway())
                 .andExpect(jsonPath("$.isSuccess").value(false))
                 .andExpect(jsonPath("$.code").value("IMAGE5004"))
                 .andExpect(jsonPath("$.message").value("이미지 등록 중 오류가 발생하였습니다"));
+    }
+
+
+    @Test
+    @DisplayName("deleteImage()를 이용하여 회원의 프로필 이미지를 삭제 할 수 있다")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void deleteImage_success() throws Exception {
+        //given
+
+        //when & then
+        mockMvc.perform(delete("/members/images"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isSuccess").value(true))
+                .andExpect(jsonPath("$.code").value("COMMON200"))
+                .andExpect(jsonPath("$.message").value("성공입니다."));
+    }
+
+
+    @Test
+    @DisplayName("삭제 할 이미지가 없으면 정해진 예외를 반환한다")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void deleteImage_fail_ImageNotFound() throws Exception {
+        //given
+        when(memberProfileImageService.deleteImage(
+                any()
+        )).thenThrow(new ImageHandler(ErrorStatus.IMAGE_NOT_FOUND));
+
+        //when & then
+        mockMvc.perform(delete("/members/images"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("IMAGE4002"))
+                .andExpect(jsonPath("$.message").value("이미지를 찾을 수 없습니다"));
+    }
+
+
+    @Test
+    @DisplayName("존재하지 않는 회원의 이미지를 삭제하려하면 정해진 예외를 반환한다")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void deleteImage_fail_MemberNotFound() throws Exception {
+        //given
+        when(memberProfileImageService.deleteImage(
+                any()
+        )).thenThrow(new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        //when & then
+        mockMvc.perform(delete("/members/images"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("MEMBER4004"))
+                .andExpect(jsonPath("$.message").value("회원을 찾을 수 없습니다"));
+    }
+
+
+    @Test
+    @DisplayName("회원의 이미지 삭제 중 오류가 발생하면 정해진 예외를 반환한다")
+    @WithMockUser(username = "test12", roles = "USER")
+    public void title() throws Exception {
+        //given
+        when(memberProfileImageService.deleteImage(
+                any()
+        )).thenThrow(new ImageHandler(ErrorStatus.IMAGE_REMOVE_ERROR));
+
+        //when & then
+        mockMvc.perform(delete("/members/images"))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(jsonPath("$.isSuccess").value(false))
+                .andExpect(jsonPath("$.code").value("IMAGE5002"))
+                .andExpect(jsonPath("$.message").value("이미지 삭제 중 오류가 발생하였습니다"));
     }
 }

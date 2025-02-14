@@ -81,7 +81,7 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
 
     @Override
     @Transactional
-    public void deleteImage(String username) throws FileNotFoundException {
+    public String deleteImage(String username) throws FileNotFoundException {
 
         // username 에 해당하는 이미지 리스트 조회
         List<String> findImageByMember = findImagesByUsername(username);
@@ -122,6 +122,8 @@ public class MemberProfileImageServiceImpl implements MemberProfileImageService 
 
             memberRepository.save(memberByUsername);
         }
+
+        return "정상적으로 삭제되었습니다";
     }
 
 
