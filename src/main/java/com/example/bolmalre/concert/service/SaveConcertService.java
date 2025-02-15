@@ -39,26 +39,44 @@ public class SaveConcertService {
         concertRepository.save(concert);
 
         // 2. ConcertPrice 엔티티 저장 (Map 데이터 처리)
+        saveConcertPrices(dto, concert);
+
+        // 3. ConcertPerformanceRound 엔티티 저장
+        saveConcertPerformanceRounds(dto, concert);
+
+        // 4. ConcertTicketRound 엔티티 저장 (Map 데이터 처리)
+        saveConcertTicketRounds(dto, concert);
+
+
+        // 5. 아티스트 정보 저장 (다대다 관계)
+        saveConcertArtist(dto, concert);
+
+    }
+
+    private void saveConcertPrices(SaveConcertDTO.SaveRequestDTO dto, Concert concert) {
         if (dto.getPrice() != null && !dto.getPrice().isEmpty()) {
             List<ConcertPrice> prices = SaveConcertConverter.toConcertPrices(dto.getPrice(), concert);
             concertPriceRepository.saveAll(prices);
         }
+    }
 
-        // 3. ConcertPerformanceRound 엔티티 저장
+    private void saveConcertPerformanceRounds(SaveConcertDTO.SaveRequestDTO dto, Concert concert) {
         if (dto.getPerformanceRounds() != null && !dto.getPerformanceRounds().isEmpty()) {
             List<ConcertPerformanceRound> rounds = dto.getPerformanceRounds().stream()
                     .map(roundDTO -> SaveConcertConverter.toConcertPerformanceRound(roundDTO, concert))
                     .collect(Collectors.toList());
             concertPerformanceRoundRepository.saveAll(rounds);
         }
+    }
 
-        // 4. ConcertTicketRound 엔티티 저장 (Map 데이터 처리)
+    private void saveConcertTicketRounds(SaveConcertDTO.SaveRequestDTO dto, Concert concert) {
         if (dto.getTicketOpenDates() != null && !dto.getTicketOpenDates().isEmpty()) {
             List<ConcertTicketRound> ticketRounds = SaveConcertConverter.toConcertTicketRounds(dto.getTicketOpenDates(), concert);
             concertTicketRoundRepository.saveAll(ticketRounds);
         }
+    }
 
-        // 5. 아티스트 정보 저장 (다대다 관계)
+    private void saveConcertArtist(SaveConcertDTO.SaveRequestDTO dto, Concert concert) {
         if (dto.getCasting() != null && !dto.getCasting().isEmpty()) {
             List<ConcertArtist> concertArtists = dto.getCasting().stream()
                     .map(artistDTO -> {
