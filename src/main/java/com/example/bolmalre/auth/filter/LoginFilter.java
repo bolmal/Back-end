@@ -27,10 +27,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -69,13 +66,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         }
     }
 
-    //Authentication authentication에서 유저정보를 ㅏㄱ져옴
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
 
         log.info("로그인 성공");
 
-        //유저 정보
+        // 유저 정보 가져오기
         String username = authentication.getName();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -83,52 +79,75 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        //토큰 생성
-        String access = jwtUtil.createJwt("access", username, role, jwtConfig.getAccessTokenValidityInSeconds());// 1시간
-        String refresh = jwtUtil.createJwt("refresh", username, role, jwtConfig.getRefreshTokenValidityInSeconds());//30일
+        // JWT 토큰 생성
+        String access = jwtUtil.createJwt("access", username, role, jwtConfig.getAccessTokenValidityInSeconds()); // 1시간
+        String refresh = jwtUtil.createJwt("refresh", username, role, jwtConfig.getRefreshTokenValidityInSeconds()); // 30일
 
-        //응답 설정
+        // 응답 헤더 및 쿠키 설정
         response.setHeader("access", access);
         response.addCookie(createCookie("refresh", refresh));
 
-        refreshTokenService.addRefreshEntity(username,refresh, jwtConfig.getRefreshTokenValidityInSeconds());
+        refreshTokenService.addRefreshEntity(username, refresh, jwtConfig.getRefreshTokenValidityInSeconds());
 
-        response.setStatus(HttpStatus.OK.value());
-
-
-
-
+        // 유저 정보 조회
         Member byUsername = memberRepository.findByUsername(username)
-                .orElseThrow(()-> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         Member.setLogin(byUsername);
+        memberRepository.save(byUsername);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        var responseBody = new HashMap<String, Object>();
-        responseBody.put("memberId", byUsername.getId());
-        responseBody.put("name", byUsername.getName());
-        responseBody.put("isLogin", byUsername.isLogin());
-        responseBody.put("upComming", "test");
-        responseBody.put("alarmCount", byUsername.getAlarmAccount());
-        responseBody.put("bookmarkCount", byUsername.getBookmarkAccount());
-        responseBody.put("isSubscribe", byUsername.getStatus());
-        responseBody.put("imagePath","test_image");
+        var responseBody = new LinkedHashMap<String, Object>();
 
-        memberRepository.save(byUsername);
+        responseBody.put("isSuccess", true);
+        responseBody.put("code", "COMMON200");
+        responseBody.put("message", "성공입니다");
 
-        // JSON 응답 반환
+        var result = new LinkedHashMap<String, Object>();
+        result.put("isLogin", byUsername.isLogin());
+        result.put("alarmCount", byUsername.getAlarmAccount());
+        result.put("upComming", "test");
+        result.put("imagePath", "test_image");
+        result.put("name", byUsername.getName());
+        result.put("bookmarkCount", byUsername.getBookmarkAccount());
+        result.put("isSubscribe", byUsername.getStatus());
+        result.put("memberId", byUsername.getId());
+
+        responseBody.put("result", result);
+
+        // JSON 변환 후 응답
+        ObjectMapper objectMapper = new ObjectMapper();
         response.getWriter().write(objectMapper.writeValueAsString(responseBody));
-        response.setStatus(HttpStatus.OK.value());
 
+        response.setStatus(HttpStatus.OK.value());
     }
+
+
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
 
-        response.setStatus(401);
+        log.info("로그인 실패");
+
+        response.setStatus(HttpStatus.UNAUTHORIZED.value()); // 401 상태 코드 설정
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        // 순서를 유지하기 위해 LinkedHashMap 사용
+        var responseBody = new LinkedHashMap<String, Object>();
+
+        responseBody.put("isSuccess", false);
+        responseBody.put("code", "MEMBER4010");
+        responseBody.put("message", "로그인에 실패하였습니다");
+        responseBody.put("result", new LinkedHashMap<>()); // 빈 객체 유지
+
+        // JSON 변환 후 응답
+        ObjectMapper objectMapper = new ObjectMapper();
+        response.getWriter().write(objectMapper.writeValueAsString(responseBody));
     }
+
 
 
 
