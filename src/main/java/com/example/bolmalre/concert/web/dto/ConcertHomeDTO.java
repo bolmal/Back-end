@@ -40,8 +40,11 @@ public class ConcertHomeDTO {
         @Schema(description = "콘서트 포스터 URL")
         private String posterUrl;
 
-        @Schema(description = "콘서트 티켓 오픈 일정")
-        private List<SaveConcertDTO.ConcertTicketRoundDTO> concertTicketRoundDTOList;
+        @Schema(description = "선예매, 1차 예매, 2차 예매")
+        private String round;
+
+        @Schema(description = "티켓 오픈 날짜")
+        private LocalDateTime ticketOpenDate;
 
         @Schema(description = "콘서트 이름")
         private String concertName;
