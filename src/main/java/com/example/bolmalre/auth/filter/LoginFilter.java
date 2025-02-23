@@ -109,7 +109,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         result.put("isLogin", byUsername.isLogin());
         result.put("alarmCount", byUsername.getAlarmAccount());
         result.put("upComming", "test");
-        result.put("imagePath", "test_image");
+        result.put("imagePath", "https://bolmal-buckets.s3.ap-northeast-2.amazonaws.com/member_profile_images/%E1%84%80%E1%85%A9%E1%84%86%E1%85%B5%E1%86%AB.jpg");
         result.put("name", byUsername.getName());
         result.put("bookmarkCount", byUsername.getBookmarkAccount());
         result.put("isSubscribe", byUsername.getStatus());
