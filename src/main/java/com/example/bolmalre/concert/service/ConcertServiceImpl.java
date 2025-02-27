@@ -1,195 +1,181 @@
 package com.example.bolmalre.concert.service;
 
 import com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus;
-import com.example.bolmalre.common.apiPayLoad.exception.handler.ImageHandler;
+import com.example.bolmalre.common.apiPayLoad.exception.handler.ConcertHandler;
 import com.example.bolmalre.concert.converter.ConcertConverter;
+import com.example.bolmalre.concert.converter.ConcertDtoConverter;
 import com.example.bolmalre.concert.domain.Concert;
-import com.example.bolmalre.concert.domain.ConcertImage;
 import com.example.bolmalre.concert.domain.ConcertPerformanceRound;
-import com.example.bolmalre.concert.infrastructure.ConcertImageRepository;
-import com.example.bolmalre.concert.infrastructure.ConcertPerformanceRoundRepository;
-import com.example.bolmalre.concert.infrastructure.ConcertRepository;
-import com.example.bolmalre.concert.infrastructure.ConcertTicketRoundRepository;
+import com.example.bolmalre.concert.domain.ConcertPrice;
+import com.example.bolmalre.concert.domain.ConcertTicketRound;
+import com.example.bolmalre.concert.infrastructure.*;
 import com.example.bolmalre.concert.web.dto.ConcertDetailPageDTO;
 import com.example.bolmalre.concert.web.dto.ConcertHomeDTO;
 import com.example.bolmalre.concert.web.dto.ConcertPageDTO;
-import com.example.bolmalre.concert.web.dto.SaveConcertDTO;
 import com.example.bolmalre.concert.web.port.ConcertService;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+@Builder
 @Service
 @Transactional
 @RequiredArgsConstructor
-@Builder
 public class ConcertServiceImpl implements ConcertService {
 
     private final ConcertRepository concertRepository;
     private final ConcertImageRepository concertImageRepository;
     private final ConcertTicketRoundRepository concertTicketRoundRepository;
     private final ConcertPerformanceRoundRepository concertPerformanceRoundRepository;
+    private final ConcertPriceRepository concertPriceRepository;
+    private final ConcertConverter converter;
 
     // 홈 광고 조회
     @Override
     public List<ConcertHomeDTO.AdvertisementConcertDTO> getAdConcertInfo() {
-
-        Slice<Concert> adConcertList = concertRepository.findByAdvertisementIsTrue();
-
-
-        return adConcertList.stream()
-                .map(ConcertConverter::toAdvertisementConcertDTO)
+        return concertRepository.findByAdvertisementIsTrue().stream()
+                .map(ConcertDtoConverter::toAdvertisementConcertDTO)
                 .collect(Collectors.toList());
-
     }
 
     // 홈 지금 볼래 말래? ( 로그인 이전 )
     @Override
     public List<ConcertHomeDTO.RecommendConcertDTO> getRecommendConcertInfoBeforeLogin() {
-
-
-        boolean isLoggedIn = isUserLoggedIn();
-
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "dailyViewCount"));
-
-        Slice<Concert> concerts = concertRepository.findTodayTopViewedConcerts(pageable);
-
-        return concerts.stream()
-                .map(concert -> {
-
-                    // concert를 통해 concertTicketRound 정보를 가져와 ConcertTicketRoundDTO로 변환 해서 List로 만들기
-                    List<SaveConcertDTO.ConcertTicketRoundDTO> concertTicketRoundDTOList = concertTicketRoundRepository.findByConcert(concert)
-                            .stream()
-                            .map(concertTicketRound -> SaveConcertDTO.ConcertTicketRoundDTO.builder()
-                                    .ticket_round(concertTicketRound.getTicketRound())
-                                    .ticket_open_date(concertTicketRound.getTicketOpenDate())
-                                    .build()
-                            )
-                            .collect(Collectors.toList());
-
-                    // ConcertPerformanceRound 조회해서 startDate, endDate를 담은 DateRangeDTO 만들기
-                    List<ConcertPerformanceRound> rounds = concertPerformanceRoundRepository.findAllByConcert(concert);
-
-                    LocalDate startDate = null;
-                    LocalDate endDate = null;
-
-                    if (!rounds.isEmpty()) {
-                        startDate = rounds.stream()
-                                .filter(round -> round.getRound() == 1)
-                                .map(round -> round.getConcertDate().toLocalDate())
-                                .findFirst()
-                                .orElse(null);
-
-                        endDate = rounds.stream()
-                                .max(Comparator.comparingInt(ConcertPerformanceRound::getRound))
-                                .map(round -> round.getConcertDate().toLocalDate())
-                                .orElse(null);
-                    }
-
-                    ConcertHomeDTO.DateRangeDTO concertDateDTO = ConcertHomeDTO.DateRangeDTO.builder()
-                            .startDate(startDate)
-                            .endDate(endDate)
-                            .build();
-
-
-                    return ConcertConverter.toRecommendConcertDTO(concert, concertTicketRoundDTOList, concertDateDTO);
-                })
-                .collect(Collectors.toList());
+        return convertConcertsToRecommendDTO(concertRepository.findTodayTopViewedConcerts(pageable));
     }
 
-    // 홈 지금 볼래 말래? (로그인 이후) FIXME (추천도 점수 추후 추가 (1차 배포엔 해당 사항 없음))
-    @Override
-    public List<ConcertHomeDTO.RecommendConcertDTO> getRecommendConcertInfoAfterLogin(Long memberId) {
+    // 홈 지금 볼래 말래? ( 로그인 이후) FIXME 추천도 점수 포함해야함
+//    @Override
+//    public List<ConcertHomeDTO.RecommendConcertDTO> getRecommendConcertInfoAfterLogin(Long memberId) {
+//        return
+//    }
 
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "dailyViewCount"));
-
-        Slice<Concert> concerts;
-        return List.of();
-    }
-
-    // 홈 이번주 가장 인기 있는 티켓( 주간 조회수 기준) FIXME( 알림 개수 추가 필요 (1차 배포엔 해당 사항 없음) )
+    // 홈 이번주 가장 인기 있는 티켓 (주간 조회수 기준)
     @Override
     public List<ConcertHomeDTO.WeekHotConcertDTO> getWeekHotConcertInfo() {
-
         Pageable pageable = PageRequest.of(0, 8, Sort.by(Sort.Direction.DESC, "weeklyViewCount"));
-
-        Slice<Concert> weekHotConcertList = concertRepository.findWeeklyTopViewedConcerts(pageable);
-
-        return weekHotConcertList.stream()
-                .map(concert -> {
-
-                    // FIXME (중복로직 처리 리팩터링)
-                    // concert를 통해 concertTicketRound 정보를 가져와 ConcertTicketRoundDTO로 변환 해서 List로 만들기
-                    List<SaveConcertDTO.ConcertTicketRoundDTO> concertTicketRoundDTOList = concertTicketRoundRepository.findByConcert(concert)
-                            .stream()
-                            .map(concertTicketRound -> SaveConcertDTO.ConcertTicketRoundDTO.builder()
-                                    .ticket_round(concertTicketRound.getTicketRound())
-                                    .ticket_open_date(concertTicketRound.getTicketOpenDate())
-                                    .build()
-                            )
-                            .collect(Collectors.toList());
-
-                    // ConcertPerformanceRound 조회해서 startDate, endDate를 담은 DateRangeDTO 만들기
-                    List<ConcertPerformanceRound> rounds = concertPerformanceRoundRepository.findAllByConcert(concert);
-
-                    LocalDate startDate = null;
-                    LocalDate endDate = null;
-
-                    if (!rounds.isEmpty()) {
-                        startDate = rounds.stream()
-                                .filter(round -> round.getRound() == 1)
-                                .map(round -> round.getConcertDate().toLocalDate())
-                                .findFirst()
-                                .orElse(null);
-
-                        endDate = rounds.stream()
-                                .max(Comparator.comparingInt(ConcertPerformanceRound::getRound))
-                                .map(round -> round.getConcertDate().toLocalDate())
-                                .orElse(null);
-                    }
-
-                    ConcertHomeDTO.DateRangeDTO concertDateDTO = ConcertHomeDTO.DateRangeDTO.builder()
-                            .startDate(startDate)
-                            .endDate(endDate)
-                            .build();
-
-
-                    return ConcertConverter.toWeekHotConcertDTO(concert, concertTicketRoundDTOList, concertDateDTO);
-                })
-                .collect(Collectors.toList());
+        return convertConcertsToWeekHotDTO(concertRepository.findWeeklyTopViewedConcerts(pageable));
     }
 
-    // 콘서트 페이지 (20개씩 페이징)
+    // 콘서트 카테고리 눌렀을 때 페이지
     @Override
     public List<ConcertPageDTO.ConcertInfoDTO> getConcertPageInfo(int page, int size) {
         return List.of();
     }
 
-    // 콘서트 상세 정보 페이지
+    // 콘서트 상세 정보
     @Override
-    public ConcertDetailPageDTO.ConcertDetailDTO getConcertDetailInfo() {
-        return null;
+    public ConcertDetailPageDTO.ConcertDetailDTO getConcertDetailInfo(Long concertId) {
+
+        // 콘서트 찾기
+        Concert targetConcert = findConcertById(concertId);
+
+        // 해당 콘서트 관련 정보 (티켓 정보, 공연 날짜, 티켓 가격)
+        String ticketInfo = converter.convertTicketRoundListToString(findTicketRoundByConcert(targetConcert));
+
+        String concertDate = converter.convertConcertPerformanceRoundListToString(findConcertPerformanceRoundByConcert(targetConcert));
+
+        String ticketPrice = converter.convertTicketPriceListToString(findTicketPriceByConcert(targetConcert));
+
+
+        // dto로 전환해서 뱉기
+        return ConcertDtoConverter.toConcertDetailDTO(targetConcert, ticketInfo, concertDate,ticketPrice);
     }
 
-    // 로그인 여부 확인
-    private boolean isUserLoggedIn() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null && authentication.isAuthenticated();
+
+    // 콘서트 찾기
+    private Concert findConcertById(Long concertId) {
+
+        return concertRepository.findById(concertId)
+                .orElseThrow(() -> new ConcertHandler(ErrorStatus.CONCERT_NOT_FOUND));
     }
 
-    // 이미지 가져오기
-    private String getConcertImageLink(Concert concert) {
-        return concertImageRepository.findByConcert(concert)
-                .map(ConcertImage::getImageLink)
-                .orElseThrow(() -> new ImageHandler(ErrorStatus.IMAGE_NOT_FOUND));
+    // 티켓 공연 정보 다 가져오기
+    private List<ConcertTicketRound> findTicketRoundByConcert(Concert concert) {
+        return concertTicketRoundRepository.findAllByConcert(concert);
+    }
+
+    // 티켓 가격 정보 다 가져오기
+    private List<ConcertPrice> findTicketPriceByConcert(Concert concert) {
+        return concertPriceRepository.findAllByConcert(concert);
+    }
+
+    // 공연 날짜 정보 다 가져오기
+    private List<ConcertPerformanceRound> findConcertPerformanceRoundByConcert(Concert concert) {
+        return concertPerformanceRoundRepository.findAllByConcert(concert);
+    }
+
+
+
+    /**
+     * Concert 리스트를 받아서 RecommendConcertDTO 리스트로 변환
+     */
+    private List<ConcertHomeDTO.RecommendConcertDTO> convertConcertsToRecommendDTO(Slice<Concert> concerts) {
+        return concerts.stream()
+                .map(concert -> {
+                    Optional<ConcertTicketRound> ticketRounds = getConcertTicketRounds(concert);
+                    ConcertHomeDTO.DateRangeDTO dateRange = createConcertRoundDate(concert);
+
+                    assert ticketRounds.orElse(null) != null;
+                    return ConcertDtoConverter.toRecommendConcertDTO(concert, ticketRounds.orElse(null), dateRange);
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Concert 리스트를 받아서 WeekHotConcertDTO 리스트로 변환
+     */
+    private List<ConcertHomeDTO.WeekHotConcertDTO> convertConcertsToWeekHotDTO(Slice<Concert> concerts) {
+        return concerts.stream()
+                .map(concert -> {
+                    Optional<ConcertTicketRound> ticketRound = getConcertTicketRounds(concert);
+                    ConcertHomeDTO.DateRangeDTO dateRange = createConcertRoundDate(concert);
+
+                    assert ticketRound.orElse(null) != null;
+                    return ConcertDtoConverter.toWeekHotConcertDTO(concert, ticketRound.orElse(null), dateRange);
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Concert의 티켓 라운드 정보를 DTO 리스트로 변환
+     */
+    private Optional<ConcertTicketRound> getConcertTicketRounds(Concert concert) {
+        LocalDateTime today = LocalDateTime.now();
+        return concertTicketRoundRepository.findFirstByConcertAndTicketOpenDateAfterOrderByTicketOpenDateAsc(concert, today);
+    }
+
+    /**
+     * Concert의 공연 일정 정보를 DTO로 변환
+     */
+    private ConcertHomeDTO.DateRangeDTO createConcertRoundDate(Concert concert) {
+        List<ConcertPerformanceRound> rounds = concertPerformanceRoundRepository.findAllByConcert(concert);
+
+        LocalDate startDate = rounds.stream()
+                .filter(round -> round.getRound() == 1)
+                .map(round -> round.getConcertDate().toLocalDate())
+                .findFirst()
+                .orElse(null);
+
+        LocalDate endDate = rounds.stream()
+                .max(Comparator.comparingInt(ConcertPerformanceRound::getRound))
+                .map(round -> round.getConcertDate().toLocalDate())
+                .orElse(null);
+
+        return ConcertHomeDTO.DateRangeDTO.builder()
+                .startDate(startDate)
+                .endDate(endDate)
+                .build();
     }
 }

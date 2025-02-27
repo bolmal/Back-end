@@ -15,7 +15,7 @@ public interface ConcertService {
     List<ConcertHomeDTO.RecommendConcertDTO> getRecommendConcertInfoBeforeLogin();
 
     // 홈 지금 볼래 말래? ( 로그인 여부 판별 필)
-    List<ConcertHomeDTO.RecommendConcertDTO> getRecommendConcertInfoAfterLogin(Long memberId);
+//    List<ConcertHomeDTO.RecommendConcertDTO> getRecommendConcertInfoAfterLogin(Long memberId);
 
     // 홈 이번주 가장 인기 있는 티켓
     List<ConcertHomeDTO.WeekHotConcertDTO> getWeekHotConcertInfo();
@@ -24,6 +24,6 @@ public interface ConcertService {
     List<ConcertPageDTO.ConcertInfoDTO> getConcertPageInfo(int page, int size);
 
     // 콘서트 상세 정보 페이지
-    ConcertDetailPageDTO.ConcertDetailDTO getConcertDetailInfo();
+    ConcertDetailPageDTO.ConcertDetailDTO getConcertDetailInfo(Long concertId);
 
 }
