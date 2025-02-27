@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.core.service.GenericResponseService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.List;
 @RequestMapping("/home")
 @Tag(name = "메인 페이지 조회 API")
 @Builder
-public class ConcertController {
+public class HomeConcertController {
 
     private final ConcertService concertService;
     private final GenericResponseService responseBuilder;
@@ -56,4 +55,5 @@ public class ConcertController {
 
         return ApiResponse.onSuccess(response);
     }
+
 }
