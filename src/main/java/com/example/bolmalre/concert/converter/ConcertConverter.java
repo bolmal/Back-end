@@ -1,64 +1,56 @@
 package com.example.bolmalre.concert.converter;
 
 import com.example.bolmalre.concert.domain.Concert;
+import com.example.bolmalre.concert.domain.ConcertPerformanceRound;
+import com.example.bolmalre.concert.domain.ConcertPrice;
+import com.example.bolmalre.concert.domain.ConcertTicketRound;
 import com.example.bolmalre.concert.web.dto.ConcertDetailPageDTO;
 import com.example.bolmalre.concert.web.dto.ConcertHomeDTO;
 import com.example.bolmalre.concert.web.dto.ConcertPageDTO;
-import com.example.bolmalre.concert.web.dto.SaveConcertDTO;
+import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
-
+@Component
 public class ConcertConverter {
 
-    // 광고 DTO Converter
-    public static ConcertHomeDTO.AdvertisementConcertDTO toAdvertisementConcertDTO(Concert concert) {
 
-        return ConcertHomeDTO.AdvertisementConcertDTO.builder()
-                .id(concert.getId())
-                .posterUrl(concert.getPosterUrl())
-                .build();
 
+    public String convertTicketRoundListToString(List<ConcertTicketRound> ctr) {
+        if (ctr.isEmpty()) return "티켓팅 일정 없음";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 (E) HH:mm", Locale.KOREAN);
+        return ctr.stream()
+                .map(round -> round.getTicketRound() + "(" + round.getTicketOpenDate().format(formatter) + ")")
+                .collect(Collectors.joining(", "));
     }
 
-    // 지금 볼래말래 DTO Converter
-    public static ConcertHomeDTO.RecommendConcertDTO toRecommendConcertDTO(
-            Concert concert, List<SaveConcertDTO.ConcertTicketRoundDTO> concertTicketRoundDTOList,
-            ConcertHomeDTO.DateRangeDTO concertRange) {
-        return ConcertHomeDTO.RecommendConcertDTO.builder()
-                .id(concert.getId())
-                .posterUrl(concert.getPosterUrl())
-                .concertTicketRoundDTOList(concertTicketRoundDTOList)
-                .concertName(concert.getConcertName())
-                .concertDate(concertRange)  // 콘서트 날짜
-                .build();
+    public String convertTicketPriceListToString(List<ConcertPrice> cp) {
+        if (cp.isEmpty()) return "가격 정보 없음";
+
+        return cp.stream()
+                .map(price -> price.getSeatType() + ": " + String.format("%,d원", price.getPrice()))
+                .collect(Collectors.joining(", "));
     }
 
-    // 이번주 가장 인기 있는 티켓 DTO Converter
-    public static ConcertHomeDTO.WeekHotConcertDTO toWeekHotConcertDTO(
-            Concert concert, List<SaveConcertDTO.ConcertTicketRoundDTO> concertTicketRoundDTOList,
-            ConcertHomeDTO.DateRangeDTO concertRange) {
-        return ConcertHomeDTO.WeekHotConcertDTO.builder()
-                .id(concert.getId())
-                .posterUrl(concert.getPosterUrl())
-                .concertTicketRoundDTOList(concertTicketRoundDTOList)
-                .concertName(concert.getConcertName())
-                .concertDate(concertRange)  // 콘서트 날짜
-                .concertPlace(concert.getConcertPlace())
-                .build();
-    }
+    public String convertConcertPerformanceRoundListToString(List<ConcertPerformanceRound> cpr) {
+        if (cpr.isEmpty()) return "공연 날짜 정보 없음";
 
-    // Concert 페이지 DTO
-    public static ConcertPageDTO.ConcertInfoDTO toConcertInfoDTO(Concert concert, String imageLink) {
-        return ConcertPageDTO.ConcertInfoDTO.builder()
-                .id(concert.getId())
-                .posterUrl(imageLink)
-                .concertName(concert.getConcertName())
-                .build();
-    }
+        DateTimeFormatter fullDateFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 (E)", Locale.KOREAN);
+        DateTimeFormatter shortDateFormatter = DateTimeFormatter.ofPattern("d (E)", Locale.KOREAN);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h a", Locale.ENGLISH);
 
-    public static ConcertDetailPageDTO.ConcertDetailDTO toConcertDetailDTO(Concert concert, String imageLink) {
-        return ConcertDetailPageDTO.ConcertDetailDTO.builder().build();
-    }
+        String firstDate = cpr.get(0).getConcertDate().format(fullDateFormatter);
+        String time = cpr.get(0).getConcertDate().format(timeFormatter);
 
+        String otherDates = cpr.stream()
+                .skip(1)
+                .map(round -> round.getConcertDate().format(shortDateFormatter))
+                .collect(Collectors.joining(", "));
+
+        return otherDates.isEmpty() ? firstDate + " " + time : firstDate + ", " + otherDates + " " + time;
+    }
 }
