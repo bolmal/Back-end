@@ -13,15 +13,15 @@ public class SaveConcertConverter {
 
     public static Concert toConcert(SaveConcertDTO.SaveRequestDTO dto) {
         return Concert.builder()
-                .concertName(dto.getConcertName())
-                .concertPlace(dto.getConcertPlace())
-                .posterUrl(dto.getPosterUrl())
-                .concertRuntime(dto.getConcertRuntime())
-                .concertAge(dto.getConcertAge())
-                .maxTicketsPerPerson(dto.getMaxTicketsPerPerson())
-                .onlineStore(dto.getOnlineStore())
-                .onlineStoreLink(dto.getBookingLink())
-                .ticketStatus(dto.getTicketStatus())
+                .concertName(dto.getConcertName() != null ? dto.getConcertName() : "공연 이름 미정")
+                .concertPlace(dto.getConcertPlace()!= null ? dto.getConcertPlace() : "공연 장소 미정")
+                .posterUrl(dto.getPosterUrl() != null ? dto.getPosterUrl() : "포스터 없음")
+                .concertRuntime(dto.getConcertRuntime()!= null ? dto.getConcertRuntime(): 0)
+                .concertAge(dto.getConcertAge()!= null ? dto.getConcertAge() : "관람 연령 미정")
+                .maxTicketsPerPerson(dto.getMaxTicketsPerPerson()!= null ? dto.getMaxTicketsPerPerson() : "예매 제한 미정")
+                .onlineStore(dto.getOnlineStore()!= null ? dto.getOnlineStore(): "티켓팅 플랫폼 미정")
+                .onlineStoreLink(dto.getBookingLink()!= null ? dto.getBookingLink() : "티켓팅 사이트 링크 미정")
+                .ticketStatus(dto.getTicketStatus()!= null ? dto.getTicketStatus() : Boolean.TRUE)
                 .build();
     }
 
