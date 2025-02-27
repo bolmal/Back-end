@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/concerts/save")
+@RequestMapping("/save")
 @Tag(name = "콘서트 정보 저장 API")
 @Builder
 @Slf4j
