@@ -21,6 +21,7 @@ public enum ErrorStatus implements BaseErrorCode {
     ALARM_EXISTS(HttpStatus.BAD_REQUEST,"ALARM4001","이미 등록된 알림입니다"),
 
     CONCERT_NOT_FOUND(HttpStatus.NOT_FOUND,"CONCERT4001","콘서트를 찾을 수 없습니다"),
+    CONCERT_TICKET_ROUND_NOT_FOUND(HttpStatus.NOT_FOUND,"CONCERT4002", "콘서트 티켓 정보를 찾을 수 없습니다."),
 
     MEMBER_IMAGE_COUNT_ERROR(HttpStatus.BAD_REQUEST,"IMAGE4003","프로필 이미지는 한 장만 등록 가능합니다"),
     MEMBER_IMAGE_EXIST(HttpStatus.BAD_REQUEST,"IMAGE4001","프로필 이미지가 이미 등록되어 있습니다"),
