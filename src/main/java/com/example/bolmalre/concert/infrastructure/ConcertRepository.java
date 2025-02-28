@@ -1,6 +1,7 @@
 package com.example.bolmalre.concert.infrastructure;
 
 import com.example.bolmalre.concert.domain.Concert;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,4 +33,25 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
     List<Concert> findConcertsWithTicketsOpeningInOneWeek(@Param("now") LocalDateTime now,
                                                           @Param("oneWeekLater") LocalDateTime oneWeekLater);
 
+    // 최신 등록순 (createdAt 기준 내림차순)
+    Page<Concert> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    // 티켓 오픈 날짜 가까운 순 (ticketOpenDate 기준 오름차순)
+    @Query("""
+    SELECT c FROM Concert c
+    WHERE c.id IN (
+        SELECT sub.concertId FROM (
+            SELECT tr.concert.id AS concertId, MIN(tr.ticketOpenDate) AS earliestDate
+            FROM ConcertTicketRound tr
+            WHERE tr.ticketOpenDate >= CURRENT_TIMESTAMP
+            GROUP BY tr.concert.id
+        ) sub
+    )
+    ORDER BY (SELECT MIN(tr2.ticketOpenDate) FROM ConcertTicketRound tr2 WHERE tr2.concert = c)
+""")
+    Page<Concert> findAllOrderByTicketOpenDate(Pageable pageable);
+
+    // 인기순 (dailyViewCount 기준 내림차순)
+    Page<Concert> findAllByOrderByDailyViewCountDesc(Pageable pageable);
 }
+

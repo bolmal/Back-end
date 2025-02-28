@@ -1,14 +1,11 @@
 package com.example.bolmalre.concert.converter;
 
-import com.example.bolmalre.concert.domain.Concert;
 import com.example.bolmalre.concert.domain.ConcertPerformanceRound;
 import com.example.bolmalre.concert.domain.ConcertPrice;
 import com.example.bolmalre.concert.domain.ConcertTicketRound;
-import com.example.bolmalre.concert.web.dto.ConcertDetailPageDTO;
-import com.example.bolmalre.concert.web.dto.ConcertHomeDTO;
-import com.example.bolmalre.concert.web.dto.ConcertPageDTO;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
@@ -18,7 +15,7 @@ import java.util.stream.Collectors;
 public class ConcertConverter {
 
 
-
+    // 티켓 오픈 라운드 + 날짜
     public String convertTicketRoundListToString(List<ConcertTicketRound> ctr) {
         if (ctr.isEmpty()) return "티켓팅 일정 없음";
 
@@ -28,6 +25,16 @@ public class ConcertConverter {
                 .collect(Collectors.joining(", "));
     }
 
+    // 간략화된 티켓 오픈 날짜
+    public String convertTicketOpenDate(ConcertTicketRound concertTicketRound) {
+        if (concertTicketRound == null) return "티켓팅 일정 없음";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 (E) HH:mm", Locale.KOREAN);
+
+        return concertTicketRound.getTicketOpenDate().format(formatter);
+    }
+
+    // 티켓 가격
     public String convertTicketPriceListToString(List<ConcertPrice> cp) {
         if (cp.isEmpty()) return "가격 정보 없음";
 
@@ -36,10 +43,11 @@ public class ConcertConverter {
                 .collect(Collectors.joining(", "));
     }
 
+    //  공연 일시
     public String convertConcertPerformanceRoundListToString(List<ConcertPerformanceRound> cpr) {
         if (cpr.isEmpty()) return "공연 날짜 정보 없음";
 
-        DateTimeFormatter fullDateFormatter = DateTimeFormatter.ofPattern("yyyy년 M월 d일 (E)", Locale.KOREAN);
+        DateTimeFormatter fullDateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 (E)", Locale.KOREAN);
         DateTimeFormatter shortDateFormatter = DateTimeFormatter.ofPattern("d (E)", Locale.KOREAN);
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h a", Locale.ENGLISH);
 
@@ -53,4 +61,27 @@ public class ConcertConverter {
 
         return otherDates.isEmpty() ? firstDate + " " + time : firstDate + ", " + otherDates + " " + time;
     }
+
+    public String convertConcertPerformanceRoundToSimpleDate(List<ConcertPerformanceRound> cpr) {
+        if (cpr.isEmpty()) return "공연 날짜 정보 없음";
+
+        DateTimeFormatter fullDateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd");
+
+        LocalDateTime firstConcertDate = cpr.get(0).getConcertDate();
+        String firstDate = firstConcertDate.format(fullDateFormatter);
+
+
+        LocalDateTime lastConcertDate = cpr.get(cpr.size() - 1).getConcertDate();
+        String lastDay = lastConcertDate.format(dayFormatter);
+
+
+        String firstYearMonth = firstConcertDate.format(DateTimeFormatter.ofPattern("yyyy.MM."));
+
+        return firstConcertDate.getMonthValue() == lastConcertDate.getMonthValue()
+                ? firstDate + " - " + lastDay
+                : firstDate + " - " + lastConcertDate.format(fullDateFormatter);
+    }
+
+
 }

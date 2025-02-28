@@ -20,39 +20,52 @@ public class ConcertDtoConverter {
 
     // 지금 볼래말래 DTO Converter
     public static ConcertHomeDTO.RecommendConcertDTO toRecommendConcertDTO(
-            Concert concert, ConcertTicketRound concertTicketRound,
-            ConcertHomeDTO.DateRangeDTO concertRange) {
+            Concert concert,
+            String ticketRound,
+            String ticketOpenDate,
+            String concertDate) {
         return ConcertHomeDTO.RecommendConcertDTO.builder()
                 .id(concert.getId())
                 .posterUrl(concert.getPosterUrl())
-                .round(concertTicketRound.getTicketRound())
-                .ticketOpenDate(concertTicketRound.getTicketOpenDate())
+                .round(ticketRound)
+                .ticketOpenDate(ticketOpenDate)
                 .concertName(concert.getConcertName())
-                .concertDate(concertRange)  // 콘서트 날짜
+                .concertDate(concertDate )  // 콘서트 날짜
                 .build();
     }
 
     // 이번주 가장 인기 있는 티켓 DTO Converter
     public static ConcertHomeDTO.WeekHotConcertDTO toWeekHotConcertDTO(
-            Concert concert, ConcertTicketRound concertTicketRound,
-            ConcertHomeDTO.DateRangeDTO concertRange) {
+            Concert concert,
+            String ticketRound,
+            String ticketOpenDate,
+            String concertDate
+            ) {
+
         return ConcertHomeDTO.WeekHotConcertDTO.builder()
                 .id(concert.getId())
                 .posterUrl(concert.getPosterUrl())
-                .round(concertTicketRound.getTicketRound())
-                .ticketOpenDate(concertTicketRound.getTicketOpenDate())
+                .round(ticketRound)
+                .ticketOpenDate(ticketOpenDate)
                 .concertName(concert.getConcertName())
-                .concertDate(concertRange)  // 콘서트 날짜
+                .concertDate(concertDate)  // 콘서트 날짜
                 .concertPlace(concert.getConcertPlace())
                 .build();
     }
 
     // Concert 페이지 DTO
-    public static ConcertPageDTO.ConcertInfoDTO toConcertInfoDTO(Concert concert) {
+    public static ConcertPageDTO.ConcertInfoDTO toConcertInfoDTO(
+            Concert concert,
+            ConcertTicketRound ctr,
+            String concertPerformanceDate,
+            String ticketOpenDate) {
         return ConcertPageDTO.ConcertInfoDTO.builder()
                 .id(concert.getId())
                 .posterUrl(concert.getPosterUrl())
+                .ticketRound(ctr.getTicketRound())
+                .ticketOpenDate(ticketOpenDate)
                 .concertName(concert.getConcertName())
+                .concertDate(concertPerformanceDate)
                 .build();
     }
 

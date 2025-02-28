@@ -44,14 +44,14 @@ public class ConcertHomeDTO {
         private String round;
 
         @Schema(description = "티켓 오픈 날짜")
-        private LocalDateTime ticketOpenDate;
+        private String ticketOpenDate;
 
         @Schema(description = "콘서트 이름")
         private String concertName;
 
         // ConcertPerformanceRound - concertDate (List)
         @Schema(description = "콘서트 공연 일자 (날짜)")
-        private DateRangeDTO concertDate;
+        private String concertDate;
     }
 
     @NoArgsConstructor
@@ -69,16 +69,14 @@ public class ConcertHomeDTO {
         @Schema(description = "선예매, 1차 예매, 2차 예매")
         private String round;
 
-        // FIXME 내부 함수로 Figma에 있는 형태로 String 전달기
         @Schema(description = "티켓 오픈 날짜")
-        private LocalDateTime ticketOpenDate;
+        private String ticketOpenDate;
 
         @Schema(description = "콘서트 이름")
         private String concertName;
 
-        // ConcertPerformanceRound - concertDate (List) FIXME String으로 Figma 맞춰서 주기
         @Schema(description = "콘서트 공연 일자 (날짜)")
-        private DateRangeDTO concertDate;
+        private String concertDate;
 
         @Schema(description = "콘서트 장소")
         private String concertPlace;

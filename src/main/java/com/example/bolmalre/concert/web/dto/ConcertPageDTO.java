@@ -26,16 +26,16 @@ public class ConcertPageDTO {
         private String posterUrl;
 
         @Schema(description = "1차 티켓오픈, 2차 티켓오픈, 선예매 등 티켓회차")
-        private TicketRound ticketRound;
+        private String ticketRound;
 
-        @Schema(description = "티켓팅 오픈 날짜+시간")
-        private LocalDateTime ticketOpenDate;
+        @Schema(description = "티켓 오픈 날짜 + 시간")
+        private String ticketOpenDate;
 
         @Schema(description = "콘서트 이름")
         private String concertName;
 
         @Schema(description = "콘서트 공연 일자 (날짜)")
-        private LocalDate concertDate;
+        private String concertDate;
     }
 
 }
