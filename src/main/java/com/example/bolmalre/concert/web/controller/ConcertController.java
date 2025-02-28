@@ -1,16 +1,18 @@
 package com.example.bolmalre.concert.web.controller;
 
 import com.example.bolmalre.common.apiPayLoad.ApiResponse;
+import com.example.bolmalre.concert.domain.enums.SortType;
 import com.example.bolmalre.concert.web.dto.ConcertDetailPageDTO;
+import com.example.bolmalre.concert.web.dto.ConcertPageDTO;
 import com.example.bolmalre.concert.web.port.ConcertService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,4 +33,15 @@ public class ConcertController {
 
         return ApiResponse.onSuccess(concertDetail);
     }
+
+    @Operation(summary = "콘서트 페이지")
+    @GetMapping("/")
+    public ApiResponse<Page<ConcertPageDTO.ConcertInfoDTO>> getConcertInfos(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "TICKET_OPEN") SortType sortType
+    ) {
+        Page<ConcertPageDTO.ConcertInfoDTO> result = concertService.getConcertPageInfo(page, sortType);
+        return ApiResponse.onSuccess(result);
+    }
+
 }
