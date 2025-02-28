@@ -1,8 +1,10 @@
 package com.example.bolmalre.concert.web.port;
 
+import com.example.bolmalre.concert.domain.enums.SortType;
 import com.example.bolmalre.concert.web.dto.ConcertDetailPageDTO;
 import com.example.bolmalre.concert.web.dto.ConcertHomeDTO;
 import com.example.bolmalre.concert.web.dto.ConcertPageDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ public interface ConcertService {
     List<ConcertHomeDTO.WeekHotConcertDTO> getWeekHotConcertInfo();
 
     // 콘서트 페이지 (20개씩)
-    List<ConcertPageDTO.ConcertInfoDTO> getConcertPageInfo(int page, int size);
+    Page<ConcertPageDTO.ConcertInfoDTO> getConcertPageInfo(int page, SortType sortType);
 
     // 콘서트 상세 정보 페이지
     ConcertDetailPageDTO.ConcertDetailDTO getConcertDetailInfo(Long concertId);
