@@ -29,7 +29,7 @@ public class ConcertPageDTO {
         private String ticketRound;
 
         @Schema(description = "티켓 오픈 날짜 + 시간")
-        private String ticketOpenDate;
+        private LocalDateTime ticketOpenDate;
 
         @Schema(description = "콘서트 이름")
         private String concertName;

@@ -37,9 +37,7 @@ public class ConcertServiceImpl implements ConcertService {
     private final ConcertPerformanceRoundRepository concertPerformanceRoundRepository;
     private final ConcertPriceRepository concertPriceRepository;
     private final ConcertConverter converter;
-
     private final Integer PAGE_SIZE = 20;
-    private final ConcertConverter concertConverter;
 
     // 홈 광고 조회
     @Override
@@ -62,7 +60,8 @@ public class ConcertServiceImpl implements ConcertService {
 
                     String round = ctr.getTicketRound();
 
-                    String ticketOpenDate = converter.convertTicketOpenDate(ctr);
+                    /*String ticketOpenDate = converter.convertTicketOpenDate(ctr);*/
+                    LocalDateTime ticketOpenDate = ctr.getTicketOpenDate();
 
                     String concertPerformanceDate = converter.convertConcertPerformanceRoundToSimpleDate(findConcertPerformanceRoundByConcert(concert));
 
@@ -85,7 +84,7 @@ public class ConcertServiceImpl implements ConcertService {
 
                             String round = ctr.getTicketRound();
 
-                            String ticketOpenDate = converter.convertTicketOpenDate(ctr);
+                            LocalDateTime ticketOpenDate = ctr.getTicketOpenDate();
 
                             String concertPerformanceDate = converter.convertConcertPerformanceRoundToSimpleDate(findConcertPerformanceRoundByConcert(concert));
 
@@ -120,6 +119,7 @@ public class ConcertServiceImpl implements ConcertService {
         Concert targetConcert = findConcertById(concertId);
 
         // 해당 콘서트 관련 정보 (티켓 정보, 공연 날짜, 티켓 가격)
+        // 이거 일단 첫번째 예매 날짜만 가져오도록 했는데 추가로 수정해야할듯 FIXME
         String ticketInfo = converter.convertTicketRoundListToString(findTicketRoundByConcert(targetConcert));
 
         String concertDate = converter.convertConcertPerformanceRoundListToString(findConcertPerformanceRoundByConcert(targetConcert));
@@ -169,8 +169,9 @@ public class ConcertServiceImpl implements ConcertService {
         return ConcertDtoConverter.toConcertInfoDTO(
                 concert,
                 ticketRound,
-                concertConverter.convertTicketOpenDate(ticketRound),
-                concertConverter.convertConcertPerformanceRoundToSimpleDate(performanceRounds)
+                ticketRound.getTicketOpenDate(),
+                /*converter.convertTicketOpenDate(ticketRound),*/
+                converter.convertConcertPerformanceRoundToSimpleDate(performanceRounds)
         );
     }
 
