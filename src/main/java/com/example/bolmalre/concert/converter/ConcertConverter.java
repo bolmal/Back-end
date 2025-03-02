@@ -19,20 +19,19 @@ public class ConcertConverter {
     public String convertTicketRoundListToString(List<ConcertTicketRound> ctr) {
         if (ctr.isEmpty()) return "티켓팅 일정 없음";
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 (E) HH:mm", Locale.KOREAN);
         return ctr.stream()
-                .map(round -> round.getTicketRound() + "(" + round.getTicketOpenDate().format(formatter) + ")")
+                .map(round -> round.getTicketRound() + "(" + round.getTicketOpenDate() + ")")
                 .collect(Collectors.joining(", "));
     }
 
-    // 간략화된 티켓 오픈 날짜
+/*    // 간략화된 티켓 오픈 날짜
     public String convertTicketOpenDate(ConcertTicketRound concertTicketRound) {
         if (concertTicketRound == null) return "티켓팅 일정 없음";
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 (E) HH:mm", Locale.KOREAN);
 
         return concertTicketRound.getTicketOpenDate().format(formatter);
-    }
+    }*/
 
     // 티켓 가격
     public String convertTicketPriceListToString(List<ConcertPrice> cp) {

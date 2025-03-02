@@ -6,6 +6,8 @@ import com.example.bolmalre.concert.web.dto.ConcertDetailPageDTO;
 import com.example.bolmalre.concert.web.dto.ConcertHomeDTO;
 import com.example.bolmalre.concert.web.dto.ConcertPageDTO;
 
+import java.time.LocalDateTime;
+
 public class ConcertDtoConverter {
 
     // 광고 DTO Converter
@@ -22,7 +24,7 @@ public class ConcertDtoConverter {
     public static ConcertHomeDTO.RecommendConcertDTO toRecommendConcertDTO(
             Concert concert,
             String ticketRound,
-            String ticketOpenDate,
+            LocalDateTime ticketOpenDate,
             String concertDate) {
         return ConcertHomeDTO.RecommendConcertDTO.builder()
                 .id(concert.getId())
@@ -38,7 +40,7 @@ public class ConcertDtoConverter {
     public static ConcertHomeDTO.WeekHotConcertDTO toWeekHotConcertDTO(
             Concert concert,
             String ticketRound,
-            String ticketOpenDate,
+            LocalDateTime ticketOpenDate,
             String concertDate
             ) {
 
@@ -57,15 +59,15 @@ public class ConcertDtoConverter {
     public static ConcertPageDTO.ConcertInfoDTO toConcertInfoDTO(
             Concert concert,
             ConcertTicketRound ctr,
-            String concertPerformanceDate,
+            LocalDateTime concertPerformanceDate,
             String ticketOpenDate) {
         return ConcertPageDTO.ConcertInfoDTO.builder()
                 .id(concert.getId())
                 .posterUrl(concert.getPosterUrl())
                 .ticketRound(ctr.getTicketRound())
-                .ticketOpenDate(ticketOpenDate)
+                .ticketOpenDate(LocalDateTime.parse(ticketOpenDate))
                 .concertName(concert.getConcertName())
-                .concertDate(concertPerformanceDate)
+                .concertDate(String.valueOf(concertPerformanceDate))
                 .build();
     }
 
