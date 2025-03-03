@@ -1,6 +1,7 @@
 package com.example.bolmalre.concert.service;
 
 import com.example.bolmalre.artist.domain.Artist;
+import com.example.bolmalre.artist.domain.enums.Genre;
 import com.example.bolmalre.artist.infrastructure.ArtistRepository;
 import com.example.bolmalre.concert.converter.SaveConcertConverter;
 import com.example.bolmalre.concert.domain.*;
@@ -85,6 +86,7 @@ public class SaveConcertService {
                                 .orElseGet(() -> {
                                     Artist newArtist = Artist.builder()
                                             .name(artistDTO.getName())
+                                            .genre(Genre.A)
                                             .build();
                                     return artistRepository.save(newArtist);  // 새로운 Artist 저장
                                 });

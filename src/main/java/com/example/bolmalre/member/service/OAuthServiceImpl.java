@@ -1,8 +1,8 @@
 package com.example.bolmalre.member.service;
 
-import com.example.bolmalre.auth.jwt.JWTUtilImpl;
-import com.example.bolmalre.auth.service.RefreshTokenService;
-import com.example.bolmalre.config.JWTConfig;
+import com.example.bolmalre.common.auth.jwt.JWTUtilImpl;
+import com.example.bolmalre.common.auth.service.RefreshTokenService;
+import com.example.bolmalre.common.config.JWTConfig;
 import com.example.bolmalre.member.converter.MemberConverter;
 import com.example.bolmalre.member.domain.Member;
 import com.example.bolmalre.member.domain.enums.Role;
@@ -18,7 +18,6 @@ import com.example.bolmalre.member.web.port.OAuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.example.bolmalre.member.util.CookieUtil.createCookie;
