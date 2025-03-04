@@ -42,6 +42,8 @@ jobs:
           docker push ${{ secrets.DOCKER_REPO }}
 
 
+
+
       - name: Deploy_EC2
         uses: appleboy/ssh-action@master
         id: deploy
@@ -50,8 +52,107 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            cd /home/monitor  
-            sudo docker-compose down || true
-            sudo docker pull ${{ secrets.DOCKER_REPO }}
-            sudo docker-compose up -d
-            sudo docker image prune -f
+            #!/bin/bash
+
+            cd /home/monitor
+
+            IS_GREEN_EXIST=$(sudo docker ps | grep green)
+            IS_BLUE_EXIST=$(sudo docker ps | grep blue)
+            DEFAULT_CONF="/etc/nginx/nginx.conf"
+
+            if [ -z "$IS_GREEN_EXIST" ] && [ -z "$IS_BLUE_EXIST" ]; then
+              echo "### 초기 배포: BLUE 컨테이너 시작 ###"
+              echo ">>> blue image를 pull합니다."
+              sudo docker-compose pull blue
+              echo ">>> blue container를 up합니다."
+              sudo docker-compose up -d blue
+
+              while true; do
+                echo ">>> blue health check 중..."
+                sleep 3
+                REQUEST=$(curl http://${{ secrets.HOST }}:8081/actuator/health)
+                if [ -n "$REQUEST" ]; then
+                  echo ">>> 🍃 health check success !"
+                  break
+                fi
+              done
+
+              sleep 3
+              echo ">>> nginx를 설정합니다."
+              sudo rm -f /etc/nginx/sites-enabled/default
+              sudo ln -sf /etc/nginx/sites-available/blue /etc/nginx/sites-enabled/default
+              sudo nginx -t
+
+              if [ $? -eq 0 ]; then
+                sudo systemctl restart nginx
+              else
+                echo "Nginx 설정에 오류가 있습니다."
+                exit 1
+              fi
+
+            elif [ -z "$IS_GREEN_EXIST" ]; then
+              echo "### BLUE => GREEN ###"
+              echo ">>> green image를 pull합니다."
+              sudo docker-compose pull green
+              echo ">>> green container를 up합니다."
+              sudo docker-compose up -d green
+
+              while true; do
+                echo ">>> green health check 중..."
+                sleep 3
+                REQUEST=$(curl http://${{ secrets.HOST }}:8082/actuator/health)
+                if [ -n "$REQUEST" ]; then
+                  echo ">>> 🍃 health check success !"
+                  break
+                fi
+              done
+
+              sleep 3
+              echo ">>> nginx를 다시 실행 합니다."
+              echo ">>> nginx 심볼릭 링크를 생성합니다."
+              sudo rm -f /etc/nginx/sites-enabled/default
+              sudo ln -sf /etc/nginx/sites-available/green /etc/nginx/sites-enabled/default
+              sudo nginx -t
+
+              if [ $? -eq 0 ]; then
+                sudo systemctl restart nginx
+              else
+                echo "Nginx 설정에 오류가 있습니다."
+                exit 1
+              fi
+
+              echo ">>> blue container를 down합니다."
+              sudo docker-compose stop blue
+
+            else
+              echo "### GREEN => BLUE ###"
+              echo ">>> blue image를 pull합니다."
+              sudo docker-compose pull blue
+              echo ">>> blue container를 up합니다."
+              sudo docker-compose up -d blue
+
+              while true; do
+                echo ">>> blue health check 중..."
+                sleep 3
+                REQUEST=$(curl http://${{ secrets.HOST }}:8081/actuator/health)
+                if [ -n "$REQUEST" ]; then
+                  echo ">>> 🍃 health check success !"
+                  break
+                fi
+              done
+
+              sleep 3
+              echo ">>> nginx를 다시 실행 합니다."
+              sudo rm -f /etc/nginx/sites-enabled/default
+              sudo ln -sf /etc/nginx/sites-available/blue /etc/nginx/sites-enabled/default
+              sudo nginx -t
+              if [ $? -eq 0 ]; then
+                sudo systemctl restart nginx
+              else
+                echo "Nginx 설정에 오류가 있습니다."
+                exit 1
+              fi
+
+              echo ">>> green container를 down합니다."
+              sudo docker-compose stop green
+            fi
