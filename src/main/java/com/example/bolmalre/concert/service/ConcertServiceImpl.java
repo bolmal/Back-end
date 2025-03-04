@@ -166,12 +166,14 @@ public class ConcertServiceImpl implements ConcertService {
         ConcertTicketRound ticketRound = findNearestConcertTicket(concert.getId());
         List<ConcertPerformanceRound> performanceRounds = findConcertPerformanceRoundByConcert(concert);
 
+
+        // 이거 concertDate 로직 잘 이해 안돼서 일단 1차만 뽑도록 해놨음 수정 필요함 FIXME
         return ConcertDtoConverter.toConcertInfoDTO(
                 concert,
                 ticketRound,
-                ticketRound.getTicketOpenDate(),
+                performanceRounds.get(0).getConcertDate(),
                 /*converter.convertTicketOpenDate(ticketRound),*/
-                converter.convertConcertPerformanceRoundToSimpleDate(performanceRounds)
+                ticketRound.getTicketOpenDate()
         );
     }
 

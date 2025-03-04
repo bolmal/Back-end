@@ -60,12 +60,12 @@ public class ConcertDtoConverter {
             Concert concert,
             ConcertTicketRound ctr,
             LocalDateTime concertPerformanceDate,
-            String ticketOpenDate) {
+            LocalDateTime ticketOpenDate) {
         return ConcertPageDTO.ConcertInfoDTO.builder()
                 .id(concert.getId())
                 .posterUrl(concert.getPosterUrl())
                 .ticketRound(ctr.getTicketRound())
-                .ticketOpenDate(LocalDateTime.parse(ticketOpenDate))
+                .ticketOpenDate(ticketOpenDate)
                 .concertName(concert.getConcertName())
                 .concertDate(String.valueOf(concertPerformanceDate))
                 .build();
