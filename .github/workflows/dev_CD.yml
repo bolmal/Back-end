@@ -100,7 +100,7 @@ jobs:
               while true; do
                 echo ">>> green health check 중..."
                 sleep 3
-                REQUEST=$(curl http://${{ secrets.HOST }}:8082/actuator/health)
+                REQUEST=$(curl http://${{ secrets.HOST }}:8082/health)
                 if [ -n "$REQUEST" ]; then
                   echo ">>> 🍃 health check success !"
                   break
@@ -134,7 +134,7 @@ jobs:
               while true; do
                 echo ">>> blue health check 중..."
                 sleep 3
-                REQUEST=$(curl http://${{ secrets.HOST }}:8081/actuator/health)
+                REQUEST=$(curl http://${{ secrets.HOST }}:8081/health)
                 if [ -n "$REQUEST" ]; then
                   echo ">>> 🍃 health check success !"
                   break
