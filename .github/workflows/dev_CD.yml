@@ -63,9 +63,9 @@ jobs:
             if [ -z "$IS_GREEN_EXIST" ] && [ -z "$IS_BLUE_EXIST" ]; then
               echo "### 초기 배포: BLUE 컨테이너 시작 ###"
               echo ">>> blue image를 pull합니다."
-              sudo docker-compose pull blue
+              sudo docker compose pull blue
               echo ">>> blue container를 up합니다."
-              sudo docker-compose up -d blue
+              sudo docker compose up -d blue
 
               while true; do
                 echo ">>> blue health check 중..."
@@ -93,9 +93,9 @@ jobs:
             elif [ -z "$IS_GREEN_EXIST" ]; then
               echo "### BLUE => GREEN ###"
               echo ">>> green image를 pull합니다."
-              sudo docker-compose pull green
+              sudo docker compose pull green
               echo ">>> green container를 up합니다."
-              sudo docker-compose up -d green
+              sudo docker compose up -d green
 
               while true; do
                 echo ">>> green health check 중..."
@@ -122,14 +122,14 @@ jobs:
               fi
 
               echo ">>> blue container를 down합니다."
-              sudo docker-compose stop blue
+              sudo docker compose stop blue
 
             else
               echo "### GREEN => BLUE ###"
               echo ">>> blue image를 pull합니다."
-              sudo docker-compose pull blue
+              sudo docker compose pull blue
               echo ">>> blue container를 up합니다."
-              sudo docker-compose up -d blue
+              sudo docker compose up -d blue
 
               while true; do
                 echo ">>> blue health check 중..."
@@ -154,5 +154,5 @@ jobs:
               fi
 
               echo ">>> green container를 down합니다."
-              sudo docker-compose stop green
+              sudo docker compose stop green
             fi
