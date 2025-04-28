@@ -91,6 +91,7 @@ public class MemberController {
         return ApiResponse.onSuccess("비밀번호가 정상적으로 검증 되었습니다");
     }
 
+
     @Operation(summary = "아이디 찾기 API")
     @GetMapping("/usernames")
     public ApiResponse<MemberFindUsernameDTO.MemberFindUsernameResponseDTO> getUsername(
