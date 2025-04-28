@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "소셜로그인 SSR")
 public class MemberOAuthSSRController {
 
-
     private final OAuthServiceImpl authService;
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
