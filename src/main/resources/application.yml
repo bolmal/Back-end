@@ -21,7 +21,6 @@ spring:
     username: root
     password: ${DB_PASSWORD}
 
-
   jpa:
     properties:
       hibernate:
