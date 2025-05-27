@@ -73,12 +73,14 @@ public class OAuthServiceImpl implements OAuthService {
     @Override
     public MemberJoinDTO.MemberSocialResponseDTO social(MemberJoinDTO.MemberSocialRequestDTO requestDTO, HttpServletResponse httpServletResponse) {
 
+        log.info(requestDTO.toString());
+
         Member byEmail = memberRepository.findByEmail(requestDTO.getEmail())
                 .orElse(null);
 
         if (byEmail == null) {
             byEmail = MemberConverter.toFrontKakaoMember(
-                    requestDTO.getName(), requestDTO.getEmail(), "front_social",bCryptHolder,uuid);
+                     requestDTO.getEmail(),requestDTO.getName(), "front_social",bCryptHolder,uuid);
 
             Member newMember = memberRepository.save(byEmail);
             loginProcess(httpServletResponse, newMember);
