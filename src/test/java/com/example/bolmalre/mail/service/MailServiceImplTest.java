@@ -1,8 +1,8 @@
 package com.example.bolmalre.mail.service;
 
-import com.example.bolmalre.common.apiPayLoad.exception.handler.ImageHandler;
-import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
-import com.example.bolmalre.common.util.RedisUtil;
+import com.example.bolmalre.global.apiPayLoad.exception.handler.MailHandler;
+import com.example.bolmalre.global.util.RedisUtil;
+import com.example.bolmalre.domain.mail.service.MailServiceImpl;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
@@ -21,7 +20,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.security.NoSuchAlgorithmException;
 
-import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.*;
+import static com.example.bolmalre.global.apiPayLoad.code.status.ErrorStatus.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;

@@ -1,5 +1,6 @@
 package com.example.bolmalre.member.infrastructure;
 
+import com.example.bolmalre.domain.member.infrastructure.BCryptHolderImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

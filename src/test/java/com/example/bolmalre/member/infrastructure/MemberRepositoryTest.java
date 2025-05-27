@@ -1,11 +1,11 @@
 package com.example.bolmalre.member.infrastructure;
 
-import com.example.bolmalre.member.domain.Member;
-import com.example.bolmalre.member.domain.enums.Gender;
-import com.example.bolmalre.member.domain.enums.Role;
-import com.example.bolmalre.member.domain.enums.Status;
-import com.example.bolmalre.member.domain.enums.SubStatus;
-import com.example.bolmalre.member.service.port.MemberRepository;
+import com.example.bolmalre.domain.member.domain.Member;
+import com.example.bolmalre.domain.member.domain.enums.Gender;
+import com.example.bolmalre.domain.member.domain.enums.Role;
+import com.example.bolmalre.domain.member.domain.enums.Status;
+import com.example.bolmalre.domain.member.domain.enums.SubStatus;
+import com.example.bolmalre.domain.member.service.port.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

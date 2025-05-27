@@ -1,14 +1,15 @@
 package com.example.bolmalre.alarm.util;
 
-import com.example.bolmalre.alarm.domain.Alarm;
-import com.example.bolmalre.alarm.infrastructure.AlarmRepository;
-import com.example.bolmalre.alarm.web.port.AlarmService;
-import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
-import com.example.bolmalre.concert.domain.Concert;
-import com.example.bolmalre.concert.domain.ConcertTicketRound;
-import com.example.bolmalre.concert.infrastructure.ConcertRepository;
-import com.example.bolmalre.member.domain.Member;
-import com.example.bolmalre.member.service.port.LocalDateHolder;
+import com.example.bolmalre.domain.alarm.domain.Alarm;
+import com.example.bolmalre.domain.alarm.infrastructure.AlarmRepository;
+import com.example.bolmalre.domain.alarm.util.AlarmMailUtil;
+import com.example.bolmalre.domain.alarm.web.port.AlarmService;
+import com.example.bolmalre.global.apiPayLoad.exception.handler.MailHandler;
+import com.example.bolmalre.domain.concert.domain.Concert;
+import com.example.bolmalre.domain.concert.domain.ConcertTicketRound;
+import com.example.bolmalre.domain.concert.infrastructure.ConcertRepository;
+import com.example.bolmalre.domain.member.domain.Member;
+import com.example.bolmalre.domain.member.service.port.LocalDateHolder;
 import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.MAIL_NOT_SEND;
+import static com.example.bolmalre.global.apiPayLoad.code.status.ErrorStatus.MAIL_NOT_SEND;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 

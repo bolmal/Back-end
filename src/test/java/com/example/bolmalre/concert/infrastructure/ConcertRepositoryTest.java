@@ -1,8 +1,10 @@
 package com.example.bolmalre.concert.infrastructure;
 
-import com.example.bolmalre.concert.domain.Concert;
-import com.example.bolmalre.concert.domain.ConcertTicketRound;
-import com.example.bolmalre.member.service.port.LocalDateHolder;
+import com.example.bolmalre.domain.concert.domain.Concert;
+import com.example.bolmalre.domain.concert.domain.ConcertTicketRound;
+import com.example.bolmalre.domain.concert.infrastructure.ConcertRepository;
+import com.example.bolmalre.domain.concert.infrastructure.ConcertTicketRoundRepository;
+import com.example.bolmalre.domain.member.service.port.LocalDateHolder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

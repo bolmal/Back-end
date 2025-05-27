@@ -1,6 +1,7 @@
 package com.example.bolmalre.member.web.dto;
 
-import com.example.bolmalre.member.domain.enums.Gender;
+import com.example.bolmalre.domain.member.domain.enums.Gender;
+import com.example.bolmalre.domain.member.web.dto.MemberUpdateDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.DisplayName;
