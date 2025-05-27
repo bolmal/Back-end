@@ -54,5 +54,7 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
     Page<Concert> findAllByOrderByDailyViewCountDesc(Pageable pageable);
 
     Optional<Concert> findByUrlId(String urlId);
+
+    /*List<Concert> findByRankedIsTrue();*/
 }
 

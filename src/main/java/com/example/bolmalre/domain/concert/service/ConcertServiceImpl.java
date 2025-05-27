@@ -134,7 +134,29 @@ public class ConcertServiceImpl implements ConcertService {
     }
 
 
+/*
+    public List<ConcertHomeDTO.RecommendConcertDTO> getRanking(){
 
+        List<Concert> byRankedIsTrue = concertRepository.findByRankedIsTrue();
+
+
+        return concerts.getContent().stream()
+                .map(concert -> {
+                    ConcertTicketRound ctr = findNearestConcertTicket(concert.getId());
+
+                    String round = ctr.getTicketRound();
+
+                    */
+/*String ticketOpenDate = converter.convertTicketOpenDate(ctr);*//*
+
+                    LocalDateTime ticketOpenDate = ctr.getTicketOpenDate();
+
+                    String concertPerformanceDate = converter.convertConcertPerformanceRoundToSimpleDate(findConcertPerformanceRoundByConcert(concert));
+
+                    return ConcertDtoConverter.toRecommendConcertDTO(concert, round, ticketOpenDate, concertPerformanceDate);
+                }).toList();
+    }
+*/
 
 
     // 콘서트 찾기

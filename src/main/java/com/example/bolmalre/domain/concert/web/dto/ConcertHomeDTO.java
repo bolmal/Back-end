@@ -50,6 +50,10 @@ public class ConcertHomeDTO {
         // ConcertPerformanceRound - concertDate (List)
         @Schema(description = "콘서트 공연 일자 (날짜)")
         private String concertDate;
+/*
+        public static RecommendConcertDTO of(AdvertisementConcertDTO advertisementConcertDTO) {
+            return RecommendConcertDTO
+        }*/
     }
 
     @NoArgsConstructor
