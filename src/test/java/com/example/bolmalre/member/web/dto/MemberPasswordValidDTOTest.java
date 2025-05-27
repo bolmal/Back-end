@@ -1,5 +1,6 @@
 package com.example.bolmalre.member.web.dto;
 
+import com.example.bolmalre.domain.member.web.dto.MemberPasswordValidDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")

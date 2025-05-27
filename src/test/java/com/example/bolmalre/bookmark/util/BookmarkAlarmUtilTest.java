@@ -1,16 +1,17 @@
 package com.example.bolmalre.bookmark.util;
 
-import com.example.bolmalre.artist.domain.Artist;
-import com.example.bolmalre.artist.domain.enums.Genre;
-import com.example.bolmalre.bookmark.domain.Bookmark;
-import com.example.bolmalre.bookmark.infrastructure.BookmarkRepository;
-import com.example.bolmalre.bookmark.web.port.BookmarkService;
-import com.example.bolmalre.common.apiPayLoad.exception.handler.MailHandler;
-import com.example.bolmalre.member.domain.Member;
-import com.example.bolmalre.member.domain.enums.Gender;
-import com.example.bolmalre.member.domain.enums.Role;
-import com.example.bolmalre.member.domain.enums.Status;
-import com.example.bolmalre.member.domain.enums.SubStatus;
+import com.example.bolmalre.domain.artist.domain.Artist;
+import com.example.bolmalre.domain.artist.domain.enums.Genre;
+import com.example.bolmalre.domain.bookmark.domain.Bookmark;
+import com.example.bolmalre.domain.bookmark.infrastructure.BookmarkRepository;
+import com.example.bolmalre.domain.bookmark.util.BookmarkMailUtil;
+import com.example.bolmalre.domain.bookmark.web.port.BookmarkService;
+import com.example.bolmalre.global.apiPayLoad.exception.handler.MailHandler;
+import com.example.bolmalre.domain.member.domain.Member;
+import com.example.bolmalre.domain.member.domain.enums.Gender;
+import com.example.bolmalre.domain.member.domain.enums.Role;
+import com.example.bolmalre.domain.member.domain.enums.Status;
+import com.example.bolmalre.domain.member.domain.enums.SubStatus;
 import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +25,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.example.bolmalre.common.apiPayLoad.code.status.ErrorStatus.MAIL_NOT_SEND;
+import static com.example.bolmalre.global.apiPayLoad.code.status.ErrorStatus.MAIL_NOT_SEND;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 

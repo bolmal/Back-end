@@ -135,3 +135,6 @@ cloud:
       auto: false
     stack:
       auto: false
+
+kakao:
+  rest-api-key: ${KAKAO_REST_API_KEY}
