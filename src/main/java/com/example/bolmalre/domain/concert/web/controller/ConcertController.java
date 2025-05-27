@@ -1,5 +1,6 @@
 package com.example.bolmalre.domain.concert.web.controller;
 
+import com.example.bolmalre.domain.concert.web.port.ConcertImageService;
 import com.example.bolmalre.global.apiPayLoad.ApiResponse;
 import com.example.bolmalre.domain.concert.domain.enums.SortType;
 import com.example.bolmalre.domain.concert.web.dto.ConcertDetailPageDTO;
@@ -15,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/concerts")
-@Tag(name = "concert 페이지 관련 API", description = "홈 화면에 뜨는 콘서트가 아닌 콘서트 페이지에 필요한 API들")
+@Tag(name = "콘서트 페이지 관련 API", description = "홈 화면에 뜨는 콘서트가 아닌 콘서트 페이지에 필요한 API들")
 @Builder
 public class ConcertController {
 
     private final ConcertService concertService;
-
+    private final ConcertImageService concertImageService;
 
     @Operation(summary = "콘서트 상세 조회 API")
     @GetMapping("/{concertId}")

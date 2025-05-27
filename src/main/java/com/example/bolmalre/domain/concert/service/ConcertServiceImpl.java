@@ -16,6 +16,7 @@ import com.example.bolmalre.domain.concert.web.dto.ConcertPageDTO;
 import com.example.bolmalre.domain.concert.web.port.ConcertService;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class ConcertServiceImpl implements ConcertService {
 
     private final ConcertRepository concertRepository;

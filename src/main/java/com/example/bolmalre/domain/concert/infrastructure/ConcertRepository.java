@@ -15,8 +15,7 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
 
     // FIXME (N+1 1차 해결 -> 추후 QueryDSL 고려)
 
-    @Query("select distinct c from Concert c left join fetch ConcertImage ci on c.id = ci.concert.id where c.advertisement = true")
-    Slice<Concert> findByAdvertisementIsTrue();
+    List<Concert> findByAdvertisementIsTrue();
 
     // 지금 볼래말래[로그인 전] ( 그 날 조회수가 가장 높은 공연 조회 )
     @Query("select distinct c from Concert c left join fetch ConcertImage ci on c.id = ci.concert.id order by c.dailyViewCount desc")

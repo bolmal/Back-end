@@ -1,5 +1,7 @@
 package com.example.bolmalre.domain.concert.web.controller;
 
+import com.example.bolmalre.domain.concert.web.dto.ConcertAdvResponse;
+import com.example.bolmalre.domain.concert.web.port.ConcertImageService;
 import com.example.bolmalre.global.apiPayLoad.ApiResponse;
 import com.example.bolmalre.domain.concert.web.dto.ConcertHomeDTO;
 import com.example.bolmalre.domain.concert.web.port.ConcertService;
@@ -23,14 +25,15 @@ public class HomeConcertController {
 
     private final ConcertService concertService;
     private final GenericResponseService responseBuilder;
+    private final ConcertImageService concertImageService;
 
     @Operation(summary = "상단 광고 조회 API")
     @GetMapping("/advertisement")
-    public ApiResponse<List<ConcertHomeDTO.AdvertisementConcertDTO>> getAdConcert() {
+    public ApiResponse<ConcertAdvResponse.ConcertAdvListResponse> getAdConcert() {
 
-        List<ConcertHomeDTO.AdvertisementConcertDTO> response = concertService.getAdConcertInfo();
+        ConcertAdvResponse.ConcertAdvListResponse result = concertImageService.getConcertAdvListResponse();
 
-        return ApiResponse.onSuccess(response);
+        return ApiResponse.onSuccess(result);
 
     }
 
