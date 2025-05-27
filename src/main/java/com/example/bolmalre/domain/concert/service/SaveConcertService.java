@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +31,9 @@ public class SaveConcertService {
 
     public void saveConcerts(List<SaveConcertDTO.SaveRequestDTO> concertRequestList) {
         for (SaveConcertDTO.SaveRequestDTO dto : concertRequestList) {
+
+            // urlId 중복검사
+            isUrlIdDuplicate(dto.getUrlId());
             saveConcert(dto);
         }
     }
@@ -100,5 +104,17 @@ public class SaveConcertService {
                     .collect(Collectors.toList());
             concertArtistRepository.saveAll(concertArtists);
         }
+    }
+
+
+    public boolean isUrlIdDuplicate(String urlId) {
+        Optional<Concert> byUrlId = concertRepository.findByUrlId(urlId);
+        boolean present = byUrlId.isPresent();
+
+        if (present) {
+            throw new IllegalArgumentException("이미 존재하는 공연입니다. 다른 공연을 넣어주세요");
+        }
+
+        return true;
     }
 }

@@ -75,6 +75,9 @@ public class SaveConcertDTO {
         @JsonProperty("additional_info")
         private String additionalInfo;
 
+        @Schema(description = "중복검사를 위한 url 필드")
+        private String urlId;
+
     }
 
     @NoArgsConstructor

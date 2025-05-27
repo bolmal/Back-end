@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface ConcertRepository extends JpaRepository<Concert, Long> {
 
@@ -51,5 +52,7 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
 
     // 인기순 (dailyViewCount 기준 내림차순)
     Page<Concert> findAllByOrderByDailyViewCountDesc(Pageable pageable);
+
+    Optional<Concert> findByUrlId(String urlId);
 }
 

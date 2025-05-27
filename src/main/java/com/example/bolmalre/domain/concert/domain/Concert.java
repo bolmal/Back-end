@@ -58,6 +58,9 @@ public class Concert extends BaseEntity {
     private boolean advertisement;
 
 
+    private String urlId;
+
+    private boolean isRanked;
 
 
     // (casting)

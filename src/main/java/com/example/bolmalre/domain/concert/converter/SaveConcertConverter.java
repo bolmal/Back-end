@@ -22,6 +22,7 @@ public class SaveConcertConverter {
                 .onlineStore(dto.getOnlineStore()!= null ? dto.getOnlineStore(): "티켓팅 플랫폼 미정")
                 .onlineStoreLink(dto.getBookingLink()!= null ? dto.getBookingLink() : "티켓팅 사이트 링크 미정")
                 .ticketStatus(dto.getTicketStatus()!= null ? dto.getTicketStatus() : Boolean.TRUE)
+                .urlId(dto.getUrlId())
                 .build();
     }
 
