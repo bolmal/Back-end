@@ -2,7 +2,7 @@ package com.example.bolmalre.domain.artist.domain;
 
 import com.example.bolmalre.domain.artist.domain.enums.Genre;
 import com.example.bolmalre.domain.bookmark.domain.Bookmark;
-import com.example.bolmalre.global.domain.BaseEntity;
+import com.example.bolmalre.global.common.domain.BaseEntity;
 import com.example.bolmalre.domain.concert.domain.ConcertArtist;
 import jakarta.persistence.*;
 import lombok.*;

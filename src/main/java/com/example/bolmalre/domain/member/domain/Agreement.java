@@ -1,7 +1,7 @@
 package com.example.bolmalre.domain.member.domain;
 
 
-import com.example.bolmalre.global.domain.BaseEntity;
+import com.example.bolmalre.global.common.domain.BaseEntity;
 import com.example.bolmalre.domain.member.web.dto.MemberJoinDTO;
 import jakarta.persistence.*;
 import lombok.*;

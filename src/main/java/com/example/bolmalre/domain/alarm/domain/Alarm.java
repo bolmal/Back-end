@@ -1,6 +1,6 @@
 package com.example.bolmalre.domain.alarm.domain;
 
-import com.example.bolmalre.global.domain.BaseEntity;
+import com.example.bolmalre.global.common.domain.BaseEntity;
 import com.example.bolmalre.domain.concert.domain.Concert;
 import com.example.bolmalre.domain.member.domain.Member;
 import jakarta.persistence.*;

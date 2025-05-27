@@ -1,4 +1,4 @@
-package com.example.bolmalre.global.domain;
+package com.example.bolmalre.global.common.domain;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

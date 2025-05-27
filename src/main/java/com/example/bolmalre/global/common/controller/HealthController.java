@@ -1,4 +1,4 @@
-package com.example.bolmalre.global.controller;
+package com.example.bolmalre.global.common;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
