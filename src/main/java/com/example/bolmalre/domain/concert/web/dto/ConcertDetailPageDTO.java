@@ -46,6 +46,9 @@ public class ConcertDetailPageDTO {
         @Schema(description = "예매 제한")
         private String viewingRestrict;
 
+        @Schema(description = "포스터 이미지")
+        private String posterUrl;
+
 
     }
 }

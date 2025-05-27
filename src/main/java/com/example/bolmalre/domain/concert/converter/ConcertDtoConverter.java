@@ -88,6 +88,7 @@ public class ConcertDtoConverter {
                 .onlineStoreURL(concert.getOnlineStoreLink())
                 .concertAge(concert.getConcertAge())
                 .viewingRestrict(concert.getMaxTicketsPerPerson())
+                .posterUrl(concert.getPosterUrl())
                 .build();
     }
 }
