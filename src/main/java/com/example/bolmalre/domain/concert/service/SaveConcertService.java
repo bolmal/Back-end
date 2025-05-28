@@ -7,6 +7,8 @@ import com.example.bolmalre.domain.concert.converter.SaveConcertConverter;
 import com.example.bolmalre.domain.concert.domain.*;
 import com.example.bolmalre.domain.concert.infrastructure.*;
 import com.example.bolmalre.domain.concert.web.dto.SaveConcertDTO;
+import com.example.bolmalre.global.apiPayLoad.code.status.ErrorStatus;
+import com.example.bolmalre.global.apiPayLoad.exception.handler.ConcertHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,14 +33,14 @@ public class SaveConcertService {
 
     public void saveConcerts(List<SaveConcertDTO.SaveRequestDTO> concertRequestList) {
         for (SaveConcertDTO.SaveRequestDTO dto : concertRequestList) {
-
-            // urlId 중복검사
-            isUrlIdDuplicate(dto.getUrlId());
             saveConcert(dto);
         }
     }
 
     public void saveConcert(SaveConcertDTO.SaveRequestDTO dto) {
+
+        isUrlIdDuplicate(dto.getUrlId());
+
         // 1. Concert 엔티티 저장
         Concert concert = SaveConcertConverter.toConcert(dto);
         concertRepository.save(concert);
@@ -107,14 +109,13 @@ public class SaveConcertService {
     }
 
 
-    public boolean isUrlIdDuplicate(String urlId) {
+    public void isUrlIdDuplicate(String urlId) {
         Optional<Concert> byUrlId = concertRepository.findByUrlId(urlId);
         boolean present = byUrlId.isPresent();
 
         if (present) {
-            throw new IllegalArgumentException("이미 존재하는 공연입니다. 다른 공연을 넣어주세요");
+            throw new ConcertHandler(ErrorStatus.CONCERT_DUPLICATE);
         }
 
-        return true;
     }
 }
