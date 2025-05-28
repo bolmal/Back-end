@@ -2,7 +2,6 @@ package com.example.bolmalre.domain.member.service;
 
 import com.example.bolmalre.global.auth.jwt.JWTUtilImpl;
 import com.example.bolmalre.global.auth.service.RefreshTokenService;
-import com.example.bolmalre.global.config.JWTConfig;
 import com.example.bolmalre.domain.member.service.port.BCryptHolder;
 import com.example.bolmalre.domain.member.service.port.MemberRepository;
 import com.example.bolmalre.domain.member.service.port.UuidHolder;

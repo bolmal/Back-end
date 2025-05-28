@@ -1,6 +1,7 @@
 package com.example.bolmalre.domain.concert.web.controller;
 
 import com.example.bolmalre.domain.concert.web.dto.ConcertAdvResponse;
+import com.example.bolmalre.domain.concert.web.dto.ConcertRankedResponseDTO;
 import com.example.bolmalre.domain.concert.web.port.ConcertImageService;
 import com.example.bolmalre.global.apiPayLoad.ApiResponse;
 import com.example.bolmalre.domain.concert.web.dto.ConcertHomeDTO;
@@ -52,11 +53,11 @@ public class HomeConcertController {
 
     @Operation(summary = "이번주 가장 인기 있는 콘서트")
     @GetMapping("/hot")
-    public ApiResponse<List<ConcertHomeDTO.WeekHotConcertDTO>> getWeekHotConcert(){
+    public ApiResponse<ConcertRankedResponseDTO.ConcertRankedResponseDTOList> getWeekHotConcert(){
 
-        List<ConcertHomeDTO.WeekHotConcertDTO> response = concertService.getWeekHotConcertInfo();
+        ConcertRankedResponseDTO.ConcertRankedResponseDTOList result = concertService.getRanking();
 
-        return ApiResponse.onSuccess(response);
+        return ApiResponse.onSuccess(result);
     }
 
 }

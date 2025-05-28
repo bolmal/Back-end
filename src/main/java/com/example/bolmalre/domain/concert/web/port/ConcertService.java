@@ -4,6 +4,7 @@ import com.example.bolmalre.domain.concert.domain.enums.SortType;
 import com.example.bolmalre.domain.concert.web.dto.ConcertDetailPageDTO;
 import com.example.bolmalre.domain.concert.web.dto.ConcertHomeDTO;
 import com.example.bolmalre.domain.concert.web.dto.ConcertPageDTO;
+import com.example.bolmalre.domain.concert.web.dto.ConcertRankedResponseDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -28,4 +29,5 @@ public interface ConcertService {
     // 콘서트 상세 정보 페이지
     ConcertDetailPageDTO.ConcertDetailDTO getConcertDetailInfo(Long concertId);
 
+    ConcertRankedResponseDTO.ConcertRankedResponseDTOList getRanking();
 }

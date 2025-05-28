@@ -1,5 +1,6 @@
 package com.example.bolmalre.domain.concert.service;
 
+import com.example.bolmalre.domain.concert.web.dto.ConcertRankedResponseDTO;
 import com.example.bolmalre.global.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.global.apiPayLoad.exception.handler.ConcertHandler;
 import com.example.bolmalre.domain.concert.converter.ConcertConverter;
@@ -134,29 +135,17 @@ public class ConcertServiceImpl implements ConcertService {
     }
 
 
-/*
-    public List<ConcertHomeDTO.RecommendConcertDTO> getRanking(){
+    @Override
+    public ConcertRankedResponseDTO.ConcertRankedResponseDTOList getRanking(){
 
         List<Concert> byRankedIsTrue = concertRepository.findByRankedIsTrue();
 
+        List<ConcertRankedResponseDTO> dtos = byRankedIsTrue.stream()
+                .map(ConcertRankedResponseDTO::of)
+                .toList();
 
-        return concerts.getContent().stream()
-                .map(concert -> {
-                    ConcertTicketRound ctr = findNearestConcertTicket(concert.getId());
-
-                    String round = ctr.getTicketRound();
-
-                    */
-/*String ticketOpenDate = converter.convertTicketOpenDate(ctr);*//*
-
-                    LocalDateTime ticketOpenDate = ctr.getTicketOpenDate();
-
-                    String concertPerformanceDate = converter.convertConcertPerformanceRoundToSimpleDate(findConcertPerformanceRoundByConcert(concert));
-
-                    return ConcertDtoConverter.toRecommendConcertDTO(concert, round, ticketOpenDate, concertPerformanceDate);
-                }).toList();
+        return ConcertRankedResponseDTO.ConcertRankedResponseDTOList.of(dtos);
     }
-*/
 
 
     // 콘서트 찾기
