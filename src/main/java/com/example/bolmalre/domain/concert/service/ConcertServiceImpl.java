@@ -138,7 +138,7 @@ public class ConcertServiceImpl implements ConcertService {
     @Override
     public ConcertRankedResponseDTO.ConcertRankedResponseDTOList getRanking(){
 
-        List<Concert> byRankedIsTrue = concertRepository.findByRankedIsTrue();
+        List<Concert> byRankedIsTrue = concertRepository.findByIsRankedTrue();
 
         List<ConcertRankedResponseDTO> dtos = byRankedIsTrue.stream()
                 .map(ConcertRankedResponseDTO::of)

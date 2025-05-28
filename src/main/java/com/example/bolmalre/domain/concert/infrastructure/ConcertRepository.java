@@ -55,6 +55,6 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
 
     Optional<Concert> findByUrlId(String urlId);
 
-    List<Concert> findByRankedIsTrue();
+    List<Concert> findByIsRankedTrue();
 }
 

@@ -15,6 +15,7 @@ import com.example.bolmalre.domain.member.web.dto.KakaoDTO;
 import com.example.bolmalre.domain.member.web.dto.MemberJoinDTO;
 import com.example.bolmalre.domain.member.web.dto.NaverDTO;
 import com.example.bolmalre.domain.member.web.port.OAuthService;
+import com.example.bolmalre.global.config.JWTConfig;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
