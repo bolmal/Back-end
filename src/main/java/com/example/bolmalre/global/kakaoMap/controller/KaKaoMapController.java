@@ -31,4 +31,15 @@ public class KaKaoMapController {
                                                      @RequestParam(name = "category_group_code") String categoryGroupCode) {
         return placeSearchService.search(keyword, categoryGroupCode);
     }
+
+
+    @GetMapping("/kakao-map/search/fixed")
+    @Operation(summary = "공연장 주변 고정 정보 조회 API",
+            description = "공연장 **주변시설**을 조회합니다 <br><br>" +
+                    "편의점, 주차장, 지하철 역, 음식점, 숙박업에 대한 공연장 주변 시설을 조회합니다. <br>")
+    @Parameter(name = "keyword",description = "공연장 장소를 입력해주세요")
+    public List<SimpleKaKaoMapSearchResponse.SimpleKaKaoMapSearchListResponse> searchList(@RequestParam String keyword){
+
+        return placeSearchService.searchList(keyword);
+    }
 }

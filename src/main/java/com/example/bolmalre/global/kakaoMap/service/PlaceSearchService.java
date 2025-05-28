@@ -7,6 +7,7 @@ import com.example.bolmalre.global.kakaoMap.controller.dto.SimpleKaKaoMapSearchR
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,25 @@ import java.util.stream.Collectors;
 public class PlaceSearchService {
 
     private final KaKaoSearchClient kaKaoSearchClient;
+
+
+    /**
+     * 편의점: CS2
+     * 주차장: PK6
+     * 지하철역: SW8
+     * 음식점: FD6
+     * 숙박: AD5
+     *
+     * 다른 카테고리가 필요한 경우, 리스트에 키워드 추가
+     * */
+    public List<SimpleKaKaoMapSearchResponse.SimpleKaKaoMapSearchListResponse> searchList(String keyword){
+
+        List<String> categoryList = List.of("CS2", "PK6", "SW8", "FD6", "AD5");
+
+        return categoryList.stream()
+                .map(category -> search(keyword, category))
+                .toList();
+    }
 
     /**
      * 주어진 키워드로 카카오 API를 통해 장소를 검색합니다.
@@ -38,7 +58,6 @@ public class PlaceSearchService {
                 categoryGroupCode, x, y, 1000, "distance", 1, 10);
 
         return SimpleKaKaoMapSearchResponse.SimpleKaKaoMapSearchListResponse.of(searchResponse);
-
     }
 
 }

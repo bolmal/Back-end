@@ -106,7 +106,7 @@ public class SecurityConfig {
                 .requestMatchers("/home/**").permitAll()
                 .requestMatchers("concerts/**").permitAll()
                 .requestMatchers("/templates/oauth/kakao/callback", "/templates/oauth/naver/callback", "templates/oauth/kakao/front").permitAll() // OAuth 콜백 주소
-                .requestMatchers("/kakao-map/search").permitAll()
+                .requestMatchers("/kakao-map/search/**").permitAll()
                 .requestMatchers("/oauth/**","/save/**").permitAll()
 
                 .anyRequest().authenticated());
