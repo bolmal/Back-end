@@ -1,6 +1,8 @@
 package com.example.bolmalre.global.kakaoMap.controller;
 
 
+import com.example.bolmalre.global.kakaoMap.controller.dto.KaKaoAddressResponse;
+import com.example.bolmalre.global.kakaoMap.controller.dto.SimpleKaKaoAddressResponse;
 import com.example.bolmalre.global.kakaoMap.controller.dto.SimpleKaKaoMapSearchResponse;
 import com.example.bolmalre.global.kakaoMap.service.PlaceSearchService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,5 +43,21 @@ public class KaKaoMapController {
     public List<SimpleKaKaoMapSearchResponse.SimpleKaKaoMapSearchListResponse> searchList(@RequestParam String keyword){
 
         return placeSearchService.searchList(keyword);
+    }
+
+
+    @GetMapping("/kakao-map/search/address")
+    @Operation(summary = "장소 상세 정보 조회 API")
+    @Parameter(name = "location", description = "조회하고 싶은 장소를 입력해주세요")
+    public KaKaoAddressResponse.Document searchAddress(@RequestParam String location){
+        return placeSearchService.searchAddress(location);
+    }
+
+
+    @GetMapping("/kakao-map/search/coordinate")
+    @Operation(summary = "장소 좌표 정보 조회 API")
+    @Parameter(name = "location", description = "조회하고 싶은 장소를 입력해주세요")
+    public SimpleKaKaoAddressResponse searchCoordinate(@RequestParam String location){
+        return placeSearchService.searchSimpleAddress(location);
     }
 }

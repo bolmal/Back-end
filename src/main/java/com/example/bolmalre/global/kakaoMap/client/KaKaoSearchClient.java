@@ -1,6 +1,7 @@
 package com.example.bolmalre.global.kakaoMap.client;
 
 import com.example.bolmalre.global.config.KaKaoFeignConfig;
+import com.example.bolmalre.global.kakaoMap.controller.dto.KaKaoAddressResponse;
 import com.example.bolmalre.global.kakaoMap.controller.dto.KaKaoSearchResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +37,15 @@ public interface KaKaoSearchClient {
             @RequestParam("y") double y,
             @RequestParam("radius") int radius,
             @RequestParam(value = "sort", defaultValue = "distance") String sort,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    );
+
+
+    @GetMapping("/v2/local/search/address.json")
+    KaKaoAddressResponse searchByAddress(
+            @RequestParam("query") String location,
+            @RequestParam("analyze_type") String analyze_type,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     );

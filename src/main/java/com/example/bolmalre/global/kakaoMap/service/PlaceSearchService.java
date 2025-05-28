@@ -2,7 +2,9 @@ package com.example.bolmalre.global.kakaoMap.service;
 
 
 import com.example.bolmalre.global.kakaoMap.client.KaKaoSearchClient;
+import com.example.bolmalre.global.kakaoMap.controller.dto.KaKaoAddressResponse;
 import com.example.bolmalre.global.kakaoMap.controller.dto.KaKaoSearchResponse;
+import com.example.bolmalre.global.kakaoMap.controller.dto.SimpleKaKaoAddressResponse;
 import com.example.bolmalre.global.kakaoMap.controller.dto.SimpleKaKaoMapSearchResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,7 @@ public class PlaceSearchService {
                 .toList();
     }
 
+
     /**
      * 주어진 키워드로 카카오 API를 통해 장소를 검색합니다.
      *
@@ -58,6 +61,28 @@ public class PlaceSearchService {
                 categoryGroupCode, x, y, 1000, "distance", 1, 10);
 
         return SimpleKaKaoMapSearchResponse.SimpleKaKaoMapSearchListResponse.of(searchResponse);
+    }
+
+
+    public KaKaoAddressResponse.Document searchAddress(String location) {
+
+        KaKaoSearchResponse searchResponse1 = kaKaoSearchClient.searchKeyword(location, 1, 10);
+
+        KaKaoAddressResponse searchResponse = kaKaoSearchClient.searchByAddress(
+                location,
+                "similar",
+                1, 10
+        );
+
+        return searchResponse.getDocuments().get(0);
+    }
+
+
+    public SimpleKaKaoAddressResponse searchSimpleAddress(String location) {
+        KaKaoSearchResponse searchResponse1 = kaKaoSearchClient.searchKeyword(location,1,10);
+
+        KaKaoSearchResponse.Document document = searchResponse1.getDocuments().get(0);
+        return SimpleKaKaoAddressResponse.of(document.getY(), document.getX());
     }
 
 }
