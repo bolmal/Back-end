@@ -1,4 +1,4 @@
-package kr.kakaomap.config;
+package com.example.bolmalre.global.config;
 
 
 import com.example.bolmalre.domain.member.service.port.MemberRepository;

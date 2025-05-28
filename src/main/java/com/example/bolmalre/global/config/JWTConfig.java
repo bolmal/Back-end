@@ -1,4 +1,4 @@
-package kr.kakaomap.config;
+package com.example.bolmalre.global.config;
 
 import lombok.Getter;
 import lombok.Setter;

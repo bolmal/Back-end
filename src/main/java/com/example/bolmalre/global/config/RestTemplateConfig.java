@@ -1,4 +1,4 @@
-package kr.kakaomap.config;
+package com.example.bolmalre.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
