@@ -60,3 +60,4 @@ public class MemberOAuthSSRController {
         return "oauth/success";
     }
 }
+
