@@ -34,6 +34,9 @@ public class ConcertRankedResponseDTO {
     @Schema(description = "콘서트 공연 일자 (날짜)")
     private String concertDate;
 
+    @Schema(description = "콘서트 공연 장소")
+    private String place;
+
 
     public static ConcertRankedResponseDTO of(Concert request){
 
@@ -44,6 +47,7 @@ public class ConcertRankedResponseDTO {
                 .ticketOpenDate(request.getConcertTicketRounds().get(0).getTicketOpenDate())
                 .concertName(request.getConcertName())
                 .concertDate(request.getConcertPerformanceRounds().get(0).getConcertDate().toString())
+                .place(request.getConcertPlace())
                 .build();
     }
 
