@@ -19,15 +19,17 @@ public class SaveConcertDTO {
     @Slf4j
     public static class SaveRequestDTO {
 
-        @Schema(description = "공연 명")
+        @Schema(description = "공연 이름입니다")
         @JsonProperty("concert_name")
         private String concertName;
 
-        @Schema(description = "공연 포스터 이미지")
+        @Schema(description = "공연 포스터 이미지입니다 <br><br>" +
+                "공연 이미지에서 좌클릭하시면 **이미지 주소 저장** 이라는 버튼이 있을겁니다 <br>" +
+                "그거 주소 복사하셔서 주시면 됩니다")
         @JsonProperty("concert_poster")
         private String posterUrl;
 
-        @Schema(description = "캐스팅 아티스트")
+        @Schema(description = "캐스팅된 아티스트 명단입니다")
         @JsonProperty("casting")
         private List<ConcertArtistDTO> casting;
 
