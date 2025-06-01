@@ -69,5 +69,7 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
         ORDER BY MIN(ctr.ticketOpenDate) ASC
     """)
     Page<Concert> findAllOrderByTicketOpenDateV2(Pageable pageable);
+
+    List<Concert> findByConcertNameContainingIgnoreCase(String keyword);
 }
 
