@@ -40,7 +40,6 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(nullable = false)
     private String phoneNumber;
 
     @Column(nullable = false)

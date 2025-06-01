@@ -42,7 +42,6 @@ public class MemberJoinDTO {
         @Schema(description = "회원이메일 입니다")
         String email;
 
-        @PhoneNumberValid
         @Schema(description = "회원전화번호 입니다")
         String phoneNumber;
 
