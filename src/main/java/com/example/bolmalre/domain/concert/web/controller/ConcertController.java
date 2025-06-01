@@ -39,7 +39,7 @@ public class ConcertController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "TICKET_OPEN") SortType sortType
     ) {
-        Page<ConcertPageDTO.ConcertInfoDTO> result = concertService.getConcertPageInfo(page, sortType);
+        Page<ConcertPageDTO.ConcertInfoDTO> result = concertService.getConcertPageInfoV2(page, sortType);
         return ApiResponse.onSuccess(result);
     }
 

@@ -34,6 +34,7 @@ public class ConcertPageDTO {
 
         @Schema(description = "콘서트 공연 일자 (날짜)")
         private String concertDate;
+
     }
 
 }

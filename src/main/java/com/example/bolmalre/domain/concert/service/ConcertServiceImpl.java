@@ -23,7 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -111,6 +113,67 @@ public class ConcertServiceImpl implements ConcertService {
         concertPage.forEach(c -> System.out.println("콘서트 ID: " + c.getId()));
         return concertPage.map(this::convertToConcertInfoDTO);
     }
+
+
+    @Override
+    public Page<ConcertPageDTO.ConcertInfoDTO> getConcertPageInfoV2(int page, SortType sortType) {
+        List<Concert> all = concertRepository.findAll();
+
+        // 정렬
+        List<Concert> sorted = switch (sortType) {
+            case LATEST -> all.stream()
+                    .sorted(Comparator.comparing(Concert::getCreatedAt).reversed())
+                    .toList();
+
+            case TICKET_OPEN -> all.stream()
+                    .sorted(Comparator.comparing(
+                            (Concert concert) -> concert.getConcertTicketRounds().stream()
+                                    .map(ConcertTicketRound::getTicketOpenDate)
+                                    .filter(Objects::nonNull)
+                                    .min(Comparator.naturalOrder())
+                                    .orElse(LocalDateTime.MAX)
+                    ))
+                    .toList();
+
+            default -> throw new IllegalArgumentException("Unexpected sort type: " + sortType);
+        };
+
+        // 페이징
+        int pageSize = 20;
+        int start = page * pageSize;
+        if (start >= sorted.size()) {
+            return new PageImpl<>(List.of(), PageRequest.of(page, pageSize), sorted.size());
+        }
+        int end = Math.min(start + pageSize, sorted.size());
+
+        // DTO 변환
+        List<ConcertPageDTO.ConcertInfoDTO> paged = sorted.subList(start, end).stream()
+                .map(concert -> {
+                    ConcertTicketRound earliestRound = concert.getConcertTicketRounds().stream()
+                            .filter(r -> r.getTicketOpenDate() != null)
+                            .min(Comparator.comparing(ConcertTicketRound::getTicketOpenDate))
+                            .orElse(null);
+
+                    return ConcertPageDTO.ConcertInfoDTO.builder()
+                            .id(concert.getId())
+                            .posterUrl(concert.getPosterUrl())
+                            .ticketRound(earliestRound != null ? earliestRound.getTicketRound() : null)
+                            .ticketOpenDate(earliestRound != null ? earliestRound.getTicketOpenDate() : null)
+                            .concertName(concert.getConcertName())
+                            .concertDate(
+                                    concert.getConcertPerformanceRounds().isEmpty()
+                                            ? null
+                                            : concert.getConcertPerformanceRounds().get(0).getConcertDate().toString()
+                            )
+                            .build();
+                })
+                .toList();
+
+        return new PageImpl<>(paged, PageRequest.of(page, pageSize), sorted.size());
+    }
+
+
+
 
 
 

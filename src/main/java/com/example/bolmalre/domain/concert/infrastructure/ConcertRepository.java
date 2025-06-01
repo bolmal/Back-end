@@ -56,5 +56,18 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
     Optional<Concert> findByUrlId(String urlId);
 
     List<Concert> findByIsRankedTrue();
+
+
+
+    @Query("SELECT c FROM Concert c ORDER BY c.createdAt DESC")
+    Page<Concert> findAllOrderByCreatedAt(Pageable pageable);
+
+    @Query("""
+        SELECT c FROM Concert c
+        JOIN c.concertTicketRounds ctr
+        GROUP BY c
+        ORDER BY MIN(ctr.ticketOpenDate) ASC
+    """)
+    Page<Concert> findAllOrderByTicketOpenDateV2(Pageable pageable);
 }
 

@@ -26,6 +26,8 @@ public interface ConcertService {
     // 콘서트 페이지 (20개씩)
     Page<ConcertPageDTO.ConcertInfoDTO> getConcertPageInfo(int page, SortType sortType);
 
+    Page<ConcertPageDTO.ConcertInfoDTO> getConcertPageInfoV2(int page, SortType sortType);
+
     // 콘서트 상세 정보 페이지
     ConcertDetailPageDTO.ConcertDetailDTO getConcertDetailInfo(Long concertId);
 
