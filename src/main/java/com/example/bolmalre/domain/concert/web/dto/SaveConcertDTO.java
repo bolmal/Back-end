@@ -77,7 +77,9 @@ public class SaveConcertDTO {
         @JsonProperty("additional_info")
         private String additionalInfo;
 
-        @Schema(description = "중복검사를 위한 url 필드")
+        @Schema(description = "중복검사를 위한 url 필드입니다 <br><br>" +
+                "공연 상세정보에 들어가면 https://tickets.interpark.com/goods/25005076 이런식으로 뜰텐데 <br>" +
+                "여기서 25005076 이 부분 넣어주시면 됩니다")
         private String urlId;
 
     }
