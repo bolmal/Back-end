@@ -20,8 +20,6 @@ public interface KaKaoSearchClient {
      * 3. 그 장소를 https://developers.kakao.com/docs/latest/ko/local/dev-guide#address-coord 를 통해 좌표로 변환함
      * 4. 그리고 그 좌표를 searchByCategory() 에 넣어서 가져와야함
      * */
-
-
     @GetMapping("/v2/local/search/keyword.json")
     KaKaoSearchResponse searchKeyword(
             @RequestParam("query") String query,

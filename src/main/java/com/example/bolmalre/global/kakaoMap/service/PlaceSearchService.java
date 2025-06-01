@@ -58,7 +58,7 @@ public class PlaceSearchService {
 
         // 공연장 좌표를 기준으로 카테고리 검색 카테고리는 아래 주석 참고
         KaKaoSearchResponse searchResponse = kaKaoSearchClient.searchByCategory(
-                categoryGroupCode, x, y, 1000, "distance", 1, 10);
+                categoryGroupCode, x, y, 1000, "distance", 1, 4);
 
         return SimpleKaKaoMapSearchResponse.SimpleKaKaoMapSearchListResponse.of(searchResponse);
     }
