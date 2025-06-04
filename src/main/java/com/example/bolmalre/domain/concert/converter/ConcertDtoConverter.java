@@ -89,6 +89,7 @@ public class ConcertDtoConverter {
                 .concertAge(concert.getConcertAge())
                 .viewingRestrict(concert.getMaxTicketsPerPerson())
                 .posterUrl(concert.getPosterUrl())
+                .description(concert.getDescription())
                 .build();
     }
 }

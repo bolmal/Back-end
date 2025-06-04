@@ -49,6 +49,8 @@ public class ConcertDetailPageDTO {
         @Schema(description = "포스터 이미지")
         private String posterUrl;
 
+        @Schema(description = "공연 상세정보")
+        private String description;
 
     }
 }
