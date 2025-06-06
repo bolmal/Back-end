@@ -107,7 +107,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         result.put("isLogin", byUsername.isLogin());
         result.put("alarmCount", byUsername.getAlarmAccount());
         result.put("upComming", "test");
-        result.put("imagePath", "https://bolmal-bucket.s3.ap-northeast-2.amazonaws.com/aa.png");
+        result.put("imagePath", null);
         result.put("name", byUsername.getName());
         result.put("bookmarkCount", byUsername.getBookmarkAccount());
         result.put("isSubscribe", byUsername.getStatus());
