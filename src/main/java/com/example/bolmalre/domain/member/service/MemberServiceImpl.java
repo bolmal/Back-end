@@ -1,11 +1,9 @@
 package com.example.bolmalre.domain.member.service;
 
+import com.example.bolmalre.domain.member.domain.MemberProfileImage;
+import com.example.bolmalre.domain.member.service.port.*;
 import com.example.bolmalre.global.apiPayLoad.code.status.ErrorStatus;
 import com.example.bolmalre.global.apiPayLoad.exception.handler.MemberHandler;
-import com.example.bolmalre.domain.member.service.port.AgreementRepository;
-import com.example.bolmalre.domain.member.service.port.BCryptHolder;
-import com.example.bolmalre.domain.member.service.port.LocalDateHolder;
-import com.example.bolmalre.domain.member.service.port.MemberRepository;
 import com.example.bolmalre.domain.member.web.dto.*;
 import com.example.bolmalre.domain.member.converter.MemberConverter;
 import com.example.bolmalre.domain.member.domain.enums.Status;
@@ -32,6 +30,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final AgreementRepository agreementRepository;
+    private final MemberProfileImageRepository memberProfileImageRepository;
 
     private final BCryptHolder bCryptHolder;
     private final LocalDateHolder localDateHolder;
@@ -48,6 +47,15 @@ public class MemberServiceImpl implements MemberService {
 
         Agreement newAgreement = Agreement.JoinDTOto(request,savedMember);
         agreementRepository.save(newAgreement);
+
+        MemberProfileImage memberImage = MemberProfileImage.builder()
+                .imageName("default-image")
+                .fileName("https://velog.velcdn.com/images/vipwhy12/post/8fb3f9f1-b516-44af-943c-3b2dd4a3c866/image.jpg")
+                .imageLink("https://velog.velcdn.com/images/vipwhy12/post/8fb3f9f1-b516-44af-943c-3b2dd4a3c866/image.jpg")
+                .member(newMember)
+                .build();
+
+        memberProfileImageRepository.save(memberImage);
 
         return MemberJoinDTO.MemberJoinResponseDTO.builder()
                 .memberId(savedMember.getId())
