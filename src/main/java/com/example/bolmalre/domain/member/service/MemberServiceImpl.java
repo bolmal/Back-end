@@ -50,8 +50,8 @@ public class MemberServiceImpl implements MemberService {
 
         MemberProfileImage memberImage = MemberProfileImage.builder()
                 .imageName("default-image")
-                .fileName("https://velog.velcdn.com/images/vipwhy12/post/8fb3f9f1-b516-44af-943c-3b2dd4a3c866/image.jpg")
-                .imageLink("https://velog.velcdn.com/images/vipwhy12/post/8fb3f9f1-b516-44af-943c-3b2dd4a3c866/image.jpg")
+                .fileName("https://bolmal-bucket.s3.ap-northeast-2.amazonaws.com/aa.png")
+                .imageLink("https://bolmal-bucket.s3.ap-northeast-2.amazonaws.com/aa.png")
                 .member(newMember)
                 .build();
 
